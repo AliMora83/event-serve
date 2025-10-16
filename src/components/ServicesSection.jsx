@@ -11,14 +11,14 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-16 bg-white">
+    <section id="services" className="py-16 bg-[#181818]">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">Our Services</h2>
+        <h2 className="text-4xl font-bold text-center mb-12 text-white">Our Services</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div key={index} className="p-6 border rounded-lg hover:shadow-lg transition">
-              <h3 className="text-xl font-bold mb-3 text-primary">{service.title}</h3>
-              <p className="text-gray-600">{service.description}</p>
+            <div key={index} className="p-6 border border-gray-700 rounded-lg hover:shadow-lg transition bg-[#1f1f1f]">
+              <h3 className="text-xl font-bold mb-3 text-white">{service.title}</h3>
+              <p className="text-gray-300">{service.description}</p>
             </div>
           ))}
         </div>
