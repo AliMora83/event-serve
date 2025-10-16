@@ -6,6 +6,7 @@ import LegacySection from '../components/LegacySection';
 import MagicYearsSection from '../components/MagicYearsSection';
 import WorkHighlightsSection from '../components/WorkHighlightsSection';
 import WhatWeOfferSection from '../components/WhatWeOfferSection';
+import ClienteleSection from '../components/ClienteleSection';
 import ExperienceStats from '../components/ExperienceStats';
 import WorkHighlights from '../components/WorkHighlights';
 import ServicesSection from '../components/ServicesSection';
@@ -18,12 +19,14 @@ import Footer from '../components/Footer';
 const Home = () => {
   return (
       <>
+        <Navbar />
         <Hero />
         <AboutSection />
         <LegacySection />
         <MagicYearsSection />
         <WorkHighlightsSection />
         <WhatWeOfferSection />
+        <ClienteleSection />
         <ExperienceStats />
         <WorkHighlights />
         <ServicesSection />
@@ -31,6 +34,7 @@ const Home = () => {
         <TeamSection />
         <ImpactSection />
         <ContactSection />
+        <Footer />
       </>
   );
 };
