@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import eventsImage from '../assets/Events wht blck.png';
 
 const WorkHighlightsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -7,7 +8,7 @@ const WorkHighlightsSection = () => {
   // Generate 8 dummy images
   const images = Array.from({ length: 8 }, (_, i) => ({
     id: i + 1,
-    url: `https://via.placeholder.com/300x200?text=Work+${i + 1}`,
+    url: eventsImage,
     alt: `Work Highlight ${i + 1}`
   }));
 
@@ -27,10 +28,10 @@ const WorkHighlightsSection = () => {
   );
 
   return (
-    <section className="py-16 px-6" style={{ backgroundColor: '#181818' }}>
+    <section className="py-16 px-6" style={{ backgroundColor: '' }}>
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
-        <h2 className="text-4xl font-bold text-center mb-12" style={{ color: '#FF0000' }}>
+        <h2 className="text-4xl font-bold text-center mb-12" style={{ color: '' }}>
           Work Highlights
         </h2>
 
