@@ -5,6 +5,7 @@ import AboutSection from '../components/AboutSection';
 import LegacySection from '../components/LegacySection';
 import MagicYearsSection from '../components/MagicYearsSection';
 import WorkHighlightsSection from '../components/WorkHighlightsSection';
+import WhatWeOfferSection from '../components/WhatWeOfferSection';
 import ExperienceStats from '../components/ExperienceStats';
 import WorkHighlights from '../components/WorkHighlights';
 import ServicesSection from '../components/ServicesSection';
@@ -22,6 +23,7 @@ const Home = () => {
         <LegacySection />
         <MagicYearsSection />
         <WorkHighlightsSection />
+        <WhatWeOfferSection />
         <ExperienceStats />
         <WorkHighlights />
         <ServicesSection />
