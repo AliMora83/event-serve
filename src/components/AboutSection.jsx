@@ -2,20 +2,29 @@ import React from 'react';
 
 const AboutSection = () => {
   return (
-    <section id="about" className="py-16 bg-gray-50">
+    <section id="about" className="py-20 bg-[#181818] text-white">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">About Us</h2>
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="text-lg text-gray-700 mb-4">
-              EventServe has been creating memorable experiences for over 5 years. 
-              We specialize in corporate events, weddings, and private celebrations.
-            </p>
-            <p className="text-lg text-gray-700">
-              Our team of dedicated professionals ensures every detail is perfect.
-            </p>
+            <h2 className="text-5xl font-bold mb-8 leading-tight">
+              <span className="font-bold">We combine</span> creativity and precision
+            </h2>
+            <div className="space-y-6 text-lg text-gray-300">
+              <p>
+                EventServe specializes in creating <span className="text-red-600 font-semibold">unforgettable experiences</span> that bring your vision to life.
+              </p>
+              <p>
+                From <span className="font-semibold">corporate events</span> to <span className="font-semibold">weddings</span> and private celebrations, our team ensures every detail exceeds expectations.
+              </p>
+              <p>
+                With over 5 years of experience, we deliver <span className="text-red-600 font-semibold">excellence</span> in event management.
+              </p>
+            </div>
+            <button className="mt-8 bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300">
+              Learn More About Us
+            </button>
           </div>
-          <div className="bg-primary h-64 rounded-lg"></div>
+          <div className="bg-gradient-to-br from-red-600 to-red-800 h-96 rounded-xl shadow-2xl"></div>
         </div>
       </div>
     </section>
