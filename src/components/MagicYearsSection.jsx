@@ -7,11 +7,7 @@ const MagicYearsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left Column - Image */}
           <div className="flex justify-center">
-            <img 
-              src="https://via.placeholder.com/400x300" 
-              alt="Dummy placeholder" 
-              className="w-full h-auto rounded-lg shadow-lg"
-            />
+              <div className="bg-gradient-to-br from-red-600 to-red-800 h-96 rounded-xl shadow-2xl"></div>
           </div>
           
           {/* Right Column - Text */}
