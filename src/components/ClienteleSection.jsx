@@ -6,7 +6,7 @@ const ClienteleSection = () => {
     <section className="bg-gray-900 py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
-          Our Glocal <span className="text-red-600">Clientèle</span>
+          Our Global <span className="text-red-600">Clients</span>
         </h2>
         
         <div className="relative">
