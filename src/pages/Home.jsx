@@ -13,19 +13,17 @@ import Footer from '../components/Footer';
 
 const Home = () => {
   return (
-    <div>
-      <Navbar />
-      <Hero />
-      <AboutSection />
-      <ExperienceStats />
-      <WorkHighlights />
-      <ServicesSection />
-      <ClientsTestimonials />
-      <TeamSection />
-      <ImpactSection />
-      <ContactSection />
-      <Footer />
-    </div>
+      <>
+        <Hero />
+        <AboutSection />
+        <ExperienceStats />
+        <WorkHighlights />
+        <ServicesSection />
+        <ClientsTestimonials />
+        <TeamSection />
+        <ImpactSection />
+        <ContactSection />
+      </>
   );
 };
 
