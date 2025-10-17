@@ -7,6 +7,7 @@ import MagicYearsSection from '../components/MagicYearsSection';
 import WorkHighlightsSection from '../components/WorkHighlightsSection';
 import WhatWeOfferSection from '../components/WhatWeOfferSection';
 import ClienteleSection from '../components/ClienteleSection';
+import TeamShowcaseSection from '../components/TeamShowcaseSection';
 import ExperienceStats from '../components/ExperienceStats';
 import ServicesSection from '../components/ServicesSection';
 import ClientsTestimonials from '../components/ClientsTestimonials';
@@ -26,6 +27,7 @@ const Home = () => {
         <WorkHighlightsSection />
         <WhatWeOfferSection />
         <ClienteleSection />
+        <TeamShowcaseSection />
         <ExperienceStats />
         <ServicesSection />
         <ClientsTestimonials />
