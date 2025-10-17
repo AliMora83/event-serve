@@ -8,7 +8,6 @@ import WorkHighlightsSection from '../components/WorkHighlightsSection';
 import WhatWeOfferSection from '../components/WhatWeOfferSection';
 import ClienteleSection from '../components/ClienteleSection';
 import ExperienceStats from '../components/ExperienceStats';
-import WorkHighlights from '../components/WorkHighlights';
 import ServicesSection from '../components/ServicesSection';
 import ClientsTestimonials from '../components/ClientsTestimonials';
 import TeamSection from '../components/TeamSection';
@@ -28,7 +27,6 @@ const Home = () => {
         <WhatWeOfferSection />
         <ClienteleSection />
         <ExperienceStats />
-        <WorkHighlights />
         <ServicesSection />
         <ClientsTestimonials />
         <TeamSection />
