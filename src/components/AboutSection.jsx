@@ -1,5 +1,4 @@
 import React from 'react';
-import EventLogo from '../assets/EventLogo.png';
 
 
 const AboutSection = () => {
@@ -26,11 +25,7 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
-             <img
-              src={EventLogo}
-              alt="Event Logo"
-              className="mx-auto my-8 w-48 h-auto rounded-lg shadow-lg"
-            />
+ 
 
           </div>
         </div>
