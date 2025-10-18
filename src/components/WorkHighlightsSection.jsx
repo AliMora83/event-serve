@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import eventsImage from '../assets/Events wht blck.png';
+import eventsImage from '../assets/EventsLogo.png';
 
 const WorkHighlightsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
