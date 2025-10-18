@@ -1,4 +1,5 @@
 import React from 'react';
+import EventLogo from '../assets/EventLogo.png';
 
 
 const AboutSection = () => {
@@ -24,10 +25,14 @@ const AboutSection = () => {
             <button className="mt-8 bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300">
               Learn More About Us
             </button>
-          </div>
- 
+         <div className="flex justify-center items-center my-8">
+              <img
+                src={EventLogo}
+                alt="Event Logo"
+                className="w-48 h-auto rounded-lg shadow-lg"
+              />
+        </div>
 
-          </div>
         </div>
       </div>
     </section>
