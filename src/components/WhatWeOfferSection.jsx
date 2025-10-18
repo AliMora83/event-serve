@@ -18,7 +18,7 @@ const WhatWeOfferSection = () => {
         {/* Section Heading */}
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
           <span className="text-white">What We </span>
-          <span className="text-red-600">Offer</span>
+          <span className="text-primary">Offer</span>
         </h2>
 
         {/* Offers Grid */}
@@ -26,8 +26,8 @@ const WhatWeOfferSection = () => {
           {offers.map((offer) => (
             <div key={offer.id} className="flex flex-col items-center text-center">
               {/* Circle Icon */}
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-red-600 transition-colors duration-300">
-                <svg className="w-12 h-12 md:w-16 md:h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300">
+                <svg className="w-12 h-12 md:w-16 md:h-16 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
