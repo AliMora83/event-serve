@@ -30,7 +30,7 @@ const AboutSection = () => {
                 src={EventsLogo}
                 alt="Event Logo"
                 className="w-48 h-auto rounded-lg shadow-lg"
-              />
+              ></img>
         </div>
 
         </div>
