@@ -2,7 +2,7 @@ import React from 'react';
 
 const MagicYearsSection = () => {
   return (
-    <section className="py-16 px-6 bg-[#181818]">
+    <section className="py-16 px-6 bg-black">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left Column - Image */}
