@@ -13,7 +13,7 @@ const WhatWeOfferSection = () => {
   ];
 
   return (
-    <section className="py-20 px-6 bg-gray-900">
+    <section className="py-20 px-6 bg-black">
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
