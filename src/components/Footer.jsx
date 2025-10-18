@@ -12,15 +12,15 @@ const Footer = () => {
           <div>
             <h4 className="font-bold mb-4 text-white">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#about" className="text-gray-100 hover:text-white transition-colors">About</a></li>
-              <li><a href="#services" className="text-gray-100 hover:text-white transition-colors">Services</a></li>
-              <li><a href="#contact" className="text-gray-100 hover:text-white transition-colors">Contact</a></li>
+              <li><a href="#about" className="text-gray-100 hover:text-white transition-colors text-sm">About</a></li>
+              <li><a href="#services" className="text-gray-100 hover:text-white transition-colors text-sm">Services</a></li>
+              <li><a href="#contact" className="text-gray-100 hover:text-white transition-colors text-sm">Contact</a></li>
             </ul>
           </div>
           <div>
             <h4 className="font-bold mb-4 text-white">Contact</h4>
-            <p className="text-gray-400">Email: info@eventserve.com</p>
-            <p className="text-gray-400">Phone: (555) 123-4567</p>
+            <p className="text-gray-100 text-sm">Email: info@eventserve.co.za</p>
+            <p className="text-gray-100 text-sm">Phone: (051) 123-4567</p>
           </div>
         </div>
         <hr className="border-t border-primary my-6" />
