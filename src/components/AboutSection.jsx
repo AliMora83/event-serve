@@ -24,7 +24,9 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
-          <div className="bg-gradient-to-br from-primary to-primary/80 h-96 rounded-xl shadow-2xl"></div>
+          <div className="bg-gradient-to-br from-primary to-primary/80 h-96 rounded-xl shadow-2xl flex items-center justify-center">
+            <img src='/assets/EventLogo.png' alt='Event Logo' className='mx-auto my-8 rounded-lg shadow-lg w-64 h-auto' />
+          </div>
         </div>
       </div>
     </section>
