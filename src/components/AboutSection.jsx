@@ -1,5 +1,5 @@
 import React from 'react';
-import EventLogo from '../assets/EventLogo.png';
+import EventsLogo from '../assets/EventsLogo.png';
 
 
 const AboutSection = () => {
@@ -27,7 +27,7 @@ const AboutSection = () => {
             </button>
          <div className="flex justify-center items-center my-8">
               <img
-                src={EventLogo}
+                src={EventsLogo}
                 alt="Event Logo"
                 className="w-48 h-auto rounded-lg shadow-lg"
               />
