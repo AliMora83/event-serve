@@ -1,5 +1,4 @@
 import React from 'react';
-
 const ExperienceStats = () => {
   const stats = [
     { number: '500+', label: 'Events Completed' },
@@ -7,9 +6,8 @@ const ExperienceStats = () => {
     { number: '50+', label: 'Team Members' },
     { number: '10+', label: 'Years Experience' }
   ];
-
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-black">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
@@ -23,5 +21,4 @@ const ExperienceStats = () => {
     </section>
   );
 };
-
 export default ExperienceStats;
