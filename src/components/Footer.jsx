@@ -2,25 +2,25 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-gray-100 py-8 border-t border-gray-700">
+    <footer className="bg-black text-textMain py-8 border-t border-gray-700">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-xl font-bold mb-4 text-white">EventServe</h3>
-            <p className="text-gray-100">Creating memorable events since 2020</p>
+            <p className="text-textMain">Creating memorable events since 2020</p>
           </div>
           <div>
             <h4 className="font-bold mb-4 text-white">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#about" className="text-gray-100 hover:text-white transition-colors text-sm">About</a></li>
-              <li><a href="#services" className="text-gray-100 hover:text-white transition-colors text-sm">Services</a></li>
-              <li><a href="#contact" className="text-gray-100 hover:text-white transition-colors text-sm">Contact</a></li>
+              <li><a href="#about" className="text-textMain hover:text-white transition-colors text-sm">About</a></li>
+              <li><a href="#services" className="text-textMain hover:text-white transition-colors text-sm">Services</a></li>
+              <li><a href="#contact" className="text-textMain hover:text-white transition-colors text-sm">Contact</a></li>
             </ul>
           </div>
           <div>
             <h4 className="font-bold mb-4 text-white">Contact</h4>
-            <p className="text-gray-100 text-sm">Email: info@eventserve.co.za</p>
-            <p className="text-gray-100 text-sm">Phone: (051) 123-4567</p>
+            <p className="text-textMain text-sm">Email: info@eventserve.co.za</p>
+            <p className="text-textMain text-sm">Phone: (051) 123-4567</p>
           </div>
         </div>
         <hr className="border-t border-primary my-6" />
