@@ -11,20 +11,20 @@ const AboutSection = () => {
             </h2>
             <div className="space-y-6 text-lg text-gray-300">
               <p>
-                EventServe specializes in creating <span className="text-red-600 font-semibold">unforgettable experiences</span> that bring your vision to life.
+                EventServe specializes in creating <span className="text-primary font-semibold">unforgettable experiences</span> that bring your vision to life.
               </p>
               <p>
                 From <span className="font-semibold">corporate events</span> to <span className="font-semibold">weddings</span> and private celebrations, our team ensures every detail exceeds expectations.
               </p>
               <p>
-                With over 5 years of experience, we deliver <span className="text-red-600 font-semibold">excellence</span> in event management.
+                With over 5 years of experience, we deliver <span className="text-primary font-semibold">excellence</span> in event management.
               </p>
             </div>
-            <button className="mt-8 bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300">
+            <button className="mt-8 bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300">
               Learn More About Us
             </button>
           </div>
-          <div className="bg-gradient-to-br from-red-600 to-red-800 h-96 rounded-xl shadow-2xl"></div>
+          <div className="bg-gradient-to-br from-primary to-primary/80 h-96 rounded-xl shadow-2xl"></div>
         </div>
       </div>
     </section>
