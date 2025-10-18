@@ -24,7 +24,11 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
-            <img src='/assets/EventLogo.png' alt='Event Logo' className='mx-auto my-8 rounded-lg shadow-lg w-64 h-auto'></img>
+              <img
+                src="/assets/EventLogo.png"
+                alt="Event Logo"
+                className="mx-auto my-8 w-48 h-auto rounded-lg shadow-lg"
+              />
           </div>
         </div>
       </div>
