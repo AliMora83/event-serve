@@ -1,5 +1,5 @@
 import React from 'react';
-import clienteleLogo from '../assets/Events wht blck.png';
+import clienteleLogo from '../assets/EventsLogo.png';
 
 const ClienteleSection = () => {
   return (
@@ -28,7 +28,6 @@ const ClienteleSection = () => {
           </div>
         </div>
       </div>
-
       <style jsx>{`
         .marquee-container {
           width: 100%;
@@ -36,12 +35,11 @@ const ClienteleSection = () => {
         }
 
         .marquee-content {
-          display: inline-block;
-          white-space: nowrap;
-          animation: scroll-left 30s linear infinite;
+          display: flex;
+          animation: marquee 20s linear infinite;
         }
 
-        @keyframes scroll-left {
+        @keyframes marquee {
           0% {
             transform: translateX(0);
           }
