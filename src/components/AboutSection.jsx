@@ -1,4 +1,6 @@
 import React from 'react';
+import EventLogo from '../assets/EventLogo.png';
+
 
 const AboutSection = () => {
   return (
@@ -24,11 +26,12 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
-              <img
-                src="/assets/EventLogo.png"
-                alt="Event Logo"
-                className="mx-auto my-8 w-48 h-auto rounded-lg shadow-lg"
-              />
+             <img
+              src={EventLogo}
+              alt="Event Logo"
+              className="mx-auto my-8 w-48 h-auto rounded-lg shadow-lg"
+            />
+
           </div>
         </div>
       </div>
