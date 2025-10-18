@@ -3,7 +3,7 @@ import clienteleLogo from '../assets/EventsLogo.png';
 
 const ClienteleSection = () => {
   return (
-    <section className="bg-gray-900 py-16 overflow-hidden">
+    <section className="bg-black py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
           Our Global <span className="text-primary">Clients</span>
