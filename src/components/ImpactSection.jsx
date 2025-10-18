@@ -31,16 +31,16 @@ const ImpactSection = () => {
       <div className="max-w-7xl mx-auto">
         {/* Heading with icon and accent */}
         <div className="flex items-center justify-center gap-4 mb-8">
-          <span className="text-red-600 text-4xl">★</span>
+          <span className="text-primary text-4xl">★</span>
           <h2 className="text-5xl font-bold text-white">
             Impact
           </h2>
-          <div className="h-1 w-16 bg-red-600"></div>
+          <div className="h-1 w-16 bg-primary"></div>
         </div>
 
         {/* Main content - left aligned section */}
         <div className="max-w-3xl mb-12">
-          <h3 className="text-3xl text-red-600 mb-6">
+          <h3 className="text-3xl text-primary mb-6">
             Making a Difference Through Every Event
           </h3>
           <p className="text-lg text-gray-300">
@@ -60,7 +60,7 @@ const ImpactSection = () => {
                   <img
                     src={eventsImage}
                     alt={image.alt}
-                    className="w-32 h-32 mx-auto object-cover rounded-full border-4 border-red-600"
+                    className="w-32 h-32 mx-auto object-cover rounded-full border-4 border-primary"
                   />
                 </div>
               ))}
