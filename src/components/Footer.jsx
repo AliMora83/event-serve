@@ -1,4 +1,5 @@
 import React from 'react';
+
 const Footer = () => {
   return (
     <footer className="bg-[#2a1818] text-gray-100 py-8 border-t border-gray-700">
@@ -22,10 +23,11 @@ const Footer = () => {
             <p className="text-gray-400">Phone: (555) 123-4567</p>
           </div>
         </div>
-        <hr className="border-t border-[#F9844A] my-6" />
-        <p className="text-center text-[#F9844A] text-sm">Copyright © 2025 EventServe. All rights reserved.</p>
+        <hr className="border-t border-primary my-6" />
+        <p className="text-center text-primary text-sm">Copyright © 2025 EventServe. All rights reserved.</p>
       </div>
     </footer>
   );
 };
+
 export default Footer;
