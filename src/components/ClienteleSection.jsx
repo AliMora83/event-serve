@@ -6,7 +6,7 @@ const ClienteleSection = () => {
     <section className="bg-gray-900 py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
-          Our Global <span className="text-red-600">Clients</span>
+          Our Global <span className="text-primary">Clients</span>
         </h2>
         
         <div className="relative">
@@ -33,12 +33,10 @@ const ClienteleSection = () => {
           width: 100%;
           overflow: hidden;
         }
-
         .marquee-content {
           display: flex;
           animation: marquee 20s linear infinite;
         }
-
         @keyframes marquee {
           0% {
             transform: translateX(0);
