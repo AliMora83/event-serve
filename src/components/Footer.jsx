@@ -23,6 +23,8 @@ const Footer = () => {
             <p className="text-gray-400">Phone: (555) 123-4567</p>
           </div>
         </div>
+        <hr className="border-t border-white my-6" />
+        <p className="text-center text-white text-sm">Copyright © 2025 EventServe. All rights reserved.</p>
       </div>
     </footer>
   );
