@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import eventsImage from '../assets/Events wht blck.png';
+import eventsImage from '../assets/EventsLogo.png';
 
 const ImpactSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const images = [
     { id: 1, alt: 'Team member 1' },
     { id: 2, alt: 'Team member 2' },
@@ -50,7 +51,7 @@ const ImpactSection = () => {
         {/* Carousel section */}
         <div className="relative">
           <div className="overflow-hidden">
-            <div 
+            <div
               className="flex gap-6 transition-transform duration-300 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * (100 / visibleImages)}%)` }}
             >
@@ -77,6 +78,7 @@ const ImpactSection = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
+
           <button
             onClick={handleNext}
             disabled={currentIndex === maxIndex}
