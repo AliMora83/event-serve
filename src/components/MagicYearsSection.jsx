@@ -6,10 +6,7 @@ const MagicYearsSection = () => {
     <section className="py-16 px-6 bg-black">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          {/* Left Column - Image */}
-          <div className="flex justify-center">
-            <img src={EventsLogo} alt="Event Logo" className="w-96 h-auto rounded-xl shadow-2xl" />
-          </div>
+
           
           {/* Right Column - Text */}
           <div className="space-y-4">
@@ -23,6 +20,10 @@ const MagicYearsSection = () => {
               <span className="text-white"> winning </span>
               <span className="text-primary">120+ awards</span>
             </p>
+          </div>
+          {/* Left Column - Image */}
+          <div className="flex justify-center">
+            <img src={EventsLogo} alt="Event Logo" className="w-96 h-auto rounded-xl shadow-2xl" />
           </div>
         </div>
       </div>
