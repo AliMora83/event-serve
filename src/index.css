@@ -2,55 +2,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
   body {
     @apply font-sans;
   }
-
   h1 {
     @apply font-h1 font-bold;
   }
-
   h2 {
     @apply font-h2 font-bold;
   }
-
   h3 {
     @apply font-h3 font-semibold;
   }
-
   h4 {
     @apply font-h4 font-semibold;
   }
-
   h5 {
     @apply font-h5 font-medium;
   }
-
   h6 {
     @apply font-h6 font-medium;
   }
-
   p {
     @apply font-sans font-normal;
   }
-
   a {
     @apply font-sans font-normal;
   }
 }
-
-/* Vertical Scroll Animation */
-@keyframes vertical-scroll {
+/* Horizontal Scroll Animation */
+@keyframes horizontal-scroll {
   0% {
-    transform: translateY(0);
+    transform: translateX(0);
   }
   100% {
-    transform: translateY(-100%);
+    transform: translateX(-100%);
   }
 }
-
-.animate-vertical-scroll {
-  animation: vertical-scroll 10s linear infinite;
+.animate-horizontal-scroll {
+  animation: horizontal-scroll 20s linear infinite;
 }
