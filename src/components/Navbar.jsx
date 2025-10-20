@@ -1,8 +1,7 @@
 import React from 'react';
-
 const Navbar = () => {
   return (
-    <nav className="bg-black shadow-lg">
+    <nav className="bg-bgMain shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="text-2xl font-bold text-white">
@@ -19,5 +18,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;
