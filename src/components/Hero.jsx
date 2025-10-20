@@ -1,4 +1,5 @@
 import React from 'react';
+
 const Hero = () => {
   return (
     <section className="bg-bgMain text-textMain py-80">
@@ -9,11 +10,14 @@ const Hero = () => {
       
       {/* Horizontal Text Scroller */}
       <div className="overflow-hidden w-full mt-8">
-        <div className="animate-horizontal-scroll whitespace-nowrap">
-          <p className="text-lg text-gray-400 inline-block">Creating Unforgettable Moments for Your Special Events</p>
+        <div className="animate-horizontal-scroll whitespace-nowrap flex">
+          <p className="text-lg text-gray-400 inline-block px-4">Creating Unforgettable Moments for Your Special Events</p>
+          <p className="text-lg text-gray-400 inline-block px-4">Creating Unforgettable Moments for Your Special Events</p>
+          <p className="text-lg text-gray-400 inline-block px-4">Creating Unforgettable Moments for Your Special Events</p>
         </div>
       </div>
     </section>
   );
 };
+
 export default Hero;
