@@ -8,7 +8,8 @@ const AboutSection = () => {
         <div className="items-center">
             <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-lg shadow-lg" />
         </div>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        </div>
+              <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-5xl font-bold mb-8 leading-tight font-bold">
              We do Events
@@ -28,8 +29,6 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
-
-        </div>
       </div>
     </section>
   );
