@@ -2,6 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   body {
     @apply font-sans;
@@ -31,15 +32,17 @@
     @apply font-sans font-normal;
   }
 }
+
 /* Horizontal Scroll Animation */
 @keyframes horizontal-scroll {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-33.333%);
   }
 }
+
 .animate-horizontal-scroll {
   animation: horizontal-scroll 20s linear infinite;
 }
