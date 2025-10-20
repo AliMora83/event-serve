@@ -1,7 +1,7 @@
 import React from 'react';
 const Scroller = () => {
   return (
-    <section className="overflow-hidden w-full mt-8 bg-black flex justify-center items-center">
+    <section className="overflow-hidden w-full bg-black flex justify-center items-center">
       <div className="animate-horizontal-scroll whitespace-nowrap flex text-center">
         <p className="text-3xl text-gray-400 inline-block px-4">Creating Unforgettable Moments for Your Special Events</p>
         <p className="text-3xl text-gray-400 inline-block px-4">Creating Unforgettable Moments for Your Special Events</p>
