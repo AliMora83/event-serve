@@ -61,7 +61,7 @@ const WorkHighlightsSection = () => {
             {visibleImages.map((image) => (
               <div
                 key={image.id}
-                className="aspect-[3/2] overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
+                className="w-full aspect-square bg-primary overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
               >
                 <img
                   src={image.url}
