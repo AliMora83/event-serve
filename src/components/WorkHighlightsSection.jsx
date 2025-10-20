@@ -100,7 +100,7 @@ const WorkHighlightsSection = () => {
                 index === currentIndex ? 'w-8' : ''
               }`}
               style={{
-                backgroundColor: index === currentIndex ? 'primary' : '#666'
+                backgroundColor: index === currentIndex ? '#aa2a3bff' : '#666'
               }}
               aria-label={`Go to page ${index + 1}`}
             />
