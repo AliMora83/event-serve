@@ -15,8 +15,8 @@ const MagicYearsSection = () => {
             </h2>
             <p className="text-2xl font-semibold">
               <span className="text-primary">3000+ experiences</span>
-              <span className="text-white"> in </span>
-              <span className="text-primary">90+ countries</span>
+              <span className="text-white"> in </span> </br>
+              <span className="text-primary">90+ countries</span> </br>
               <span className="text-white"> winning </span>
               <span className="text-primary">120+ awards</span>
             </p>
