@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         primary: '#931e2e',
-        bgMain: '#2a1818',
+        bgMain: '#0F0E0E',
         textMain: '#f3f4f6',
       },
       fontFamily: {
