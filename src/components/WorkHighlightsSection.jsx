@@ -56,20 +56,21 @@ const WorkHighlightsSection = () => {
           </button>
 
           {/* Image Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
             {visibleImages.map((image) => (
               <div
                 key={image.id}
-                className="w-full aspect-square overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
+                className="flex justify-center items-center w-full aspect-square overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
               >
                 <img
                   src={image.url}
                   alt={image.alt}
-                  className="w-48 h-48 object-fit"
+                  className="w-full h-full object-cover"
                 />
               </div>
             ))}
           </div>
+
 
           {/* Right Arrow */}
           <button
