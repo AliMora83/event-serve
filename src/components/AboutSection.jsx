@@ -9,7 +9,7 @@ const AboutSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-5xl font-bold mb-8 leading-tight">
-              <span className="font-bold">We combine</span> creativity and precision
+              <span className="font-bold">XXXX We combine</span> creativity and precision
             </h2>
             <div className="space-y-6 text-lg text-gray-300">
               <p>
