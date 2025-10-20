@@ -65,7 +65,7 @@ const WorkHighlightsSection = () => {
                 <img
                   src={image.url}
                   alt={image.alt}
-                  className="w-full h-full object-cover"
+                  className="w-48 h-48 object-fit"
                 />
               </div>
             ))}
