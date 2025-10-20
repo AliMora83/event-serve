@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import eventsImage from '../assets/sasa-image.jpeg';
+import sasaImage from '../assets/sasa-image.jpeg';
+import eventsImage from '../assets/EventsLogo.png';
 
 const ImpactSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,7 +28,7 @@ const ImpactSection = () => {
   };
 
   return (
-    <section className="relative py-16 px-4 bg-cover bg-center bg-blend-overlay bg-gray-900/90" style={{ backgroundImage: `url(${eventsImage})` }}>
+    <section className="relative py-16 px-4 bg-cover bg-center bg-blend-overlay bg-gray-900/90" style={{ backgroundImage: `url(${sasaImage})` }}>
       <div className="max-w-7xl mx-auto">
         {/* Heading with icon and accent */}
         <div className="flex items-center justify-center gap-4 mb-8">
