@@ -25,7 +25,7 @@ const MagicYearsSection = () => {
           </div>
           {/* Left Column - Image */}
           <div className="flex justify-center">
-            <img src={EventsLogo} alt="Event Logo" className="w-96 h-auto rounded-xl shadow-2xl" />
+            <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-xl shadow-2xl" />
           </div>
         </div>
       </div>
