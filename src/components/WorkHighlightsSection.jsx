@@ -40,8 +40,7 @@ const WorkHighlightsSection = () => {
           {/* Left Arrow */}
           <button
             onClick={handlePrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-            style={{ backgroundColor: '#FF0000' }}
+            className="absolute bg-primary left-0 top-1/2 -translate-y-1/2 -translate-x-6 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
             aria-label="Previous images"
           >
             <svg
@@ -61,7 +60,7 @@ const WorkHighlightsSection = () => {
             {visibleImages.map((image) => (
               <div
                 key={image.id}
-                className="w-full aspect-square bg-primary overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
+                className="w-full aspect-square overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
               >
                 <img
                   src={image.url}
