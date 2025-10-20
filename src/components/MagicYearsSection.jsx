@@ -1,4 +1,5 @@
 import React from 'react';
+import EventsLogo from '../assets/EventsLogo.png';
 
 const MagicYearsSection = () => {
   return (
@@ -7,13 +8,13 @@ const MagicYearsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left Column - Image */}
           <div className="flex justify-center">
-              <div className="bg-gradient-to-br from-primary to-primary/80 h-96 rounded-xl shadow-2xl"></div>
+            <img src={EventsLogo} alt="Event Logo" className="w-96 h-auto rounded-xl shadow-2xl" />
           </div>
           
           {/* Right Column - Text */}
           <div className="space-y-4">
             <h2 className="text-5xl font-bold text-white">
-              40+ years of magic
+              35+ years of excellence
             </h2>
             <p className="text-2xl font-semibold">
               <span className="text-primary">3000+ experiences</span>
