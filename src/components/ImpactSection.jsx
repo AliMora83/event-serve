@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import eventsImage from '../assets/EventsLogo.png';
+import eventsImage from '../assets/sasa-image.jpeg';
 
 const ImpactSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
