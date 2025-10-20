@@ -10,15 +10,17 @@ const MagicYearsSection = () => {
           
           {/* Right Column - Text */}
           <div className="space-y-4">
-            <h2 className="text-5xl font-bold text-white">
+            <h2 className="text-6xl font-bold text-white">
               35+ years of excellence
             </h2>
-            <p className="text-2xl font-semibold">
-              <span className="text-primary">3000+ experiences</span>
-              <span className="text-white"> in </span> <br/>
-              <span className="text-primary">90+ countries</span> <br/>
-              <span className="text-white"> winning </span>
-              <span className="text-primary">120+ awards</span>
+            <p className="text-3xl font-semibold">
+              <span className="text-white">2400+</span> 
+              <span className="text-primary"> experiences in</span> <br/>
+              <span className="text-white">12</span> 
+              <span className="text-primary"> countries, </span>
+              <span className="text-primary"> winning </span> <br/>
+              <span className="text-white">120+</span>
+              <span className="text-primary"> awards.</span>
             </p>
           </div>
           {/* Left Column - Image */}
