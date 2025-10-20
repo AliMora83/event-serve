@@ -13,7 +13,7 @@ const LegacySection = () => {
         
         <div className="grid md:grid-cols-3 gap-12">
           <div className="text-center">
-            <div className="text-5xl font-bold text-white mb-4">500+</div>
+            <div className="text-5xl font-bold text-primary mb-4">500+</div>
             <h3 className="text-2xl font-semibold mb-3">Events Delivered</h3>
             <p className="text-gray-400">
               From intimate gatherings to grand celebrations, we've brought countless visions to life.
@@ -21,7 +21,7 @@ const LegacySection = () => {
           </div>
           
           <div className="text-center">
-            <div className="text-5xl font-bold text-white mb-4">15+</div>
+            <div className="text-5xl font-bold text-primary mb-4">15+</div>
             <h3 className="text-2xl font-semibold mb-3">Years of Excellence</h3>
             <p className="text-gray-400">
               Over a decade of dedication to creating unforgettable moments for our clients.
@@ -29,7 +29,7 @@ const LegacySection = () => {
           </div>
           
           <div className="text-center">
-            <div className="text-5xl font-bold text-white mb-4">98%</div>
+            <div className="text-5xl font-bold text-primary mb-4">98%</div>
             <h3 className="text-2xl font-semibold mb-3">Client Satisfaction</h3>
             <p className="text-gray-400">
               Our commitment to excellence is reflected in the smiles of satisfied clients.
