@@ -74,8 +74,7 @@ const WorkHighlightsSection = () => {
           {/* Right Arrow */}
           <button
             onClick={handleNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
-            style={{ backgroundColor: '#FF0000' }}
+            className="absolute bg-primary right-0 top-1/2 -translate-y-1/2 translate-x-6 z-10 w-12 h-12 rounded-full flex items-center justify-center transition-all hover:scale-110"
             aria-label="Next images"
           >
             <svg
@@ -101,7 +100,7 @@ const WorkHighlightsSection = () => {
                 index === currentIndex ? 'w-8' : ''
               }`}
               style={{
-                backgroundColor: index === currentIndex ? '#FF0000' : '#666'
+                backgroundColor: index === currentIndex ? 'primary' : '#666'
               }}
               aria-label={`Go to page ${index + 1}`}
             />
