@@ -29,11 +29,13 @@ const AboutSection = () => {
         </div>
 
         </div>
+        <div className="items-center">
               <img
                 src={EventsLogo}
                 alt="Event Logo"
                 className="w-48 h-auto rounded-lg shadow-lg"
               ></img>
+              </div>
       </div>
       </div>
     </section>
