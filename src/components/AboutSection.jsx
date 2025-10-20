@@ -1,15 +1,13 @@
 import React from 'react';
 import EventsLogo from '../assets/EventsLogo.png';
-
 const AboutSection = () => {
   return (
-    <section id="about" className="py-40 bg-bgMain text-white">
+    <section className="py-40 bg-bgMain text-white" id="about">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="items-center">
             <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-lg shadow-lg" />
-        </div>
-        </div>
-              <div className="grid md:grid-cols-2 gap-12 items-center">
+          </div>
           <div>
             <h2 className="text-5xl font-bold mb-8 leading-tight font-bold">
              We do Events
@@ -29,9 +27,9 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
+        </div>
       </div>
     </section>
   );
 };
-
 export default AboutSection;
