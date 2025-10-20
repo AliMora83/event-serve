@@ -28,10 +28,10 @@ const WorkHighlightsSection = () => {
   );
 
   return (
-    <section className="py-16 px-6" style={{ backgroundColor: '' }}>
+    <section className="py-16 px-6 bg-bgMain">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
-        <h2 className="text-4xl font-bold text-center mb-12" style={{ color: '' }}>
+        <h2 className="text-4xl text-white font-bold text-center mb-12">
           Work Highlights
         </h2>
 

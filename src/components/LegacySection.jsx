@@ -1,9 +1,14 @@
 import React from 'react';
+import bgImg from '../assets/sasa-image.jpeg';
+
 
 const LegacySection = () => {
   return (
-    <section className="py-20 bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4">
+        <section className=" py-20 bg-black text-white">
+      {/* Background Image Layer */}
+ 
+        {/* Content Layer */}
+       
         <div className="text-center mb-16">
           <h2 className="text-5xl font-bold mb-6">Our Legacy</h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -43,7 +48,6 @@ const LegacySection = () => {
             Our legacy is built on trust, quality, and the unwavering dedication to make every event special."
           </p>
         </div>
-      </div>
     </section>
   );
 };
