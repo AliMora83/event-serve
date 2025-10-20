@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import Scroller from '../components/Scroller';
 import AboutSection from '../components/AboutSection';
 import LegacySection from '../components/LegacySection';
 import MagicYearsSection from '../components/MagicYearsSection';
@@ -18,6 +19,7 @@ const Home = () => {
       <>
         <Navbar />
         <Hero />
+        <Scroller />
         <AboutSection />
         <LegacySection />
         <MagicYearsSection />
