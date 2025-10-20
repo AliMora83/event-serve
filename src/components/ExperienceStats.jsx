@@ -7,7 +7,7 @@ const ExperienceStats = () => {
     { number: '10+', label: 'Years Experience' }
   ];
   return (
-    <section className="py-16 bg-black">
+    <section className="py-16 bg-bgMain">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
