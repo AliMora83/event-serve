@@ -29,9 +29,9 @@ const ImpactSection = () => {
 
   return (
     <section className="relative py-16 px-4 bg-cover bg-center bg-blend-overlay bg-gray-900/50" style={{ backgroundImage: `url(${sasaImage})` }}>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl">
         {/* Heading with icon and accent */}
-        <div className="flex justify-center gap-4 mb-8">
+        <div className="flex items-center justify-center gap-4 mb-8">
           <span className="text-primary text-4xl">★</span>
           <h2 className="text-5xl font-bold text-white">
             Impact
