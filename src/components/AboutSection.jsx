@@ -9,7 +9,7 @@ const AboutSection = () => {
             <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-lg shadow-lg" />
           </div>
           <div>
-            <h2 className="text-5xl font-bold mb-8 leading-tight font-bold">
+            <h2 className="text-5xl font-bold mb-8 leading-tight font-bold uppercase">
              We do Events
             </h2>
             <div className="space-y-6 text-lg text-gray-300">
