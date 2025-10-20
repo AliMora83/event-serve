@@ -5,10 +5,13 @@ const AboutSection = () => {
   return (
     <section id="about" className="py-40 bg-bgMain text-white">
       <div className="max-w-7xl mx-auto px-4">
+        <div className="items-center">
+            <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-lg shadow-lg" />
+        </div>
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-5xl font-bold mb-8 leading-tight font-bold">
-             We do Events!!!
+             We do Events
             </h2>
             <div className="space-y-6 text-lg text-gray-300">
               <p>
@@ -25,9 +28,7 @@ const AboutSection = () => {
               Learn More About Us
             </button>
           </div>
-          <div className="items-center">
-            <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-lg shadow-lg" />
-          </div>
+
         </div>
       </div>
     </section>
