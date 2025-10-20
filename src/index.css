@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,36 +7,42 @@
   body {
     @apply font-sans;
   }
-
   h1 {
     @apply font-h1 font-bold;
   }
-
   h2 {
     @apply font-h2 font-bold;
   }
-
   h3 {
     @apply font-h3 font-semibold;
   }
-
   h4 {
     @apply font-h4 font-semibold;
   }
-
   h5 {
     @apply font-h5 font-medium;
   }
-
   h6 {
     @apply font-h6 font-medium;
   }
-
   p {
     @apply font-body font-normal;
   }
-
   a {
     @apply font-body font-normal;
   }
+}
+
+/* Vertical Scroll Animation */
+@keyframes vertical-scroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-vertical-scroll {
+  animation: vertical-scroll 10s linear infinite;
 }
