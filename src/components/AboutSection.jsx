@@ -7,8 +7,8 @@ const AboutSection = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-5xl font-bold mb-8 leading-tight">
-              <span className="font-bold">We combine</span> creativity and precision
+            <h2 className="text-5xl font-bold mb-8 leading-tight font-bold">
+             We do Events!!!
             </h2>
             <div className="space-y-6 text-lg text-gray-300">
               <p>
