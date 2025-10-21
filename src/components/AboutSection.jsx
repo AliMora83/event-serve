@@ -27,7 +27,7 @@ const AboutSection = () => {
           />
           
           {/* Content Overlay */}
-          <div className="relative z-10" style={{ gridColumn: '1 / -1' }}>
+          <div className="relative z-10 bg-black/90" style={{ gridColumn: '1 / -1' }}>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 {/* Empty space for layout balance */}
