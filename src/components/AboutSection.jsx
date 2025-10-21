@@ -28,11 +28,11 @@ const AboutSection = () => {
           
           {/* Content Overlay */}
           <div className="relative z-10" style={{ gridColumn: '1 / -1' }}>
-            <div className="grid md:grid-cols-2 gap-12 items-center bg-black/90">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 {/* Empty space for layout balance */}
               </div>
-              <div>
+              <div className="bg-black/60">
                 <h2 className="text-5xl font-bold mb-8 leading-tight font-bold uppercase">
                   We do Events
                 </h2>
