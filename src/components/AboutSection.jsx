@@ -6,7 +6,16 @@ const AboutSection = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="items-center">
-            <img src={EventsLogo} alt="Event Logo" className="w-48 h-auto rounded-lg shadow-lg" />
+            <iframe
+              src='https://www.youtube.com/embed/EhmIfUMwf68?autoplay=1&loop=1&mute=1&playlist=EhmIfUMwf68'
+              width={340}
+              height={190}
+              title='KB Motsilanyane - Rock Lefatshe'
+              frameBorder={0}
+              allow='autoplay; encrypted-media'
+              allowFullScreen
+              style={{ borderRadius: '12px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}
+            />
           </div>
           <div>
             <h2 className="text-5xl font-bold mb-8 leading-tight font-bold uppercase">
