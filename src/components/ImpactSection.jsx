@@ -30,8 +30,8 @@ const ImpactSection = () => {
   return (
     <section className="relative py-16 px-4">
       {/* Background image with effects - positioned absolutely behind content */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-black/90"
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-black/50"
         style={{
           backgroundImage: `url(${sasaImage})`,
           filter: 'grayscale(100%)',
@@ -70,7 +70,11 @@ const ImpactSection = () => {
               style={{ transform: `translateX(-${currentIndex * (100 / visibleImages)}%)` }}
             >
               {images.map((image) => (
-                <div key={image.id} className="flex-shrink-0" style={{ width: `calc(${100 / visibleImages}% - 20px)` }}>
+                <div
+                  key={image.id}
+                  className="flex-shrink-0"
+                  style={{ width: `${100 / visibleImages}%` }}
+                >
                   <img
                     src={eventsImage}
                     alt={image.alt}
