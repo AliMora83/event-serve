@@ -3,7 +3,7 @@ import EventsLogo from '../assets/EventsLogo.png';
 
 const AboutSection = () => {
   return (
-    <section className="py-40 bg-bgMain text-white" id="about">
+    <section className="py-40 bg-black text-white" id="about">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center relative" style={{ minHeight: '500px' }}>
           {/* Background Video */}
