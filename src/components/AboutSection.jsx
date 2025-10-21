@@ -27,8 +27,8 @@ const AboutSection = () => {
           />
           
           {/* Content Overlay */}
-          <div className="relative z-10 bg-black/90" style={{ gridColumn: '1 / -1' }}>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10" style={{ gridColumn: '1 / -1' }}>
+            <div className="grid md:grid-cols-2 gap-12 items-center bg-black/90">
               <div>
                 {/* Empty space for layout balance */}
               </div>
@@ -38,7 +38,7 @@ const AboutSection = () => {
                 </h2>
                 <div className="space-y-6 text-lg text-gray-300">
                   <p>
-                    EventServe specializes in creating <span className="text-primary font-semibold">unforgettable experiences</span> that bring your vision to life.
+                    EventServe specializes in creating <span className="text-primary font-semibold">unforgettable experiences</span> <br/> that bring your vision to life.
                   </p>
                   
                 </div>
