@@ -31,13 +31,22 @@ const ImpactSection = () => {
     <section className="relative py-16 px-4">
       {/* Background image with effects - positioned absolutely behind content */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-black/50"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url(${sasaImage})`,
           filter: 'grayscale(100%)',
           mixBlendMode: 'multiply',
           backgroundAttachment: 'fixed',
           zIndex: 0
+        }}
+      />
+      
+      {/* Dark overlay for better text contrast */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          zIndex: 1
         }}
       />
       
