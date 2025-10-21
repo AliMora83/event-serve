@@ -28,8 +28,21 @@ const ImpactSection = () => {
   };
 
   return (
-    <section className="relative py-16 px-4 bg-cover bg-center bg-blend-overlay bg-black/90" style={{ backgroundImage: `url(${sasaImage})`, filter: 'grayscale(100%)', mixBlendMode: 'multiply', backgroundAttachment: 'fixed' }}>
-      <div className="max-w-7xl mx-auto">
+    <section className="relative py-16 px-4">
+      {/* Background image with effects - positioned absolutely behind content */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-black/90"
+        style={{
+          backgroundImage: `url(${sasaImage})`,
+          filter: 'grayscale(100%)',
+          mixBlendMode: 'multiply',
+          backgroundAttachment: 'fixed',
+          zIndex: 0
+        }}
+      />
+      
+      {/* Content container - positioned relative above background */}
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Heading with icon and accent */}
         <div className="flex items-center justify-start gap-4 mb-8">
           <span className="text-primary text-4xl">★</span>
