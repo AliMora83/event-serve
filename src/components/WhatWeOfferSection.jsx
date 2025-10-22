@@ -25,7 +25,7 @@ const WhatWeOfferSection = () => {
           mixBlendMode: 'multiply',
           backgroundAttachment: 'fixed',
           zIndex: 0,
-          opacity: 0.25
+          opacity: 0.4
         }}
         aria-hidden="true"
       />
