@@ -22,10 +22,10 @@ const WhatWeOfferSection = () => {
         style={{
           backgroundImage: `url(${bgImage})`,
           filter: 'grayscale(100%)',
-          mixBlendMode: 'multiply',
+          mixBlendMode: 'screen',
           backgroundAttachment: 'fixed',
           zIndex: 0,
-          opacity: 0.4
+          opacity: 0.5
         }}
         aria-hidden="true"
       />
