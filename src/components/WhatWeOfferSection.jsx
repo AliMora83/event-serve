@@ -14,7 +14,7 @@ const WhatWeOfferSection = () => {
   ];
 
   return (
-    <section className="py-20 px-6 bg-black">
+    <section className="py-20 px-6">
      {/* Background image with effects - positioned absolutely behind content */}
       <div
         className="absolute inset-0 bg-cover bg-center"
