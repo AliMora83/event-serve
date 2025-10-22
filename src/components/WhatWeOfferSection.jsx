@@ -1,4 +1,5 @@
 import React from 'react';
+import bgImage from '../assets/bg-01.jpg';
 
 const WhatWeOfferSection = () => {
   const offers = [
@@ -14,6 +15,17 @@ const WhatWeOfferSection = () => {
 
   return (
     <section className="py-20 px-6 bg-black">
+     {/* Background image with effects - positioned absolutely behind content */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          filter: 'grayscale(100%)',
+          mixBlendMode: 'multiply',
+          backgroundAttachment: 'fixed',
+          zIndex: 0
+        }}
+      />
       <div className="max-w-7xl mx-auto">
         {/* Section Heading */}
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
