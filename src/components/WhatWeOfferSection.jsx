@@ -24,7 +24,8 @@ const WhatWeOfferSection = () => {
           filter: 'grayscale(100%)',
           mixBlendMode: 'multiply',
           backgroundAttachment: 'fixed',
-          zIndex: 0
+          zIndex: 0,
+          opacity: 0.25
         }}
         aria-hidden="true"
       />
