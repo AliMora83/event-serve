@@ -16,7 +16,7 @@ const WhatWeOfferSection = () => {
   ];
 
   return (
-    <section className="py-20 px-6 relative overflow-hidden">
+    <section className="py-20 px-6 relative overflow-hidden bg-black">
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
         style={{
