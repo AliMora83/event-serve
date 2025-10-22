@@ -8,7 +8,6 @@ import MagicYearsSection from '../components/MagicYearsSection';
 import WorkHighlightsSection from '../components/WorkHighlightsSection';
 import WhatWeOfferSection from '../components/WhatWeOfferSection';
 import ClienteleSection from '../components/ClienteleSection';
-import ExperienceStats from '../components/ExperienceStats';
 import ClientsTestimonials from '../components/ClientsTestimonials';
 import ImpactSection from '../components/ImpactSection';
 import ContactSection from '../components/ContactSection';
@@ -26,7 +25,6 @@ const Home = () => {
         <WorkHighlightsSection />
         <WhatWeOfferSection />
         <ClienteleSection />
-        <ExperienceStats />
         <ClientsTestimonials />
         <ImpactSection />
         <ContactSection />
