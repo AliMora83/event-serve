@@ -1,7 +1,7 @@
 import React from 'react';
 import EventsLogo from '../assets/EventsLogo.png';
 import Lottie from 'lottie-react';
-import chooseYourColors from '../assets/choose-your-colors.json';
+import heartAnimation from '../assets/heart-animation.json';
 
 
 const MagicYearsSection = () => {
@@ -29,7 +29,7 @@ const MagicYearsSection = () => {
           {/* Left Column - Image */}
           <div className="flex justify-center">
             <Lottie
-              animationData={chooseYourColors}
+              animationData={heartAnimation}
               loop
               style={{ width: 220, height: 220 }}
             />          </div>
