@@ -1,5 +1,7 @@
 import React from 'react';
 import bgImage from '../assets/bg-01.jpg';
+import screenGif from '../assets/screen.gif';
+import recordGif from '../assets/record.gif';
 
 const WhatWeOfferSection = () => {
   const offers = [
@@ -15,7 +17,6 @@ const WhatWeOfferSection = () => {
 
   return (
     <section className="py-20 px-6 relative overflow-hidden">
-      {/* Background image with effects - positioned absolutely behind content */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
         style={{
@@ -28,22 +29,20 @@ const WhatWeOfferSection = () => {
         aria-hidden="true"
       />
       <div className="relative max-w-7xl mx-auto z-10">
-        {/* Section Heading */}
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
           <span className="text-white">What We </span>
           <span className="text-primary">Offer</span>
         </h2>
-        {/* Offers Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {offers.map((offer) => (
+          {offers.map((offer, idx) => (
             <div key={offer.id} className="flex flex-col items-center text-center">
-              {/* Circle Icon */}
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300">
-                <svg className="w-12 h-12 md:w-16 md:h-16 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300 overflow-hidden">
+                <img
+                  src={idx < 4 ? screenGif : recordGif}
+                  alt={idx < 4 ? "Screen Gif" : "Record Gif"}
+                  className="object-contain w-16 h-16 md:w-24 md:h-24"
+                />
               </div>
-              {/* Label */}
               <p className="text-white text-sm md:text-base font-medium">
                 {offer.label}
               </p>
