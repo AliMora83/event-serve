@@ -45,7 +45,7 @@ const ImpactSection = () => {
       <div
         className="absolute inset-0"
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
           zIndex: 1
         }}
       />
