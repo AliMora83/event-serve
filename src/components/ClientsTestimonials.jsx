@@ -8,13 +8,13 @@ const ClientsTestimonials = () => {
   return (
     <section className="py-16 bg-bgLight">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12 text-textMain">What Our Clients Say</h2>
+        <h2 className="text-4xl font-bold text-center mb-12 text-bgMain">What Our Clients Say</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <div key={index} className="bg-bgLight p-6 rounded-lg shadow-md">
-              <p className="text-textMain mb-4">"{testimonial.text}"</p>
-              <div className="font-bold text-textMain">{testimonial.name}</div>
-              <div className="text-sm text-textMain">{testimonial.company}</div>
+              <p className="text-bgMain mb-4">"{testimonial.text}"</p>
+              <div className="font-bold text-bgMain">{testimonial.name}</div>
+              <div className="text-sm text-bgMain">{testimonial.company}</div>
             </div>
           ))}
         </div>
