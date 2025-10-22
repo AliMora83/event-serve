@@ -4,7 +4,7 @@ import Logo from '../assets/Events-01-07.png';
 const Navbar = () => {
   return (
     <nav className="bg-bgMain shadow-lg">
-      <div className="max-w-7xl mx-14 px-4">
+      <div className="max-w-7xl mx-auto py-4 px-8">
         <div className="flex justify-between items-center h-16">
           <div className="text-2xl font-bold text-white">
           <img 
