@@ -8,7 +8,16 @@ const ClientsTestimonials = () => {
   ];
 
   return (
-    <section className="py-16 bg-bgLight">
+    <section 
+      className="py-16"
+  style={{
+    background: "linear-gradient(135deg, rgb(217,211,211) 0%, rgb(255,255,255) 50%, rgb(229,210,210) 100%)"
+  }}
+>  className="py-16"
+  style={{
+    background: "linear-gradient(135deg, rgb(217,211,211) 0%, rgb(255,255,255) 50%, rgb(229,210,210) 100%)"
+  }}
+>
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-12 text-bgMain">
           What Our Clients Say
