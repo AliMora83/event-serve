@@ -9,6 +9,7 @@ export default {
       colors: {
         primary: '#aa2a3bff',
         bgMain: '#0F0E0E',
+        bgLight: '#f2f2f2',
         textMain: '#f3f4f6',
       },
       fontFamily: {
