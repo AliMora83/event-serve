@@ -10,7 +10,7 @@ const Navbar = () => {
           <img 
             src={Logo} 
             alt="EventServe Logo" 
-            className="h-40 w-auto" // adjust height as needed
+            className="h-20 w-auto" // adjust height as needed
           />
           </div>
           <div className="hidden md:flex space-x-8">
