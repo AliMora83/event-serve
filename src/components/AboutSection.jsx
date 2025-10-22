@@ -1,5 +1,7 @@
 import React from 'react';
 import EventsLogo from '../assets/EventsLogo.png';
+import Lottie from 'lottie-react';
+import playBut from '../assets/galaxy-play.json';
 
 const AboutSection = () => {
   return (
@@ -29,9 +31,13 @@ const AboutSection = () => {
           {/* Content Overlay */}
           <div className="relative z-10" style={{ gridColumn: '1 / -1' }}>
             <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                {/* Empty space for layout balance */}
-              </div>
+          {/* Left Column - Image */}
+          <div className="flex justify-center">
+            <Lottie
+              animationData={playBut}
+              loop
+              style={{ width: 220, height: 220 }}
+            />          </div>
               <div className="bg-black/60">
                 <h2 className="text-5xl font-bold mb-8 leading-tight font-bold uppercase">
                   We do Events
