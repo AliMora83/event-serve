@@ -1,4 +1,6 @@
 import React from 'react';
+import { GradFlow, PRESETS } from "gradflow";
+
 
 const ClientsTestimonials = () => {
   const testimonials = [
@@ -8,8 +10,20 @@ const ClientsTestimonials = () => {
   ];
 
   return (
-    <section className="py-24 bg-bgLight">
-      <div className="max-w-7xl mx-auto px-4">
+    <section style={{ position: "relative", overflow: "hidden" }}>
+  <GradFlow
+  config={{
+        color1: { r: 217, g: 211, b: 211 },
+        color2: { r: 255, g: 255, b: 255 },
+        color3: { r: 229, g: 210, b: 210 },
+        speed: 0.6,
+        scale: 2,
+        type: 'animated',
+        noise: 0.18
+      }}
+    config={PRESETS.cosmic} // or choose/customize a preset
+  />
+      <div className="relative z-10 max-w-7xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-12 text-bgMain">
           What Our Clients Say
         </h2>
