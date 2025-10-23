@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { GradFlow } from 'gradflow';       // <--- Import GradFlow!
 import eventsImage from '../assets/EventsLogo.png';
 
 const WorkHighlightsSection = () => {
@@ -28,13 +29,37 @@ const WorkHighlightsSection = () => {
   );
 
   return (
-    <section className="py-16 px-6 bg-bgMain">
-      <div className="max-w-7xl mx-auto">
+    // Make sure section is relative & hidden overflow!
+    <section style={{ position: "relative", overflow: "hidden" }} className="py-16 px-6 bg-bgMain">
+      {/* ---- Gradient Background Layer ---- */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none"
+        }}
+      >
+        <GradFlow
+          config={{
+            color1: { r: 217, g: 211, b: 211 },
+            color2: { r: 255, g: 255, b: 255 },
+            color3: { r: 229, g: 210, b: 210 },
+            speed: 0.6,
+            scale: 2,
+            type: 'animated',
+            noise: 0.18
+          }}
+        />
+      </div>
+      {/* ---- Foreground Content Layer ---- */}
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Heading */}
         <h2 className="text-4xl text-white font-bold text-center mb-12">
           Work Highlights
         </h2>
-
         {/* Image Grid with Navigation */}
         <div className="relative">
           {/* Left Arrow */}
@@ -54,24 +79,17 @@ const WorkHighlightsSection = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
           </button>
-
           {/* Image Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
             {visibleImages.map((image) => (
               <div
                 key={image.id}
-                className="flex justify-center items-center w-full aspect-square overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow"
+                className="rounded-xl overflow-hidden"
               >
-                <img
-                  src={image.url}
-                  alt={image.alt}
-                  className="w-48 h-48 object-fit"
-                />
+                <img src={image.url} alt={image.alt} className="w-full h-auto" />
               </div>
             ))}
           </div>
-
-
           {/* Right Arrow */}
           <button
             onClick={handleNext}
@@ -90,20 +108,14 @@ const WorkHighlightsSection = () => {
             </svg>
           </button>
         </div>
-
-        {/* Pagination Dots */}
+        {/* Dot Navigation */}
         <div className="flex justify-center mt-8 gap-2">
-          {Array.from({ length: totalPages }).map((_, index) => (
+          {[...Array(totalPages)].map((_, i) => (
             <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentIndex ? 'w-8' : ''
-              }`}
-              style={{
-                backgroundColor: index === currentIndex ? '#aa2a3bff' : '#666'
-              }}
-              aria-label={`Go to page ${index + 1}`}
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`w-4 h-4 rounded-full ${i === currentIndex ? 'bg-primary' : 'bg-gray-400/50'} transition-all`}
+              aria-label={`Go to page ${i + 1}`}
             />
           ))}
         </div>
