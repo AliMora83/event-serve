@@ -8,6 +8,15 @@
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- Hidden static Netlify form for build-time detection -->
+    <form name="contact" netlify hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+
