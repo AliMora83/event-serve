@@ -51,7 +51,7 @@ const ClientsTestimonials = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <div key={index} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-              <p className="text-bgMain mb-4">{testimonial.text}</p>
+              <p className="text-gray-700/70 mb-4">{testimonial.text}</p>
               <div className="font-bold text-bgMain">{testimonial.name}</div>
               <div className="text-sm text-bgMain">{testimonial.company}</div>
             </div>
