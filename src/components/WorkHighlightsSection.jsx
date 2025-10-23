@@ -44,14 +44,14 @@ const WorkHighlightsSection = () => {
       >
         <GradFlow
           config={{
-            color1: { r: 217, g: 211, b: 211 },
-            color2: { r: 255, g: 255, b: 255 },
-            color3: { r: 229, g: 210, b: 210 },
-            speed: 0.6,
-            scale: 2,
-            type: 'animated',
-            noise: 0.18
-          }}
+                  color1: { r: 98, g: 19, b: 19 },
+                  color2: { r: 0, g: 0, b: 0 },
+                  color3: { r: 59, g: 7, b: 7 },
+                  speed: 0.9,
+                  scale: 2,
+                  type: 'smoke',
+                  noise: 0.18
+                }}
         />
       </div>
       {/* ---- Foreground Content Layer ---- */}
