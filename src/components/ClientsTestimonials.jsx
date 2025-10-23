@@ -14,7 +14,7 @@ const ClientsTestimonials = () => {
       text: 'Our wedding was perfect thanks to the EventServe team!',
     },
     {
-      name: 'Mk Brown',
+      name: 'Mkuseli Brown',
       company: 'Local Business',
       text: 'Professional service from start to finish. Will definitely use again.',
     },
