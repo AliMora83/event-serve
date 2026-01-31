@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import Lottie from 'lottie-react';
 import bgImage from '../assets/bg-01.jpg';
 import screenGif from '../assets/screen.gif';
 import recordGif from '../assets/record.gif';
+import cameraAnimation from '../assets/wired-outline-61-camera-in-reveal.json';
 
 const WhatWeOfferSection = () => {
+  const [isHovering, setIsHovering] = useState(false);
+  const lottieRef = useRef();
+
   const offers = [
     { id: 1, label: 'Event Production' },
     { id: 2, label: 'Virtual & Hybrid Experiences' },
@@ -14,6 +19,20 @@ const WhatWeOfferSection = () => {
     { id: 7, label: 'Video Production' },
     { id: 8, label: 'Digital & Mobile Technology' }
   ];
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    if (lottieRef.current) {
+      lottieRef.current.goToAndPlay(0, true); // Restart from beginning on hover
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (lottieRef.current) {
+      lottieRef.current.goToAndStop(lottieRef.current.totalFrames - 1, true); // Go to last frame (completed icon)
+    }
+  };
 
   return (
     <section className="py-20 px-6 relative overflow-hidden bg-black">
@@ -37,12 +56,33 @@ const WhatWeOfferSection = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {offers.map((offer, idx) => (
             <div key={offer.id} className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300 overflow-hidden">
-                <img
-                  src={idx < 4 ? screenGif : recordGif}
-                  alt={idx < 4 ? "Screen Gif" : "Record Gif"}
-                  className="object-contain w-16 h-16 md:w-24 md:h-24"
-                />
+              <div
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300 overflow-hidden"
+                onMouseEnter={idx === 5 ? handleMouseEnter : undefined}
+                onMouseLeave={idx === 5 ? handleMouseLeave : undefined}
+              >
+                {idx === 5 ? (
+                  <Lottie
+                    lottieRef={lottieRef}
+                    animationData={cameraAnimation}
+                    loop={false}
+                    autoplay={false}
+                    initialSegment={[cameraAnimation.op - 1, cameraAnimation.op - 1]}
+                    className="w-16 h-16 md:w-24 md:h-24 scale-90"
+                    onDOMLoaded={() => {
+                      // Ensure it starts at the last frame (completed icon)
+                      if (lottieRef.current) {
+                        lottieRef.current.goToAndStop(lottieRef.current.totalFrames - 1, true);
+                      }
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={idx < 4 ? screenGif : recordGif}
+                    alt={idx < 4 ? "Screen Gif" : "Record Gif"}
+                    className="object-contain w-16 h-16 md:w-24 md:h-24"
+                  />
+                )}
               </div>
               <p className="text-white text-sm md:text-base font-medium">
                 {offer.label}
