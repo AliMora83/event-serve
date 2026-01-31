@@ -23,14 +23,14 @@ const WhatWeOfferSection = () => {
   const handleMouseEnter = () => {
     setIsHovering(true);
     if (lottieRef.current) {
-      lottieRef.current.goToAndPlay(0, true); // Restart from beginning on hover
+      lottieRef.current.playSegments([100, 190], true); // Play hover flash animation
     }
   };
 
   const handleMouseLeave = () => {
     setIsHovering(false);
     if (lottieRef.current) {
-      lottieRef.current.goToAndStop(lottieRef.current.totalFrames - 1, true); // Go to last frame (completed icon)
+      lottieRef.current.playSegments([89, 89], true); // Reset to static frame
     }
   };
 
@@ -67,14 +67,8 @@ const WhatWeOfferSection = () => {
                     animationData={cameraAnimation}
                     loop={false}
                     autoplay={false}
-                    initialSegment={[cameraAnimation.op - 1, cameraAnimation.op - 1]}
+                    initialSegment={[89, 89]}
                     className="w-16 h-16 md:w-24 md:h-24 scale-90"
-                    onDOMLoaded={() => {
-                      // Ensure it starts at the last frame (completed icon)
-                      if (lottieRef.current) {
-                        lottieRef.current.goToAndStop(lottieRef.current.totalFrames - 1, true);
-                      }
-                    }}
                   />
                 ) : (
                   <img
