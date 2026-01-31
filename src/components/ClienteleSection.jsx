@@ -1,29 +1,43 @@
 import React from 'react';
-import clienteleLogo from '../assets/EventsLogo.png';
+import deptSportLogo from '../assets/events_logos/Dept_sport.png';
+import kuduLogo from '../assets/events_logos/KUDU.png';
+import netballLogo from '../assets/events_logos/Netball.png';
+import sabcLogo from '../assets/events_logos/SABC.png';
+import safaLogo from '../assets/events_logos/SAFA.png';
+import sasaLogo from '../assets/events_logos/SASA.png';
 
 const ClienteleSection = () => {
+  const clients = [
+    { name: 'Dept Sport', logo: deptSportLogo },
+    { name: 'KUDU', logo: kuduLogo },
+    { name: 'Netball', logo: netballLogo },
+    { name: 'SABC', logo: sabcLogo },
+    { name: 'SAFA', logo: safaLogo },
+    { name: 'SASA', logo: sasaLogo },
+  ];
+
+  // Duplicate clients for seamless scrolling
+  const marqueeClients = [...clients, ...clients, ...clients, ...clients];
+
   return (
     <section className="bg-black py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
           Our Global <span className="text-primary">Clients</span>
         </h2>
-        
+
         <div className="relative">
           <div className="marquee-container">
             <div className="marquee-content">
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
-              <img src={clienteleLogo} alt="Client Logo" className="h-24 mx-8 inline-block" />
+              {marqueeClients.map((client, index) => (
+                <div key={`${client.name}-${index}`} className="flex items-center justify-center mx-16 min-w-[150px]">
+                  <img
+                    src={client.logo}
+                    alt={`${client.name} Logo`}
+                    className="h-24 max-w-[200px] object-contain rounded-lg transition-opacity duration-300"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

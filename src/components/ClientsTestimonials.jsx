@@ -1,5 +1,5 @@
 import React from 'react';
-import { GradFlow } from 'gradflow';
+
 
 const ClientsTestimonials = () => {
   const testimonials = [
@@ -19,33 +19,12 @@ const ClientsTestimonials = () => {
       text: 'Professional service from start to finish. Will definitely use again.',
     },
   ];
-  
+
   return (
-    <section style={{ position: "relative", overflow: "hidden" }}>
-      {/* Gradient background: absolutely positioned and stretched */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        zIndex: 0,
-        width: "100%",
-        height: "100%",
-        pointerEvents: "none"
-      }}>
-        <GradFlow
-          config={{
-            color1: { r: 217, g: 211, b: 211 },
-            color2: { r: 255, g: 255, b: 255 },
-            color3: { r: 229, g: 210, b: 210 },
-            speed: 0.6,
-            scale: 2,
-            type: 'animated',
-            noise: 0.18
-          }}
-        />
-      </div>
-      {/* Content above gradient */}
+    <section className="bg-black relative overflow-hidden">
+      {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-24">
-        <h2 className="text-4xl font-bold text-center mb-12 text-bgMain">
+        <h2 className="text-4xl font-bold text-center mb-12 text-white">
           What Our Clients Say
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
