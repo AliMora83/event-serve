@@ -40,7 +40,7 @@ const ImpactSection = () => {
           zIndex: 0
         }}
       />
-      
+
       {/* Dark overlay for better text contrast */}
       <div
         className="absolute inset-0"
@@ -49,7 +49,7 @@ const ImpactSection = () => {
           zIndex: 1
         }}
       />
-      
+
       {/* Content container - positioned relative above background */}
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Heading with icon and accent */}
@@ -71,52 +71,6 @@ const ImpactSection = () => {
           </p>
         </div>
 
-        {/* Carousel section */}
-        <div className="relative">
-          <div className="overflow-hidden">
-            <div
-              className="flex gap-6 transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * (100 / visibleImages)}%)` }}
-            >
-              {images.map((image) => (
-                <div
-                  key={image.id}
-                  className="flex-shrink-0"
-                  style={{ width: `${100 / visibleImages}%` }}
-                >
-                  <img
-                    src={eventsImage}
-                    alt={image.alt}
-                    className="w-32 h-32 mx-auto object-cover rounded-full border-4 border-primary"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation arrows */}
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed text-white p-3 rounded-full transition-all"
-            aria-label="Previous images"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            onClick={handleNext}
-            disabled={currentIndex === maxIndex}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed text-white p-3 rounded-full transition-all"
-            aria-label="Next images"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
       </div>
     </section>
   );
