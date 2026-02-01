@@ -8,7 +8,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="py-16 px-6 bg-bgMain">
+    <section id="contact" className="py-16 px-6 bg-bgMain">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-4xl font-bold text-center mb-8 text-white">
           Contact Us

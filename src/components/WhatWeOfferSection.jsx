@@ -45,7 +45,7 @@ const OfferItem = ({ offer, index }) => {
   return (
     <div className="flex flex-col items-center text-center">
       <div
-        className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300 overflow-hidden"
+        className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-800 border-2 border-gray-700 flex items-center justify-center mb-4 hover:border-primary transition-colors duration-300 overflow-hidden"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -56,7 +56,7 @@ const OfferItem = ({ offer, index }) => {
             loop={false}
             autoplay={false}
             initialSegment={offer.initialSegment}
-            className="w-16 h-16 md:w-24 md:h-24 scale-90"
+            className="w-12 h-12 md:w-20 md:h-20 scale-90"
             style={offer.style}
             onDOMLoaded={() => {
               // Set initial frame to last frame (completed icon) for animations without custom initialSegment
@@ -69,7 +69,7 @@ const OfferItem = ({ offer, index }) => {
           <img
             src={offer.image}
             alt={`${offer.label} icon`}
-            className="object-contain w-16 h-16 md:w-24 md:h-24"
+            className="object-contain w-12 h-12 md:w-20 md:h-20"
           />
         )}
       </div>
@@ -128,7 +128,7 @@ const WhatWeOfferSection = () => {
   ];
 
   return (
-    <section className="py-20 px-6 relative overflow-hidden bg-black">
+    <section id="services" className="py-20 px-6 relative overflow-hidden bg-black">
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
         style={{
