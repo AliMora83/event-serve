@@ -1,4 +1,3 @@
-import React from 'react';
 import deptSportLogo from '../assets/events_logos/Dept_sport.png';
 import kuduLogo from '../assets/events_logos/KUDU.png';
 import netballLogo from '../assets/events_logos/Netball.png';
@@ -23,7 +22,7 @@ const ClienteleSection = () => {
     <section className="bg-black py-16 overflow-hidden">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white">
-          Our Global <span className="text-primary">Clients</span>
+          Organizations We&apos;re Proud to Have <span className="text-primary">Served</span>
         </h2>
 
         <div className="relative">
@@ -42,14 +41,14 @@ const ClienteleSection = () => {
           </div>
         </div>
       </div>
-      <style jsx>{`
+      <style>{`
         .marquee-container {
           width: 100%;
           overflow: hidden;
         }
         .marquee-content {
           display: flex;
-          animation: marquee 20s linear infinite;
+          animation: marquee 10s linear infinite;
         }
         @keyframes marquee {
           0% {

@@ -99,7 +99,7 @@ const WhatWeOfferSection = () => {
     },
     {
       id: 4,
-      label: 'Employee Engagement',
+      label: 'RSVP & Accreditations',
       animation: employeeAnimation
     },
     {
@@ -122,7 +122,7 @@ const WhatWeOfferSection = () => {
     },
     {
       id: 8,
-      label: 'Digital & Mobile Technology',
+      label: 'PR & Marketing',
       animation: digitalAnimation
     }
   ];
