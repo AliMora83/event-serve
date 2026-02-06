@@ -1,17 +1,17 @@
 import React from 'react';
-import Logo from '../assets/Events-01-07.png'; 
+import Logo from '../assets/Events-white-01.png';
 
 const Navbar = () => {
   return (
     <nav className="bg-bgMain shadow-lg">
       <div className="max-w-7xl mx-auto py-4 px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="text-2xl font-bold text-white">
-          <img 
-            src={Logo} 
-            alt="EventServe Logo" 
-            className="h-20 w-auto" // adjust height as needed
-          />
+          <div className="pt-[28px]">
+            <img
+              src={Logo}
+              alt="EventServe Logo"
+              className="h-28 w-auto" // adjust height as needed
+            />
           </div>
           <div className="hidden md:flex space-x-8">
             <a href="#home" className="text-gray-300 hover:text-white transition-colors">Home</a>
