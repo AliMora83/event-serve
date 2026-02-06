@@ -1,8 +1,7 @@
-import React, { useState, useRef } from 'react';
+import { useRef } from 'react';
+import PropTypes from 'prop-types';
 import Lottie from 'lottie-react';
 import bgImage from '../assets/bg-01.jpg';
-import screenGif from '../assets/screen.gif';
-import recordGif from '../assets/record.gif';
 import multimediaAnimation from '../assets/multimedia.json';
 import brandAnimation from '../assets/brand.json';
 import videoAnimation from '../assets/video.json';
@@ -12,12 +11,10 @@ import digitalAnimation from '../assets/digital.json';
 import eventAnimation from '../assets/event.json';
 import liveAnimation from '../assets/live.json';
 
-const OfferItem = ({ offer, index }) => {
-  const [isHovering, setIsHovering] = useState(false);
+const OfferItem = ({ offer }) => {
   const lottieRef = useRef();
 
   const handleMouseEnter = () => {
-    setIsHovering(true);
     if (lottieRef.current) {
       if (offer.hoverSegments) {
         // Use custom segments if defined (e.g., Multimedia Content)
@@ -30,7 +27,6 @@ const OfferItem = ({ offer, index }) => {
   };
 
   const handleMouseLeave = () => {
-    setIsHovering(false);
     if (lottieRef.current) {
       if (offer.resetSegment) {
         // Use custom reset segment if defined
@@ -78,6 +74,19 @@ const OfferItem = ({ offer, index }) => {
       </p>
     </div>
   );
+};
+
+OfferItem.propTypes = {
+  offer: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    label: PropTypes.string.isRequired,
+    animation: PropTypes.object,
+    hoverSegments: PropTypes.arrayOf(PropTypes.number),
+    resetSegment: PropTypes.arrayOf(PropTypes.number),
+    initialSegment: PropTypes.arrayOf(PropTypes.number),
+    style: PropTypes.object,
+    image: PropTypes.string,
+  }).isRequired,
 };
 
 const WhatWeOfferSection = () => {
@@ -147,8 +156,8 @@ const WhatWeOfferSection = () => {
           <span className="text-primary">Offer</span>
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {offers.map((offer, idx) => (
-            <OfferItem key={offer.id} offer={offer} index={idx} />
+          {offers.map((offer) => (
+            <OfferItem key={offer.id} offer={offer} />
           ))}
         </div>
       </div>

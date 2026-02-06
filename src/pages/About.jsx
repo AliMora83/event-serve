@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Navbar from '../components/Navbar';
 import AboutSection from '../components/AboutSection';
 import TeamSection from '../components/TeamSection';

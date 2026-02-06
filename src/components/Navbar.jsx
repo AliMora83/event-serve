@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Logo from '../assets/Events-white-01.png';
 
 const Navbar = () => {

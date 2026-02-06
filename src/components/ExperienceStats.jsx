@@ -1,4 +1,4 @@
-import React from 'react';
+
 const ExperienceStats = () => {
   const stats = [
     { number: '500+', label: 'Events Completed' },

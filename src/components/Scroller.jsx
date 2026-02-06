@@ -1,4 +1,4 @@
-import React from 'react';
+
 const Scroller = () => {
   return (
     <section className="overflow-hidden w-full bg-bgMain flex justify-center items-center">

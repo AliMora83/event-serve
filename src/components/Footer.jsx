@@ -1,4 +1,4 @@
-import React from 'react';
+
 const Footer = () => {
   return (
     // Replaced entire footer content with updated styles and year

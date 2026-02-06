@@ -1,31 +1,6 @@
-import React, { useState } from 'react';
 import sasaImage from '../assets/sasa-image.jpeg';
-import eventsImage from '../assets/EventsLogo.png';
 
 const ImpactSection = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const images = [
-    { id: 1, alt: 'Team member 1' },
-    { id: 2, alt: 'Team member 2' },
-    { id: 3, alt: 'Team member 3' },
-    { id: 4, alt: 'Team member 4' },
-    { id: 5, alt: 'Team member 5' },
-    { id: 6, alt: 'Team member 6' },
-    { id: 7, alt: 'Team member 7' },
-    { id: 8, alt: 'Team member 8' },
-  ];
-
-  const visibleImages = 6;
-  const maxIndex = Math.max(0, images.length - visibleImages);
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
-  };
 
   return (
     <section className="relative py-16 px-4">

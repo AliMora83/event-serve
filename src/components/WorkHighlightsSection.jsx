@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
 import { GradFlow } from 'gradflow';       // <--- Import GradFlow!
-import eventsImage from '../assets/EventsLogo.png';
 
 const WorkHighlightsSection = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
 
   // Generate 8 dummy images
   // Dynamically import all images from the gallery folder

@@ -1,5 +1,4 @@
-import React from 'react';
-import bgImg from '../assets/sasa-image.jpeg';
+
 
 
 const LegacySection = () => {
@@ -21,7 +20,7 @@ const LegacySection = () => {
           <div className="text-5xl font-bold text-primary mb-4">500+</div>
           <h3 className="text-2xl font-semibold mb-3">Events Delivered</h3>
           <p className="text-gray-400">
-            From intimate gatherings to grand celebrations, we've brought countless visions to life.
+            From intimate gatherings to grand celebrations, we&apos;ve brought countless visions to life.
           </p>
         </div>
 
@@ -44,8 +43,8 @@ const LegacySection = () => {
 
       <div className="mt-16 text-center">
         <p className="text-lg text-gray-300 italic max-w-2xl mx-auto">
-          "EventServe has been instrumental in creating lasting memories for families and communities.
-          Our legacy is built on trust, quality, and the unwavering dedication to make every event special."
+          &quot;EventServe has been instrumental in creating lasting memories for families and communities.
+          Our legacy is built on trust, quality, and the unwavering dedication to make every event special.&quot;
         </p>
       </div>
     </section>

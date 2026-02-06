@@ -1,5 +1,3 @@
-import React from 'react';
-import EventsLogo from '../assets/EventsLogo.png';
 import Lottie from 'lottie-react';
 import playBut from '../assets/galaxy-play.json';
 
@@ -27,26 +25,26 @@ const AboutSection = () => {
               opacity: 0.3
             }}
           />
-          
+
           {/* Content Overlay */}
           <div className="relative z-10" style={{ gridColumn: '1 / -1' }}>
             <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Image */}
-          <div className="flex justify-center">
-            <Lottie
-              animationData={playBut}
-              loop
-              style={{ width: 220, height: 220 }}
-            />          </div>
+              {/* Left Column - Image */}
+              <div className="flex justify-center">
+                <Lottie
+                  animationData={playBut}
+                  loop
+                  style={{ width: 220, height: 220 }}
+                />          </div>
               <div className="bg-black/60">
                 <h2 className="text-5xl font-bold mb-8 leading-tight font-bold uppercase">
                   We do Events
                 </h2>
                 <div className="space-y-6 text-lg text-gray-300">
                   <p>
-                    EventServe specializes in creating <span className="text-primary font-semibold">unforgettable experiences</span> <br/> that bring your vision to life.
+                    EventServe specializes in creating <span className="text-primary font-semibold">unforgettable experiences</span> <br /> that bring your vision to life.
                   </p>
-                  
+
                 </div>
                 <button className="mt-8 bg-primary hover:bg-primary/90 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300">
                   Learn More About Us

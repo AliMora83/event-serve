@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const ContactSection = () => {
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (/* e */) => {
     setSubmitted(true);
   };
 
@@ -15,7 +15,7 @@ const ContactSection = () => {
         </h2>
         {submitted ? (
           <div className="bg-green-700/70 rounded-lg p-6 text-white text-center font-semibold">
-            Thank you for contacting us! We'll get back to you soon.
+            Thank you for contacting us! We&apos;ll get back to you soon.
           </div>
         ) : (
           <form

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Scroller from '../components/Scroller';
@@ -15,21 +15,21 @@ import Footer from '../components/Footer';
 
 const Home = () => {
   return (
-      <>
-        <Navbar />
-        <Hero />
-        <Scroller />
-        <AboutSection />
-        <LegacySection />
-        <MagicYearsSection />
-        <WorkHighlightsSection />
-        <WhatWeOfferSection />
-        <ClienteleSection />
-        <ClientsTestimonials />
-        <ImpactSection />
-        <ContactSection />
-        <Footer />
-      </>
+    <>
+      <Navbar />
+      <Hero />
+      <Scroller />
+      <AboutSection />
+      <LegacySection />
+      <MagicYearsSection />
+      <WorkHighlightsSection />
+      <WhatWeOfferSection />
+      <ClienteleSection />
+      <ClientsTestimonials />
+      <ImpactSection />
+      <ContactSection />
+      <Footer />
+    </>
   );
 };
 
