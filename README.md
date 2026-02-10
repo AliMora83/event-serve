@@ -1,14 +1,17 @@
-# React + Vite + TailWindCSS - A Template Repo
+/Users/alikora/dev/AntiG/Atlas/.agent/templates/PROJECT_LINKS_TEMPLATE.md
+# 📌 Important Project Links
 
-It is a template repository for you to start a project using React and TailwindCSS. You just need to create a new repository from this template repo by clicking the button at the top right corner of this page.
+This file contains quick access links for the current project and related resources.
 
-## Watch This Video
+## 🌍 Current Project: Atlas Website
 
-https://www.youtube.com/watch?v=Zk2YJUvfsOA
+| Resource | Link | Description |
+| :--- | :--- | :--- |
+| **Repository** | [GitHub Repo](https://github.com/AliMora83/Atlas-Website) | Source code for the Atlas Conference Website |
+| **Localhost** | [http://localhost:3000](http://localhost:3000) | Development server URL (Next.js) |
+| **Live Site** | [atlasconference.africa](https://atlasconference.africa/) | Deployed production site |
+| **Reference Site** | [atlasconvention.com](https://atlasconvention.com/) | Inspiration & reference |
+| **Netlify Dashboard** | [Project Overview](https://app.netlify.com/projects/atlasglobal26/overview) | Hosting & Deployment |
+| **Documentation** | [Web Document](./Atlas-Web-Document.md) | Comprehensive project specification |
 
-## Links
 
-- Install Node.js: https://nodejs.org/en
-- Install Vite: https://vitejs.dev/
-- TailwindCSS: https://tailwindcss.com/
-- How to Learn TailwindCSS?: https://www.youtube.com/shorts/BhasK2BPn8c
