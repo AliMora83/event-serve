@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Astro
+.astro/
+
+# Environment — .env.example is committed, .env is not
+.env
+.env.production

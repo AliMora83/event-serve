@@ -1,0 +1,21 @@
+---
+interface Props { text: string; }
+const { text } = Astro.props;
+// Track is duplicated so the -50% translate loops seamlessly.
+const items = Array(6).fill(text);
+---
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {items.map((t) => <span class="marquee__item">{t}</span>)}
+    {items.map((t) => <span class="marquee__item">{t}</span>)}
+  </div>
+</div>
+
+<style>
+  .marquee__item {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-small);
+    color: var(--c-on-crimson);
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Marquee from '@components/Marquee.astro';
+import StatsBand from '@components/StatsBand.astro';
+import ServiceGrid from '@components/ServiceGrid.astro';
+import WorkHighlights from '@components/WorkHighlights.astro';
+import ClientLogos from '@components/ClientLogos.astro';
+import Testimonials from '@components/Testimonials.astro';
+import ParallaxBand from '@components/ParallaxBand.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import site from '@data/site.json';
+---
+<BaseLayout
+  title="EventServe | Event management in Johannesburg, Cape Town, Durban & Bloemfontein"
+  description="EventServe delivers event production, live broadcast, brand activations and sponsorship partnerships across South Africa."
+>
+  <!-- HERO — parallax band 1 of 3 -->
+  <ParallaxBand image="/images/hero/stage.jpg" speed={0.3} minHeight="88vh">
+    <p class="hero__eyebrow">EventServe</p>
+    <h1 class="hero__title">{site.tagline}</h1>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="/contact">Start a conversation</a>
+      <a class="btn btn--ghost" href="/services">See what we do</a>
+    </div>
+  </ParallaxBand>
+
+  <Marquee text="Creating unforgettable moments for your special events" />
+
+  <StatsBand />
+
+  <section class="section">
+    <div class="wrap">
+      <SectionHeading title="We do events" />
+      <p class="lede">
+        TODO — carry over the existing "We do events" copy, plus the video
+        embed that currently sits beside it.
+      </p>
+      <a class="btn btn--ghost" href="/about">More about us</a>
+    </div>
+  </section>
+
+  <WorkHighlights />
+
+  <!-- Services lives here as a section. There is no /services route —
+       removed from nav by decision, since the copy to justify a page doesn't
+       exist. services.json stays keyed by slug so /services/[slug] remains a
+       v1.1 option. -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <SectionHeading title="What we offer" />
+      <ServiceGrid />
+    </div>
+  </section>
+
+  <ClientLogos />
+
+  <Testimonials />
+
+  <!--
+    PARTNERSHIPS BAND — parallax 2 of 3.
+    This replaces the old "Impact" section. The background photo is the
+    SA Sport Awards, which is the exact property named in the partnerships
+    copy, so the imagery earns the link. The community/impact message that
+    used to live here has moved to /about.
+  -->
+  <ParallaxBand image="/images/hero/sport-awards.jpg" speed={0.2}>
+    <div class="heading-mark">
+      <svg class="heading-mark__star" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 1.5l3.09 6.83 7.41.81-5.5 5.02 1.5 7.34L12 17.9l-6.5 3.6 1.5-7.34-5.5-5.02 7.41-.81z"/>
+      </svg>
+      <h2>Where brands meet experiences</h2>
+      <span class="heading-mark__rule" aria-hidden="true"></span>
+    </div>
+    <p class="band__lede">
+      We placed Hyundai South Africa as official vehicle sponsor of the 18th
+      South African Sport Awards, and have connected brands including African
+      Bank and Icebolethu Funerals with national sporting audiences.
+    </p>
+    <a class="btn btn--primary" href="/partnerships">Explore partnerships</a>
+  </ParallaxBand>
+</BaseLayout>
+
+<style>
+  .hero__eyebrow {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--c-crimson-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .hero__title {
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+    max-width: 16ch;
+    margin-bottom: var(--space-5);
+  }
+
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+  .band__lede {
+    color: var(--c-text);
+    max-width: 52ch;
+    margin-bottom: var(--space-5);
+  }
+</style>

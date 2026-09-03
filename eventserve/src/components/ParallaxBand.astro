@@ -1,0 +1,32 @@
+---
+/**
+ * Full-bleed image band with transform-driven parallax.
+ * Used in exactly THREE places site-wide: the home hero, the home
+ * Partnerships band, and "Where brands meet experiences" on /partnerships.
+ * Adding a fourth will make the effect feel decorative rather than deliberate.
+ */
+interface Props {
+  image: string;
+  alt?: string;
+  speed?: number;
+  minHeight?: string;
+}
+const { image, alt = '', speed = 0.25, minHeight = '520px' } = Astro.props;
+---
+<section class="parallax band" data-parallax-speed={speed} style={`--band-min-h: ${minHeight}`}>
+  <img class="parallax__media" src={image} alt={alt} loading="lazy" decoding="async" />
+  <div class="parallax__scrim" aria-hidden="true"></div>
+  <div class="wrap band__content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .band {
+    min-height: var(--band-min-h);
+    display: flex;
+    align-items: center;
+    padding-block: var(--section-y);
+  }
+  .band__content { width: 100%; }
+</style>

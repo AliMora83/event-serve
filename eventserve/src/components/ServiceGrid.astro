@@ -1,0 +1,64 @@
+---
+import services from '@data/services.json';
+
+interface Props {
+  /** Home shows labels only; /services shows summaries once copy lands. */
+  detailed?: boolean;
+}
+const { detailed = false } = Astro.props;
+---
+<ul class="services">
+  {services.map((service, i) => (
+    <li class="service" data-reveal data-reveal-step={i % 4}>
+      <span class="service__icon" aria-hidden="true">
+        <!-- Icon set TODO: one 24px line icon per service.slug -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="9" />
+        </svg>
+      </span>
+      <h3 class="service__title">{service.title}</h3>
+      {detailed && <p class="service__summary">{service.summary}</p>}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .service {
+    text-align: center;
+    padding: var(--space-4);
+  }
+
+  .service__icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--space-3);
+    border: 1px solid var(--c-crimson);
+    border-radius: 50%;
+    color: var(--c-crimson-text);
+  }
+
+  .service__title {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .service__summary {
+    color: var(--c-text-muted);
+    font-size: var(--fs-small);
+    margin: var(--space-2) auto 0;
+    max-width: 34ch;
+  }
+</style>
