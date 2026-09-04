@@ -4,12 +4,16 @@
  * This uses scroll-snap plus visible arrow controls and a keyboard-reachable
  * scroller.
  */
-const slides = [
-  { src: '/images/work/01.jpg', alt: 'TODO — describe the event' },
-  { src: '/images/work/02.jpg', alt: 'TODO' },
-  { src: '/images/work/03.jpg', alt: 'TODO' },
-  { src: '/images/work/04.jpg', alt: 'TODO' }
-];
+import { Image } from 'astro:assets';
+import { workImages } from '@assets/images';
+
+// Alt text is deliberately still TODO: it needs the client's gallery-to-event
+// mapping, requested. Placeholder alt on a real photo is worse than none, so
+// Sprint 3 writes these against the actual events.
+const slides = workImages.map((src, i) => ({
+  src,
+  alt: `TODO — event ${i + 1}`,
+}));
 ---
 <section class="section--tight highlights" aria-labelledby="work-heading">
   <div class="wrap highlights__head">
@@ -23,7 +27,14 @@ const slides = [
   <ul class="highlights__track" tabindex="0" data-highlight-track>
     {slides.map((slide) => (
       <li class="highlights__item">
-        <img src={slide.src} alt={slide.alt} loading="lazy" decoding="async" />
+        <Image
+          src={slide.src}
+          alt={slide.alt}
+          widths={[480, 940]}
+          sizes="(max-width: 768px) 80vw, 480px"
+          loading="lazy"
+          decoding="async"
+        />
       </li>
     ))}
   </ul>

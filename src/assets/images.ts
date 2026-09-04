@@ -5,80 +5,119 @@
  * `astro:assets` needs static imports to optimise anything. This module is the
  * bridge: JSON stores a key, this file maps the key to the imported asset.
  *
- * SPRINT 3 fills this in during the image migration. Until then the scaffold
- * uses string paths, which render broken — that's expected, not a bug.
- *
- * Pattern:
- *
- *   import sasa   from './hero/sasa-image.jpeg';
- *   import bg01   from './hero/bg-01.jpg';
- *
- *   export const heroImages = { sasa, bg01 } as const;
- *   export type HeroKey = keyof typeof heroImages;
- *
- * Then in a component:
- *
  *   import { Image } from 'astro:assets';
- *   import { heroImages } from '../assets/images';
- *   <Image src={heroImages[key]} alt={alt} widths={[640, 1024, 1920]} />
- *
- * SPRINT 3 INVENTORY — 18 references across 7 files.
- *
- * Files that HOLD paths (these are the swaps):
- *   index.astro             2
- *   partnerships.astro      2
- *   WorkHighlights.astro    4
- *   Header.astro            1   logo
- *   BaseLayout.astro        1   og-default
- *   partners.json           3   logo paths
- *   clients.json            5   logo paths
- *
- * Files that hold NO paths but still need work — their props change type
- * from `string` to `ImageMetadata`:
- *   ParallaxBand.astro      receives `image`
- *   ClientLogos.astro       receives paths via clients.json
+ *   import { clientLogos } from '@assets/images';
+ *   <Image src={clientLogos[key]} alt={name} widths={[160, 320]} />
  *
  * ---------------------------------------------------------------------------
- * UPDATE, Sprint 1.1 image staging: 17 references across 6 files.
+ * RESOLUTION CEILING — read before assigning any image to a full-bleed band.
  *
- * BaseLayout's og-default drops off the list. It is now a real file at
- * public/og-default.jpg and correctly STAYS in public/ — an og:image must be a
- * plain, stable absolute URL that scrapers can fetch, which is exactly what
- * astro:assets is not for.
+ * Of the 72 staged images, exactly TWO photographs are wide enough to back a
+ * full-bleed band:
  *
+ *   hero/sasa-image.jpeg   3600x2401
+ *   hero/bg-01.jpg         1920x1320
+ *
+ * Everything else is a web export: 49 files at 900x500, 10 at 940x788, the
+ * rest smaller. Those are fine inside a card or a carousel slide, and visibly
+ * soft stretched across a viewport.
+ *
+ * The design has THREE parallax bands and two adequate photographs. The third
+ * band (`/partnerships`) is knowingly under-resolved until the client supplies
+ * originals. `astro:assets` will not rescue this — it downscales, it does not
+ * invent detail.
  * ---------------------------------------------------------------------------
- * SOURCE GAP — most of the remaining 17 have nothing to point AT.
- *
- * 72 images are now staged in src/assets/, but the scaffold's placeholder
- * paths were written to a naming scheme the source files do not use. Sprint 3
- * cannot simply swap these; someone has to choose images, and in several cases
- * obtain them.
- *
- *   HAVE a source:
- *     hero/sport-awards.jpg  -> hero/sasa-image.jpeg (3600x2401, confirmed)
- *     work/01..04.jpg        -> pick 4 of gallery/1.png..10.png. These ten are
- *                               what the old carousel actually showed
- *
- *   NO source in the repo — needs a decision or the client:
- *     hero/stage.jpg              nothing named "stage". Closest is
- *                                 gallery/Stage_Setups/ (15 files) or
- *                                 hero/bg-01.jpg
- *     hero/red-carpet.jpg         nothing matching
- *     partnerships/intro.jpg      nothing matching
- *     logo.svg                    brand/ holds PNGs only. No vector logo
- *                                 exists in this repo (see public/favicon.svg)
- *     logos/hyundai.svg           not present
- *     logos/african-bank.svg      not present
- *     logos/mtn.svg               not present
- *     logos/client-1,2,4,5.svg    placeholders; the clients are not yet named
- *
- *   PARTIAL:
- *     logos/sasa.svg          -> logos/SASA.png exists, as raster not vector
- *
- * staged logos/ holds six: Dept_sport, KUDU, Netball, SABC, SAFA, SASA. Only
- * SASA overlaps what partners.json and clients.json ask for. This is the
- * "logo permissions" risk in PROJECT.md arriving early — worth raising with
- * the client now rather than in Sprint 4.
  */
 
-export {};
+import type { ImageMetadata } from 'astro';
+
+/* --- Band and hero backgrounds ------------------------------------------ */
+
+// The old hero was show_jan.mp4, not a photograph — see Hero.jsx in legacy/.
+// The video is 848x480, so no poster frame from it can carry an 88vh band.
+// bg-01.jpg is the widest photograph not already committed elsewhere.
+import stage from './hero/bg-01.jpg';
+
+// Confirmed in SPRINT-1.1: the SA Sport Awards shot, and the exact property
+// named in the partnerships copy. Was the old ImpactSection background.
+import sportAwards from './hero/sasa-image.jpeg';
+
+// UNDER-RESOLVED at 900x500 behind a full-bleed band. Chosen from
+// Presidential_Gala per ruling; replace when originals arrive.
+import redCarpet from './gallery/Presidential_Gala/Presidential_Gala_1.png';
+
+export const heroImages = {
+  stage,
+  'sport-awards': sportAwards,
+  'red-carpet': redCarpet,
+} as const;
+
+export type HeroKey = keyof typeof heroImages;
+
+/* --- Inline page imagery ------------------------------------------------- */
+
+// Inline <img>, not full-bleed, so 900x500 is adequate here.
+import partnershipsIntro from './gallery/Stage_Setups/Stage_Setup_1.png';
+
+export const pageImages = {
+  'partnerships-intro': partnershipsIntro,
+} as const;
+
+/* --- Work highlights ------------------------------------------------------
+ * gallery/1-10.png are the images the OLD SITE ACTUALLY SHOWED — the previous
+ * WorkHighlightsSection globbed 'assets/gallery/*.png' non-recursively, so the
+ * 50 subfolder images never reached a visitor. 940x788, fine for a slide.
+ * Alt text is written in Sprint 3 once the client returns the event mapping.
+ * -------------------------------------------------------------------------- */
+
+import work01 from './gallery/1.png';
+import work02 from './gallery/2.png';
+import work03 from './gallery/3.png';
+import work04 from './gallery/4.png';
+
+export const workImages: ImageMetadata[] = [work01, work02, work03, work04];
+
+/* --- Brand ----------------------------------------------------------------
+ * PLACEHOLDER, same basis as public/favicon.svg: no vector logo exists in this
+ * repo, and a PNG cannot honestly be traced to SVG. Events-white-01.png is
+ * what the old Navbar used, so this is the faithful port, not a guess.
+ * Swap for real SVG artwork when the client supplies it.
+ * -------------------------------------------------------------------------- */
+
+import logo from './brand/Events-white-01.png';
+
+export const brand = { logo } as const;
+
+/* --- Client logos ---------------------------------------------------------
+ * These six are the real clientele row. Verified, not assumed: the old
+ * ClienteleSection.jsx imported exactly these six files and nothing else.
+ * -------------------------------------------------------------------------- */
+
+import deptSport from './logos/Dept_sport.png';
+import kudu from './logos/KUDU.png';
+import netball from './logos/Netball.png';
+import sabc from './logos/SABC.png';
+import safa from './logos/SAFA.png';
+import sasa from './logos/SASA.png';
+
+export const clientLogos = {
+  'dept-sport': deptSport,
+  kudu,
+  netball,
+  sabc,
+  safa,
+  sasa,
+} as const;
+
+export type ClientLogoKey = keyof typeof clientLogos;
+
+/* --- Still unresolved -----------------------------------------------------
+ * partners.json wants three brand logos and the repo holds one of them:
+ *
+ *   hyundai        no source
+ *   african-bank   no source
+ *   sasa           logos/SASA.png exists, as raster not vector
+ *
+ * Requested from the client. Until they arrive, ClientLogos and the partners
+ * grid must tolerate a missing logo rather than render a broken image.
+ * -------------------------------------------------------------------------- */

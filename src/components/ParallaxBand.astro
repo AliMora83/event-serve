@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 /**
  * Full-bleed image band with transform-driven parallax.
  * Used in exactly THREE places site-wide: the home hero, the home
@@ -6,7 +8,7 @@
  * Adding a fourth will make the effect feel decorative rather than deliberate.
  */
 interface Props {
-  image: string;
+  image: ImageMetadata;
   alt?: string;
   speed?: number;
   minHeight?: string;
@@ -14,7 +16,16 @@ interface Props {
 const { image, alt = '', speed = 0.25, minHeight = '520px' } = Astro.props;
 ---
 <section class="parallax band" data-parallax-speed={speed} style={`--band-min-h: ${minHeight}`}>
-  <img class="parallax__media" src={image} alt={alt} loading="lazy" decoding="async" />
+  <Image
+    class="parallax__media"
+    src={image}
+    alt={alt}
+    widths={[768, 1280, 1920]}
+    width={1920}
+    sizes="100vw"
+    loading="lazy"
+    decoding="async"
+  />
   <div class="parallax__scrim" aria-hidden="true"></div>
   <div class="wrap band__content">
     <slot />

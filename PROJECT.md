@@ -60,6 +60,14 @@ Still worth checking what `gradflow` did, in case a component in the port relied
 **Done when:** staging loads, four routes resolve, a test enquiry reaches the client's inbox.
 **Tag `v0.1`.**
 
+### gradflow — reproduce in CSS, Sprint 3
+
+`gradflow` was an animated gradient backdrop behind the work-highlights
+carousel in the old build (`WorkHighlightsSection.jsx`), configured with three
+dark-red stops. Nothing structural depended on it and it is not being ported as
+a dependency. Sprint 3 reproduces the effect in CSS if it is still wanted; it
+must respect the global `prefers-reduced-motion` block either way.
+
 ### Video — pending Vimeo upload
 
 `show_jan.mp4` (29MB) is not deployed. It goes to Vimeo and the page embeds

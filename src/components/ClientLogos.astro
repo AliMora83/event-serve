@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import clients from '@data/clients.json';
+import { clientLogos, type ClientLogoKey } from '@assets/images';
 /**
  * Old build put mismatched logos on white chips against black. This
  * normalises them to a single height and desaturates until hover, which
@@ -12,7 +14,13 @@ import clients from '@data/clients.json';
     <ul class="clients">
       {clients.map((client, i) => (
         <li data-reveal data-reveal-step={i}>
-          <img src={client.logo} alt={client.name} loading="lazy" />
+          <Image
+            src={clientLogos[client.logo as ClientLogoKey]}
+            alt={client.name}
+            widths={[160, 320]}
+            sizes="160px"
+            loading="lazy"
+          />
         </li>
       ))}
     </ul>

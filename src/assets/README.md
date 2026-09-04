@@ -40,7 +40,34 @@ default `react.svg`. None are referenced by the old build. The "86 source
 images" figure in earlier documents counted these four alongside the 82
 photographs: 82 + 3 + 1 = 86.
 
-## Not yet done
+## Wiring status
 
-Nothing is rewired. Components still point at `public/images/` and every image
-renders broken — expected until Sprint 3. See `images.ts`.
+**14 of 17 references are now live** through `images.ts`. Components import
+`ImageMetadata` and render through `astro:assets`; no component points at
+`public/images/` any more.
+
+Remaining: the three `partners.json` logos. Two have no source file
+(Hyundai, African Bank) and render as **no logo at all** rather than a broken
+image — the partner name sits in an `<h3>` directly below, so nothing is lost
+but the mark. SASA resolves to `logos/SASA.png`.
+
+## Resolution ceiling — the constraint that shapes Sprint 3
+
+Only **two** photographs here are wide enough for a full-bleed band:
+
+    hero/sasa-image.jpeg   3600x2401
+    hero/bg-01.jpg         1920x1320
+
+49 of the 72 are 900x500 and 10 are 940x788 — web exports, not source
+photography. They are fine in a card or a carousel slide and visibly soft
+stretched across a viewport.
+
+The design has **three** parallax bands and two adequate photographs. The
+`/partnerships` band is knowingly under-resolved until the client supplies
+originals. `astro:assets` downscales; it cannot invent detail.
+
+## Alt text
+
+Still outstanding, deliberately. It needs the client's gallery-to-event
+mapping — placeholder alt text on a real photograph is worse than an honest
+TODO, because it looks finished.

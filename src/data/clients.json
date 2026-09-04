@@ -1,7 +1,8 @@
 [
-  { "name": "TODO client 1", "logo": "/images/logos/client-1.svg" },
-  { "name": "TODO client 2", "logo": "/images/logos/client-2.svg" },
-  { "name": "MTN",           "logo": "/images/logos/mtn.svg" },
-  { "name": "TODO client 4", "logo": "/images/logos/client-4.svg" },
-  { "name": "TODO client 5", "logo": "/images/logos/client-5.svg" }
+  { "name": "Department of Sport, Arts and Culture", "logo": "dept-sport" },
+  { "name": "KUDU",                                  "logo": "kudu"       },
+  { "name": "Netball South Africa",                  "logo": "netball"    },
+  { "name": "SABC",                                  "logo": "sabc"       },
+  { "name": "SAFA",                                  "logo": "safa"       },
+  { "name": "South African Sports Awards",           "logo": "sasa"       }
 ]

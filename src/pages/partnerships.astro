@@ -2,7 +2,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import ParallaxBand from '@components/ParallaxBand.astro';
+import { Image } from 'astro:assets';
 import partners from '@data/partners.json';
+import { heroImages, pageImages, clientLogos, type ClientLogoKey } from '@assets/images';
 import approach from '@data/approach.json';
 ---
 <BaseLayout
@@ -32,7 +34,13 @@ import approach from '@data/approach.json';
           stakeholders to build partnerships that deliver value on both sides.
         </p>
       </div>
-      <img src="/images/partnerships/intro.jpg" alt="TODO — describe image" loading="lazy" />
+      <Image
+        src={pageImages['partnerships-intro']}
+        alt="TODO — needs the client's gallery-to-event mapping"
+        widths={[480, 900]}
+        sizes="(max-width: 768px) 100vw, 480px"
+        loading="lazy"
+      />
     </div>
   </section>
 
@@ -54,7 +62,16 @@ import approach from '@data/approach.json';
       <ul class="partners">
         {partners.map((partner, i) => (
           <li class="partner" data-reveal data-reveal-step={i}>
-            <img class="partner__logo" src={partner.logo} alt={partner.name} loading="lazy" />
+            {partner.logoKey && (
+              <Image
+                class="partner__logo"
+                src={clientLogos[partner.logoKey as ClientLogoKey]}
+                alt=""
+                widths={[64, 128]}
+                sizes="64px"
+                loading="lazy"
+              />
+            )}
             <h3>{partner.name}</h3>
             <p class="partner__role">{partner.role}</p>
             <p class="partner__body">{partner.body}</p>
@@ -86,7 +103,7 @@ import approach from '@data/approach.json';
   </section>
 
   <!-- 5. WHERE BRANDS MEET EXPERIENCES — parallax band 3 of 3 -->
-  <ParallaxBand image="/images/hero/red-carpet.jpg" speed={0.2}>
+  <ParallaxBand image={heroImages['red-carpet']} speed={0.2}>
     <h2>From the red carpet to the sporting arena</h2>
     <p class="band__lede">
       Whether you're sponsoring an established event, securing a strategic brand
