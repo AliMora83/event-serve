@@ -1,70 +1,97 @@
 # EventServe — build and deploy to HostAfrica shared cPanel over SSH.
 #
-# Push to main deploys STAGING only. Production is a deliberate manual run.
-# Every sprint should end with something the client can look at, and nothing
-# should reach the live domain by accident.
+# MANUAL TRIGGER ONLY. There is deliberately no `push:` trigger.
+#
+# eventserve.co.za is LIVE and is the client's only web presence. There is no
+# staging subdomain. The first deploy to public_html REPLACES the existing
+# site, so deploying must be a decision someone makes, never a side effect of
+# merging to main. Do not add a push trigger without changing that fact first.
+#
+# Until cutover day, use the `deploytest` target. It writes to a subdirectory
+# and cannot touch the live site.
 
 name: Deploy
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       target:
-        description: 'Where to deploy'
+        description: 'deploytest = pre-cutover test | cleanup-deploytest = remove it | production = REPLACES THE LIVE SITE'
         required: true
-        default: staging
+        default: deploytest
         type: choice
-        options: [staging, production]
+        options: [deploytest, cleanup-deploytest, production]
+      confirm:
+        description: 'For production ONLY: type REPLACE-LIVE-SITE to confirm'
+        required: false
+        default: ''
+        type: string
 
 concurrency:
-  # Never let two deploys rsync the same directory at once.
-  group: deploy-${{ github.event.inputs.target || 'staging' }}
+  group: deploy-${{ github.event.inputs.target }}
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.target || 'staging' }}
+    environment: ${{ github.event.inputs.target }}
 
     steps:
+      # A live-site replacement should take more than one dropdown. This costs
+      # nothing and makes an accidental production run essentially impossible.
+      - name: Confirm production intent
+        if: github.event.inputs.target == 'production'
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "REPLACE-LIVE-SITE" ]; then
+            echo "::error::Production deploy REPLACES the live eventserve.co.za."
+            echo "::error::Re-run with confirm = REPLACE-LIVE-SITE if that is intended."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
+        if: github.event.inputs.target != 'cleanup-deploytest'
 
       - uses: actions/setup-node@v4
+        if: github.event.inputs.target != 'cleanup-deploytest'
         with:
           node-version: 20
           cache: npm
 
       - run: npm ci
+        if: github.event.inputs.target != 'cleanup-deploytest'
 
-      # The build FAILS if PUBLIC_WEB3FORMS_KEY is missing — see
-      # src/components/ContactForm.astro. That is intentional: a contact form
-      # that builds clean and silently delivers nothing is the exact bug this
-      # sprint exists to fix. If this step fails, set the secret.
-      # DEPLOY_ENV is what permits a keyless build, and only for staging.
-      # Production fails without PUBLIC_WEB3FORMS_KEY rather than shipping a
-      # form that posts an empty access_key and gets a 200 back.
+      # DEPLOY_ENV=production is what makes the key mandatory. deploytest builds
+      # keyless on purpose: it proves the transport and the .htaccess rules, and
+      # does not need a working form. See src/components/ContactForm.astro.
       - name: Build
+        if: github.event.inputs.target != 'cleanup-deploytest'
         env:
-          DEPLOY_ENV: ${{ github.event.inputs.target || 'staging' }}
+          DEPLOY_ENV: ${{ github.event.inputs.target }}
           PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
         run: npm run build
 
-      - name: Resolve target path
+      - name: Resolve target
         id: target
         run: |
           set -euo pipefail
-          if [ "${{ github.event.inputs.target || 'staging' }}" = "production" ]; then
+          if [ "${{ github.event.inputs.target }}" = "production" ]; then
             path="${{ vars.PROD_PATH }}"
+            url="${{ vars.PROD_URL }}"
           else
-            path="${{ vars.STAGING_PATH }}"
+            # deploytest and cleanup-deploytest share the same directory.
+            path="${{ vars.DEPLOYTEST_PATH }}"
+            url="${{ vars.DEPLOYTEST_URL }}"
           fi
 
           # rsync --delete against a wrong or empty path is destructive.
-          # Refuse anything that isn't an absolute path well below root.
+          #
+          # Normalise trailing slashes FIRST. Without this, a pattern meant to
+          # catch a bare home directory also matches any legitimate deeper path
+          # written with a trailing slash — which rsync targets often are.
+          path="${path%/}"
+
           case "$path" in
-            ''|'/'|'/home'|'/home/'*/ ) echo "::error::Refusing to deploy to '$path'"; exit 1 ;;
+            ''|'/'|'/home') echo "::error::Refusing to deploy to '$path'"; exit 1 ;;
             /*) ;;
             *) echo "::error::Target path must be absolute, got '$path'"; exit 1 ;;
           esac
@@ -72,7 +99,19 @@ jobs:
             echo "::error::Target path '$path' is suspiciously shallow"; exit 1
           fi
 
+          # Belt and braces: the deploytest path must be a subdirectory, so a
+          # mis-set variable cannot aim the test run at the live document root.
+          # Applies to cleanup too — an rm -rf must not be aimable at the
+          # document root by editing one repo variable.
+          if [ "${{ github.event.inputs.target }}" != "production" ]; then
+            case "$path" in
+              */_deploytest) ;;
+              *) echo "::error::deploytest path must end in /_deploytest, got '$path'"; exit 1 ;;
+            esac
+          fi
+
           echo "path=$path" >> "$GITHUB_OUTPUT"
+          echo "url=$url"   >> "$GITHUB_OUTPUT"
 
       - name: Configure SSH
         env:
@@ -89,14 +128,14 @@ jobs:
           if [ -n "$KNOWN_HOSTS" ]; then
             printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
           else
-            # Trust-on-first-use fallback. Prefer setting SSH_KNOWN_HOSTS —
-            # generate it with: ssh-keyscan -p PORT HOST
+            # Prefer setting SSH_KNOWN_HOSTS: ssh-keyscan -p PORT HOST
             echo "::warning::SSH_KNOWN_HOSTS not set; falling back to ssh-keyscan"
             ssh-keyscan -p "${PORT:-22}" "$HOST" > ~/.ssh/known_hosts 2>/dev/null
           fi
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy
+        if: github.event.inputs.target != 'cleanup-deploytest'
         env:
           HOST: ${{ secrets.SSH_HOST }}
           USER: ${{ secrets.SSH_USER }}
@@ -106,35 +145,146 @@ jobs:
           set -euo pipefail
           # Trailing slash on dist/ copies its CONTENTS, not the directory.
           #
-          # --delete removes files no longer in the build, but cPanel owns
-          # some entries in public_html that are not ours. Deleting
-          # .well-known breaks AutoSSL renewal; deleting cgi-bin upsets the
-          # panel. Both are excluded.
+          # --delete removes files no longer in the build, but cPanel owns some
+          # entries in public_html that are not ours. Deleting .well-known
+          # breaks AutoSSL renewal; deleting cgi-bin upsets the panel. Both are
+          # excluded. _deploytest is excluded too, so a production run does not
+          # sweep away a test directory that is still being inspected.
           rsync -az --delete \
             --exclude '.well-known/' \
             --exclude 'cgi-bin/' \
             --exclude '.htpasswd' \
+            --exclude '_deploytest/' \
             --human-readable --stats \
             -e "ssh -i ~/.ssh/id_deploy -p ${PORT:-22} -o StrictHostKeyChecking=yes" \
             dist/ "$USER@$HOST:$DEST"
 
-      - name: Verify routes
+      # The deployed .htaccess already blocks /_deploytest/ via a REQUEST_URI
+      # rewrite. Appending `Require all denied` to the copy that lands there is
+      # the second mechanism: independent of mod_rewrite, and scoped to this
+      # directory only because it is written after the fact, never committed.
+      - name: Seal the deploy test directory
+        if: github.event.inputs.target == 'deploytest'
         env:
-          BASE: ${{ vars.DEPLOY_URL }}
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+          PORT: ${{ secrets.SSH_PORT }}
+          DEST: ${{ steps.target.outputs.path }}
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/id_deploy -p "${PORT:-22}" -o StrictHostKeyChecking=yes \
+            "$USER@$HOST" "printf '\n# Appended by the deploy workflow. This directory is not public.\nRequire all denied\n' >> '$DEST/.htaccess'"
+          echo "Sealed $DEST/.htaccess"
+
+      # Deploy-test verification runs over SSH, not HTTP — the directory is
+      # deliberately unreachable, so a 200 is impossible and a 403 is the only
+      # meaningful HTTP signal. What this test exists to prove is that rsync
+      # works, the paths are right and the permissions are sane. None of that
+      # needs a public URL.
+      - name: Verify over SSH
+        if: github.event.inputs.target == 'deploytest'
+        env:
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+          PORT: ${{ secrets.SSH_PORT }}
+          DEST: ${{ steps.target.outputs.path }}
+          BASE: ${{ steps.target.outputs.url }}
+        run: |
+          set -euo pipefail
+          SSH="ssh -i $HOME/.ssh/id_deploy -p ${PORT:-22} -o StrictHostKeyChecking=yes $USER@$HOST"
+
+          echo "--- file count: local build vs remote ---"
+          local_n=$(find dist -type f | wc -l | tr -d ' ')
+          remote_n=$($SSH "find '$DEST' -type f | wc -l" | tr -d ' ')
+          echo "  local  $local_n"
+          echo "  remote $remote_n"
+          # Remote is local + 0; the .htaccess append edits a file, adds none.
+          [ "$local_n" = "$remote_n" ] || { echo "::error::file count mismatch"; exit 1; }
+
+          echo "--- key files present ---"
+          for f in index.html .htaccess robots.txt 404.html about/index.html contact/index.html partnerships/index.html; do
+            if $SSH "test -f '$DEST/$f'"; then echo "  ok      $f"; else echo "  MISSING $f"; exit 1; fi
+          done
+
+          echo "--- permissions (cPanel wants 644 files / 755 dirs) ---"
+          $SSH "find '$DEST' -type f ! -perm 644 | head -20" > /tmp/badf || true
+          $SSH "find '$DEST' -type d ! -perm 755 | head -20" > /tmp/badd || true
+          if [ -s /tmp/badf ]; then echo "  files with unexpected mode:"; sed 's/^/    /' /tmp/badf; else echo "  all files 644"; fi
+          if [ -s /tmp/badd ]; then echo "  dirs with unexpected mode:";  sed 's/^/    /' /tmp/badd; else echo "  all dirs 755"; fi
+
+          echo "--- ownership and sample listing ---"
+          $SSH "ls -la '$DEST' | head -15"
+
+          echo "--- the block actually blocks ---"
+          if [ -n "${BASE:-}" ]; then
+            code=$(curl -s -o /dev/null -w '%{http_code}' -L "$BASE/")
+            echo "  GET $BASE/ -> $code (expect 403)"
+            case "$code" in
+              403) echo "  ok: directory is not publicly fetchable" ;;
+              200) echo "::error::_deploytest is PUBLICLY READABLE — a duplicate of the site is live"; exit 1 ;;
+              *)   echo "::warning::unexpected status $code; not 200, so not publicly readable, but check the server config" ;;
+            esac
+          else
+            echo "::warning::DEPLOYTEST_URL not set; cannot confirm the block from outside"
+          fi
+
+          echo
+          echo "Transport proven. Run this workflow again with target"
+          echo "cleanup-deploytest once you are satisfied — the directory should"
+          echo "not sit on the live domain for weeks."
+
+      # Production only. These assertions need a publicly fetchable URL, which
+      # by design the deploy test does not have, so they run for the first time
+      # at cutover.
+      - name: Verify over HTTP
+        if: github.event.inputs.target == 'production'
+        env:
+          BASE: ${{ steps.target.outputs.url }}
         run: |
           set -euo pipefail
           if [ -z "${BASE:-}" ]; then
-            echo "::warning::DEPLOY_URL not set; skipping route check"; exit 0
+            echo "::error::PROD_URL is not set"; exit 1
           fi
           fail=0
-          # Astro emits directory output. /about must resolve without the
-          # trailing slash too — verify rather than assume, per SPRINT-1.1.
+
+          echo "--- routes ---"
           for p in / /about /partnerships /contact; do
             code=$(curl -s -o /dev/null -w '%{http_code}' -L "$BASE$p")
             printf '%-16s %s\n' "$p" "$code"
             [ "$code" = "200" ] || fail=1
           done
+
+          echo "--- .htaccess applied? ---"
+          hdrs=$(curl -sSI -L "$BASE/" | tr 'A-Z' 'a-z')
+          for h in "x-content-type-options: nosniff" "referrer-policy: strict-origin-when-cross-origin"; do
+            if printf '%s' "$hdrs" | grep -q "$h"; then echo "  ok      $h"; else echo "  MISSING $h"; fail=1; fi
+          done
+
+          asset=$(curl -s -L "$BASE/" | grep -o '/_astro/[A-Za-z0-9._-]*\.css' | head -1)
+          if [ -n "$asset" ]; then
+            cc=$(curl -sSI -L "$BASE$asset" | tr 'A-Z' 'a-z' | grep -i '^cache-control' || true)
+            echo "  asset   $asset -> ${cc:-<none>}"
+            printf '%s' "$cc" | grep -q immutable || { echo "::error::hashed asset not immutable"; fail=1; }
+          fi
+
+          echo "--- 404 ---"
           code=$(curl -s -o /dev/null -w '%{http_code}' -L "$BASE/definitely-not-a-page")
-          printf '%-16s %s (expect 404)\n' "/404" "$code"
+          echo "  $code (expect 404)"
           [ "$code" = "404" ] || fail=1
+
           exit $fail
+
+      # _deploytest must not outlive the test it exists for.
+      - name: Remove the deploy test directory
+        if: github.event.inputs.target == 'cleanup-deploytest'
+        env:
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+          PORT: ${{ secrets.SSH_PORT }}
+          DEST: ${{ steps.target.outputs.path }}
+        run: |
+          set -euo pipefail
+          # DEST is already proven to end in /_deploytest by the resolve step.
+          ssh -i ~/.ssh/id_deploy -p "${PORT:-22}" -o StrictHostKeyChecking=yes \
+            "$USER@$HOST" "rm -rf -- '$DEST' && echo removed: '$DEST'"
+          echo "Deploy test directory removed."

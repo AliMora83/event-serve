@@ -16,14 +16,26 @@ import site from '@data/site.json';
 const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
 /**
- * Staging must be provable before the key exists; production must never ship
- * without it.
+ * Local and preview builds run keyless with the form visibly disabled.
+ * The production build demands the key.
  *
- * `DEPLOY_ENV=staging` is the ONLY thing that permits a keyless build, and it
- * renders the form visibly disabled rather than live. Everything else — an
- * unset DEPLOY_ENV included — fails the build. Failing closed matters: if the
- * production deploy ever forgets to set DEPLOY_ENV, we want a red build, not
- * a silently disabled contact form on the live site.
+ * There is no staging host: eventserve.co.za is live and is the client's only
+ * web presence, so the first deploy replaces it. That removes the environment
+ * that used to justify keyless builds, and would otherwise leave every local
+ * `npm run build` demanding a key the client has not activated yet.
+ *
+ * The rule is therefore explicit-production, with CI as a fail-closed backstop:
+ *
+ *   local, no DEPLOY_ENV      keyless OK, form disabled
+ *   DEPLOY_ENV=deploytest     keyless OK, form disabled
+ *   DEPLOY_ENV=production     KEY REQUIRED, anywhere, including locally
+ *   CI with DEPLOY_ENV unset  KEY REQUIRED — a misconfigured workflow must
+ *                             fail rather than quietly ship a dead form
+ *
+ * The local case matters more than it looks: the cutover may well be a manual
+ * upload of a locally built dist/. Anyone doing that must set
+ * DEPLOY_ENV=production, and the warning below fires on every keyless build so
+ * an unmarked one is hard to upload by accident.
  *
  * What we will not do under any configuration is render a form that posts an
  * empty access_key. Web3Forms answers that with a 200 and delivers nothing —
@@ -31,16 +43,28 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
  * When there is no key there is no access_key field and no enabled control.
  */
 const DEPLOY_ENV = process.env.DEPLOY_ENV ?? '';
+const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+const requiresKey = DEPLOY_ENV === 'production' || (isCI && DEPLOY_ENV === '');
+
 const formConfigured = Boolean(WEB3FORMS_KEY);
 
-if (import.meta.env.PROD && !formConfigured && DEPLOY_ENV !== 'staging') {
+if (import.meta.env.PROD && requiresKey && !formConfigured) {
   throw new Error(
-    'PUBLIC_WEB3FORMS_KEY is not set. The contact form would build but never ' +
-    'deliver. Set it in .env (see .env.example) or in the deploy environment. ' +
-    'For a keyless staging build, set DEPLOY_ENV=staging — the form will ' +
-    'render disabled.'
+    'PUBLIC_WEB3FORMS_KEY is not set and this is a production build. The ' +
+    'contact form would build but never deliver. Set it in .env (see ' +
+    '.env.example) or as a repo secret. For a local or deploy-test build, ' +
+    'leave DEPLOY_ENV unset — the form will render visibly disabled.'
   );
 }
+
+if (import.meta.env.PROD && !formConfigured) {
+  console.warn(
+    '\n  ⚠  Building WITHOUT PUBLIC_WEB3FORMS_KEY — the contact form is ' +
+    'disabled in this output.\n     Do not upload this build to ' +
+    'eventserve.co.za. For the real thing: DEPLOY_ENV=production.\n'
+  );
+}
+
 ---
 <div class="contact">
   <div class="contact__details">

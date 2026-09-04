@@ -33,12 +33,10 @@ they are stale — flag them.
 | Fonts | Montserrat 400/600/700, loaded via `<link>` in `BaseLayout` |
 | JS framework | **None.** No React, no View Transitions. The only client JS is `motion.js` |
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
-| Forms | Web3Forms → `info@eventserve.co.za`. Production **fails to build** without
-`PUBLIC_WEB3FORMS_KEY`; only `DEPLOY_ENV=staging` may build keyless, and renders the
-form disabled |
+| Forms | Web3Forms → `info@eventserve.co.za`. `DEPLOY_ENV=production` **fails to build** without `PUBLIC_WEB3FORMS_KEY`; local and `deploytest` builds run keyless and render the form disabled |
 | Package manager | npm |
 | Hosting | HostAfrica, shared cPanel, Apache/LiteSpeed |
-| Staging | staging.eventserve.co.za |
+| Staging | **None.** See "The live site" below |
 | Repo | AliMora83/event-serve |
 
 ## Documents
@@ -86,6 +84,13 @@ treatment with the star motif. A knowingly soft photograph reads as an
 oversight; a solid band reads as a choice. If original photography arrives,
 restoring it is a one-line swap **and** a reopening of this budget, not just
 a swap.
+
+**The live site is the only environment.** eventserve.co.za is the client's
+sole web presence and there is no staging subdomain. The first production
+deploy REPLACES it, so it happens once, on cutover day, by hand. The deploy
+workflow is `workflow_dispatch` only — **never add a push trigger** — and
+until cutover the only permitted target is `deploytest`, which writes to
+`public_html/_deploytest/`.
 
 **Never touch DNS or MX records.** `info@eventserve.co.za` is a mailbox on the
 same hosting. Mail routing is out of scope for every sprint.

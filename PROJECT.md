@@ -45,19 +45,19 @@ Keep one tool per branch at a time. Two agents editing the same working tree pro
 
 # Phase 1 — Foundation and homepage
 
-**Days 1–7.** Outcome: homepage complete on staging, all images optimised, form delivering.
+**Days 1–7.** Outcome: homepage complete and provable via `deploytest`, all images optimised, form delivering.
 
 ## Sprint 1 — Foundation *(day 1)*
 
 Docs cleanup, scaffold installed, old build moved to `legacy/`, images staged.
-cPanel deploy pipeline, `staging.eventserve.co.za`, `.htaccess`.
+cPanel deploy pipeline (manual trigger, `deploytest` target), `.htaccess`.
 Web3Forms wired and **verified by a delivered message**.
 Confirm the new tree has no React: `@astrojs/react`, `lottie-react` and `gradflow`
 live in the **old** build's `package.json`, which moves to `legacy/`. Nothing to
 remove from the Astro scaffold — dependencies there are `astro` and `sharp` only.
 Still worth checking what `gradflow` did, in case a component in the port relied on it.
 
-**Done when:** staging loads, four routes resolve, a test enquiry reaches the client's inbox.
+**Done when:** a `deploytest` run proves the transport and that `.htaccess` applies, four routes resolve, and a test enquiry reaches the client's inbox. The production deploy waits for cutover day.
 **Tag `v0.1`.**
 
 ### gradflow — reproduce in CSS, Sprint 3
@@ -84,10 +84,17 @@ Sprint 2 stubs the embed with a poster frame.
 ### Deploy pipeline — configuration required
 
 `.github/workflows/deploy.yml` builds and rsyncs `dist/` over SSH to cPanel.
-**Push to `main` deploys staging only.** Production is a manual
-`workflow_dispatch` run, so nothing reaches the live domain by accident.
 
-It cannot run until these are set on the GitHub repo.
+**Manual trigger only. There is deliberately no push trigger.**
+eventserve.co.za is live and is the client's only web presence. There is no
+staging subdomain, so the first production deploy REPLACES the existing site.
+Deploying has to be a decision someone makes, never a side effect of merging.
+
+**No production deploys until cutover day.** Until then use the `deploytest`
+target, which writes to `public_html/_deploytest/` and cannot touch the live
+site. The workflow refuses a `deploytest` path that does not end in
+`/_deploytest`, and a production run additionally requires typing
+`REPLACE-LIVE-SITE` into the confirm field.
 
 **Secrets** (Settings → Secrets and variables → Actions → Secrets):
 
@@ -98,28 +105,48 @@ It cannot run until these are set on the GitHub repo.
 | `SSH_PRIVATE_KEY` | Private half of a key whose public half is in cPanel → SSH Access → Manage Keys. Generate a **deploy-only** key; do not reuse a personal one |
 | `SSH_PORT` | Optional. Defaults to 22 — HostAfrica often uses a non-standard port |
 | `SSH_KNOWN_HOSTS` | Optional but recommended. `ssh-keyscan -p PORT HOST`. Without it the workflow falls back to trust-on-first-use and warns |
-| `PUBLIC_WEB3FORMS_KEY` | Web3Forms access key. **The build fails without it** — by design |
+| `PUBLIC_WEB3FORMS_KEY` | Web3Forms access key. Required for `production`; `deploytest` builds without it |
 
 **Variables** (same page → Variables):
 
 | Variable | Example |
 |---|---|
-| `STAGING_PATH` | `/home/<user>/staging.eventserve.co.za` |
+| `DEPLOYTEST_PATH` | `/home/<user>/public_html/_deploytest` |
+| `DEPLOYTEST_URL` | `https://eventserve.co.za/_deploytest` |
 | `PROD_PATH` | `/home/<user>/public_html` |
-| `DEPLOY_URL` | `https://staging.eventserve.co.za` — enables the post-deploy route check |
+| `PROD_URL` | `https://eventserve.co.za` |
 
-Both environments (`staging`, `production`) should exist under Settings →
-Environments. Adding a required reviewer on `production` is worth doing.
+Both environments (`deploytest`, `production`) should exist under Settings →
+Environments. Put a required reviewer on `production`.
+
+**Proving the transport before cutover.** Run the workflow with target
+`deploytest`.
+
+`_deploytest/` is **blocked outright**, not merely noindexed — a rewrite rule
+in `.htaccess` returns 403 for any `/_deploytest` URL, and the deploy job
+appends `Require all denied` to the copy that lands there. It puts a complete
+duplicate of the site on the live domain, and a noindex header still permits
+the fetch during exactly the window that matters.
+
+Because it is unreachable, **verification runs over SSH, not HTTP**: local vs
+remote file count, presence of the key files, file and directory permissions,
+and an ownership listing. That is what the test exists to prove — rsync, paths
+and permissions — none of which needs a public URL. The one HTTP call asserts
+a **403**, and fails the run on a 200.
+
+The header assertions (`X-Content-Type-Options`, `Referrer-Policy`,
+`Cache-Control: immutable`) and the 404 check need a fetchable URL and a
+document root, so they run for the first time at cutover, against production.
+
+**Then clean up.** Run the workflow again with target `cleanup-deploytest`.
+It removes the directory over SSH and skips the build entirely. `_deploytest`
+should not outlive the test it exists for — it must not sit on the live domain
+for weeks.
 
 **Safety notes.** `rsync --delete` removes anything in the target that is not
-in the build, so the workflow refuses shallow or non-absolute paths outright,
-and excludes `.well-known/` (deleting it breaks AutoSSL renewal), `cgi-bin/`
-and `.htpasswd`, which cPanel owns.
-
-`staging.eventserve.co.za` must be created as a subdomain in cPanel first, and
-its document root is what `STAGING_PATH` points at. Staging is kept out of
-search results by an `X-Robots-Tag` header in `.htaccess` keyed on the
-hostname — not by `robots.txt`, since the same build is promoted to live.
+in the build, so the workflow refuses shallow or non-absolute paths, and
+excludes `.well-known/` (deleting it breaks AutoSSL renewal), `cgi-bin/`,
+`.htpasswd` and `_deploytest/`.
 
 ## Sprint 2 — Shared components *(days 2–4)*
 
@@ -192,7 +219,7 @@ SEO: titles, descriptions, sitemap, robots.txt, structured data. 404 page. Analy
 
 ## Days 14–15 — Review and cutover
 
-**Not work days.** Client review, fixes, then staging to `public_html/`.
+**Not work days.** Client review, fixes, then the cutover deploy to `public_html/` — the first and only production run.
 
 Do not touch MX records. `info@eventserve.co.za` is a mailbox on the same hosting.
 
