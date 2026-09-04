@@ -16,20 +16,29 @@ import site from '@data/site.json';
 const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
 /**
- * Fail the BUILD, not the visitor.
+ * Staging must be provable before the key exists; production must never ship
+ * without it.
  *
- * Without this, a missing key produces `access_key=""`, the page builds and
- * deploys clean, and the form dies at runtime with a generic error. That is
- * precisely the failure mode that ran unnoticed from January: a form that
- * looks fine and delivers nothing. A broken contact form must never be
- * shippable in silence.
+ * `DEPLOY_ENV=staging` is the ONLY thing that permits a keyless build, and it
+ * renders the form visibly disabled rather than live. Everything else — an
+ * unset DEPLOY_ENV included — fails the build. Failing closed matters: if the
+ * production deploy ever forgets to set DEPLOY_ENV, we want a red build, not
+ * a silently disabled contact form on the live site.
  *
- * Dev is left alone so the site runs without a key.
+ * What we will not do under any configuration is render a form that posts an
+ * empty access_key. Web3Forms answers that with a 200 and delivers nothing —
+ * the exact silent-success shape that hid the Netlify failure for nine months.
+ * When there is no key there is no access_key field and no enabled control.
  */
-if (import.meta.env.PROD && !WEB3FORMS_KEY) {
+const DEPLOY_ENV = process.env.DEPLOY_ENV ?? '';
+const formConfigured = Boolean(WEB3FORMS_KEY);
+
+if (import.meta.env.PROD && !formConfigured && DEPLOY_ENV !== 'staging') {
   throw new Error(
     'PUBLIC_WEB3FORMS_KEY is not set. The contact form would build but never ' +
-    'deliver. Set it in .env (see .env.example) or in the deploy environment.'
+    'deliver. Set it in .env (see .env.example) or in the deploy environment. ' +
+    'For a keyless staging build, set DEPLOY_ENV=staging — the form will ' +
+    'render disabled.'
   );
 }
 ---
@@ -43,21 +52,31 @@ if (import.meta.env.PROD && !WEB3FORMS_KEY) {
     <p class="contact__cities">{site.cities.join(' · ')}</p>
   </div>
 
-  <form class="contact__form" data-contact-form>
-    <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+  <form class="contact__form" data-contact-form={formConfigured ? true : undefined}>
+    {!formConfigured && (
+      <p class="form-notice" role="status">
+        <strong>This form isn't configured yet.</strong> It's switched off
+        rather than pretending to send. Please email
+        <a href={`mailto:${site.email}`}>{site.email}</a> or call us — the
+        numbers are alongside.
+      </p>
+    )}
+    {formConfigured && (
+      <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+    )}
     <input type="hidden" name="subject" value="New enquiry from eventserve.co.za" />
     <input type="hidden" name="from_name" value="EventServe website" />
     <div class="field">
       <label for="name">Name</label>
-      <input id="name" name="name" type="text" required autocomplete="name" />
+      <input id="name" name="name" type="text" required autocomplete="name" disabled={!formConfigured} />
     </div>
     <div class="field">
       <label for="email">Email</label>
-      <input id="email" name="email" type="email" required autocomplete="email" />
+      <input id="email" name="email" type="email" required autocomplete="email" disabled={!formConfigured} />
     </div>
     <div class="field">
       <label for="message">Message</label>
-      <textarea id="message" name="message" rows="5" required></textarea>
+      <textarea id="message" name="message" rows="5" required disabled={!formConfigured}></textarea>
     </div>
 
     <!-- Honeypot. Must be named "botcheck" — that's Web3Forms' convention. -->
@@ -66,7 +85,9 @@ if (import.meta.env.PROD && !WEB3FORMS_KEY) {
       <input id="botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off" />
     </div>
 
-    <button class="btn btn--primary" type="submit">Send message</button>
+    <button class="btn btn--primary" type="submit" disabled={!formConfigured}>
+      {formConfigured ? 'Send message' : 'Form unavailable'}
+    </button>
 
     <p class="form-status" role="status" data-form-status hidden></p>
   </form>
@@ -129,6 +150,31 @@ if (import.meta.env.PROD && !WEB3FORMS_KEY) {
   .contact__cities { color: var(--c-text-faint); font-size: var(--fs-small); }
 
   .field { margin-bottom: var(--space-3); }
+
+  /* Shown only when PUBLIC_WEB3FORMS_KEY is absent — a keyless staging build.
+     Deliberately prominent: a disabled form with no explanation reads as a
+     bug, and the fallback contact route has to be obvious. */
+  .form-notice {
+    background: var(--c-surface);
+    border: 1px solid var(--c-field-border);
+    border-left: 3px solid var(--c-crimson);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+    color: var(--c-text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .form-notice strong { color: var(--c-crimson-text); }
+  .form-notice a { color: var(--c-crimson-text); }
+
+  .field input:disabled,
+  .field textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .field label {
     display: block;

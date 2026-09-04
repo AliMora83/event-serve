@@ -42,8 +42,12 @@ jobs:
       # src/components/ContactForm.astro. That is intentional: a contact form
       # that builds clean and silently delivers nothing is the exact bug this
       # sprint exists to fix. If this step fails, set the secret.
+      # DEPLOY_ENV is what permits a keyless build, and only for staging.
+      # Production fails without PUBLIC_WEB3FORMS_KEY rather than shipping a
+      # form that posts an empty access_key and gets a 200 back.
       - name: Build
         env:
+          DEPLOY_ENV: ${{ github.event.inputs.target || 'staging' }}
           PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
         run: npm run build
 

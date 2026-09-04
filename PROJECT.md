@@ -60,6 +60,19 @@ Still worth checking what `gradflow` did, in case a component in the port relied
 **Done when:** staging loads, four routes resolve, a test enquiry reaches the client's inbox.
 **Tag `v0.1`.**
 
+### Video — pending Vimeo upload
+
+`show_jan.mp4` (29MB) is not deployed. It goes to Vimeo and the page embeds
+from there.
+
+    VIMEO_URL = TODO_VIMEO_URL
+
+**The file stays at `legacy/public/show_jan.mp4` until that URL exists.** It is
+the only findable copy and the client needs it to do the upload. Do not remove
+it as part of any image or asset cleanup.
+
+Sprint 2 stubs the embed with a poster frame.
+
 ### Deploy pipeline — configuration required
 
 `.github/workflows/deploy.yml` builds and rsyncs `dist/` over SSH to cPanel.

@@ -33,7 +33,9 @@ they are stale — flag them.
 | Fonts | Montserrat 400/600/700, loaded via `<link>` in `BaseLayout` |
 | JS framework | **None.** No React, no View Transitions. The only client JS is `motion.js` |
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
-| Forms | Web3Forms → `info@eventserve.co.za` |
+| Forms | Web3Forms → `info@eventserve.co.za`. Production **fails to build** without
+`PUBLIC_WEB3FORMS_KEY`; only `DEPLOY_ENV=staging` may build keyless, and renders the
+form disabled |
 | Package manager | npm |
 | Hosting | HostAfrica, shared cPanel, Apache/LiteSpeed |
 | Staging | staging.eventserve.co.za |
@@ -88,9 +90,16 @@ These were established by audit. Trust them over anything else in the repo:
 - The old contact form **never worked**. It used Netlify Forms while the site
   was hosted on HostAfrica. No submission has ever been delivered.
 - Deploy is **not** Cloudflare or Netlify auto-deploy. It's cPanel.
-- The 86 source images are PNGs of photographs, ~46MB. They belong in
-  `src/assets/`, not `public/`.
-- `show_jan.mp4` (29MB) is not deployed. It lives on Vimeo.
+- The "86 source images" figure counted more than photographs. Actual: 82
+  PNG/JPG photos, 3 unreferenced GIFs and Vite's default `react.svg`.
+  Sprint 1.1 staged **72** of them to `src/assets/` (38MB) after dropping 9
+  byte-identical duplicates and one file that turned out to be a 94-byte
+  HTML 403 page saved with a `.jpg` extension. Images belong in
+  `src/assets/`, never `public/` — the exceptions are `favicon.svg` and
+  `og-default.jpg`, which must be plain static URLs.
+- `show_jan.mp4` (29MB) is not deployed; it goes to Vimeo. Until that URL
+  exists the file **stays at `legacy/public/show_jan.mp4`** — it is the only
+  findable copy and the client needs it to do the upload.
 - `.agent/` contains one file and syncs nothing. It is **not** the source of the
   stray documents — don't re-investigate it. Antigravity's workspace-level
   config is the remaining suspect.
