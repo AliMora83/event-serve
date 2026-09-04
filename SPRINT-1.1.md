@@ -87,11 +87,11 @@ something went wrong in the move.
 
 ## 3.4 Images — staging only, full migration is Sprint 3
 
-The scaffold's components still reference `public/images/` in 17 places across
-8 files. That is **known and expected** — the paths are placeholders and every
+The scaffold's components still reference `public/images/` in 18 places across
+7 files. That is **known and expected** — the paths are placeholders and every
 image renders broken until Sprint 3 rewires them.
 
-`src/assets/images.ts` documents the pattern and lists all 17 references.
+`src/assets/images.ts` documents the pattern and lists all 18 references.
 
 **In this sprint, only stage the files:**
 
@@ -101,7 +101,7 @@ image renders broken until Sprint 3 rewires them.
 - [ ] **`show_jan.mp4` (29MB) does not get deployed.** It moves to Vimeo. Remove it from the repo, note the pending Vimeo URL in `PROJECT.md`, and stub the embed with a poster frame for Sprint 2
 - [ ] Generate `favicon.svg` and `og-default.jpg` from `Events-white-01` / `EventsLogo.png`
 - [ ] `sasa-image.jpeg` at 3600×2401 is the SA Sport Awards shot — the partnerships band background. Keep at full resolution
-- [ ] **Do not rewire components yet.** Populating `images.ts` and swapping the 17 references is Sprint 3, alongside writing alt text for all 86
+- [ ] **Do not rewire components yet.** Populating `images.ts` and swapping the 18 references is Sprint 3, alongside writing alt text for all 86
 
 ## 3.5 Contact form — Web3Forms
 

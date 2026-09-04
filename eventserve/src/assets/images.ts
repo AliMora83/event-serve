@@ -22,15 +22,21 @@
  *   import { heroImages } from '../assets/images';
  *   <Image src={heroImages[key]} alt={alt} widths={[640, 1024, 1920]} />
  *
- * Components to rewire in Sprint 3 (17 references, 8 files):
- *   ParallaxBand.astro      hero backgrounds
- *   WorkHighlights.astro    4 slides
- *   Header.astro            logo
- *   BaseLayout.astro        og-default
- *   ClientLogos.astro       5 via clients.json
- *   partnerships.astro      2 inline
- *   partners.json           3 logo paths
- *   clients.json            5 logo paths
+ * SPRINT 3 INVENTORY — 18 references across 7 files.
+ *
+ * Files that HOLD paths (these are the swaps):
+ *   index.astro             2
+ *   partnerships.astro      2
+ *   WorkHighlights.astro    4
+ *   Header.astro            1   logo
+ *   BaseLayout.astro        1   og-default
+ *   partners.json           3   logo paths
+ *   clients.json            5   logo paths
+ *
+ * Files that hold NO paths but still need work — their props change type
+ * from `string` to `ImageMetadata`:
+ *   ParallaxBand.astro      receives `image`
+ *   ClientLogos.astro       receives paths via clients.json
  */
 
 export {};

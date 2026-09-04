@@ -10,7 +10,11 @@
   --c-ink:            #0F0E0E;  /* page background */
   --c-surface:        #171515;  /* cards, form fields */
   --c-surface-raised: #211E1E;  /* hover / elevated cards */
-  --c-hairline:       #2C2929;  /* 1px rules, field borders */
+  --c-hairline:       #2C2929;  /* DECORATIVE rules only — 1.26:1, exempt   */
+  --c-field-border:   #6B6767;  /* form field borders — 3.26:1 on surface.
+                                   WCAG 1.4.11 requires 3:1 for UI component
+                                   boundaries. A field whose only affordance is
+                                   its border must use THIS, not --c-hairline. */
 
   /* --- Brand crimson ------------------------------------------------------
      Sourced from the old tailwind.config.js `primary: #aa2a3bff` (alpha

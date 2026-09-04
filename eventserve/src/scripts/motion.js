@@ -163,5 +163,9 @@ function boot() {
 
 boot();
 
-/* Re-run after Astro View Transitions swap the DOM. */
-document.addEventListener('astro:page-load', boot);
+/* View Transitions were dropped in Sprint 1 — 15.4KB of client JS for a
+   cosmetic cross-page fade on a four-page site. If ClientRouter is ever
+   reinstated in BaseLayout, re-add this line so motion re-initialises after
+   a DOM swap:
+       document.addEventListener('astro:page-load', boot);
+*/

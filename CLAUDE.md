@@ -31,7 +31,7 @@ they are stale — flag them.
 | Framework | Astro 5, static output |
 | Styling | Vanilla CSS custom properties (`src/styles/tokens.css`). **No Tailwind** |
 | Fonts | Montserrat 400/600/700, loaded via `<link>` in `BaseLayout` |
-| JS framework | **None.** No React. Lottie replaced with static SVG, nothing hydrates |
+| JS framework | **None.** No React, no View Transitions. The only client JS is `motion.js` |
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
 | Forms | Web3Forms → `info@eventserve.co.za` |
 | Package manager | npm |
@@ -59,6 +59,10 @@ namka-control turns out to read it, rebuild the workflow properly.
 **Never hardcode a colour, font size or spacing value.** Everything goes
 through `src/styles/tokens.css`. The previous build's contrast failures came
 from per-section values drifting apart.
+
+**Borders have two tokens.** `--c-hairline` is decorative only. Anything that
+is the sole visual affordance of a UI control — form field borders above all —
+uses `--c-field-border`, which meets WCAG 1.4.11's 3:1 non-text threshold.
 
 **Three crimsons, three jobs.** Using the wrong one is the specific bug being
 fixed:
