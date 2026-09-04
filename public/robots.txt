@@ -1,8 +1,11 @@
-# Staging is excluded by an X-Robots-Tag header in .htaccess, not here —
-# the same build is promoted to production, so this file must stay
-# production-correct.
+# There is one host. The site should be indexed.
 
 User-agent: *
 Allow: /
+
+# Pre-cutover deploy tests land at /_deploytest/. Belt and braces only: that
+# directory is blocked outright in .htaccess, so a crawler cannot fetch it even
+# if it ignores this line.
+Disallow: /_deploytest/
 
 Sitemap: https://eventserve.co.za/sitemap-index.xml

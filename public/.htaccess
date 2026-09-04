@@ -8,26 +8,48 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Force HTTPS. HTTP_HOST is preserved so this is correct on both the live
-  # domain and the staging subdomain.
+  # Force HTTPS. HTTP_HOST is preserved rather than hardcoded, so this stays
+  # correct if the site is ever served from another hostname.
   RewriteCond %{HTTPS} !=on
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </IfModule>
 
 # ---------------------------------------------------------------------------
-# Staging must never be indexed
+# Deploy test directory — blocked outright
 #
-# One build is promoted from staging to live, so robots.txt cannot differ
-# between them. The header is applied per-host instead, which means the live
-# site is unaffected and there is no file to forget to change at promotion.
+# Pre-cutover deploy tests land in public_html/_deploytest/, which puts a full
+# duplicate of the site on the live domain. Blocked beats noindexed: it cannot
+# be indexed if it cannot be fetched, and a noindex header still permits the
+# fetch during exactly the window that matters.
+#
+# This is a rewrite rule rather than a bare `Require all denied` because this
+# single file is deployed BOTH into _deploytest/ and, at cutover, into the
+# document root. A bare Require would deny production too, and a path-scoped
+# <If> block risks a 500 on the live site if the server build does not support
+# it. Matching on REQUEST_URI is correct in either position and inert in
+# production, where no such URL exists.
+#
+# The deploy job also appends `Require all denied` to the copy it places in
+# _deploytest/. Two mechanisms, either sufficient.
 # ---------------------------------------------------------------------------
-<IfModule mod_setenvif.c>
-  SetEnvIf Host ^staging\. IS_STAGING=1
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} ^/_deploytest(/|$)
+  RewriteRule ^ - [F,L]
 </IfModule>
-<IfModule mod_headers.c>
-  Header always set X-Robots-Tag "noindex, nofollow" env=IS_STAGING
-</IfModule>
+
+# ---------------------------------------------------------------------------
+# Indexing
+#
+# There is one host. The site should be indexed, and robots.txt says so.
+#
+# A host-keyed X-Robots-Tag block used to live here for staging. It was removed
+# when the staging subdomain was dropped — with a single host it is noise that
+# implies a second environment exists. If a preview target is ever added, bring
+# it back rather than relying on robots.txt: one build is promoted to live, so
+# a file-based rule would be wrong on one host or need editing at promotion.
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # Custom 404
