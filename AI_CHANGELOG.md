@@ -8,6 +8,98 @@
 
 ---
 
+## v0.1 — 2026-09-04 — Sprint 1.1, Foundation
+
+Astro 5 installed and running at the repo root; the old Vite/React build is
+preserved in `legacy/`. Four routes build clean. Nothing is deployed.
+
+### Decision A — Tailwind dropped, vanilla CSS custom properties
+
+Four colours and a font name is not a migration. Contrast ratios were
+re-derived independently rather than accepted from the brief, and every figure
+reproduced exactly:
+
+| Token | Value | On `#0F0E0E` | Verdict |
+|---|---|---|---|
+| `--c-crimson` | `#AA2A3B` | **2.85:1** | Fails body AND large text. Fills only |
+| `--c-crimson-hover` | `#C4374A` | 3.66:1 | Hover states only |
+| `--c-crimson-text` | `#E8657A` | 6.03:1 | Passes. All crimson type |
+| `--c-text` | `#F3F4F6` | 17.51:1 | Passes |
+| `--c-text-muted` | `#B0ADAD` | 8.65:1 | Passes |
+| `--c-text-faint` | `#8A8686` | 5.36:1 | Passes |
+| `--c-error-text` | `#F0798C` | 7.18:1 | Passes |
+| White on `#AA2A3B` | `#FFFFFF` | 6.77:1 | Buttons pass |
+
+`bgLight: #f2f2f2` had **zero** occurrences in the old build. No token needed.
+
+**A fourth token was added.** `--c-hairline` `#2C2929` measures 1.26:1 against
+`--c-surface`, and the contact form's fields were identifiable *only* by that
+border — a WCAG 1.4.11 failure, since the field fill is itself 1.06:1 against
+the page. `--c-field-border` `#6B6767` (3.26:1) now carries any border that is
+the sole affordance of a control. `--c-hairline` stays for decorative rules,
+which convey nothing and are exempt.
+
+### Decision B — superseded before implementation
+
+`Master.md` stays, rewritten. Handled in `DOC-CLEANUP.md`.
+
+### The form finding, carried forward into a build-time guard
+
+The old form never delivered a message (see v2.0.0). The replacement is
+Web3Forms, and the failure mode is now structurally impossible to ship
+quietly: a `DEPLOY_ENV=production` build **fails** without
+`PUBLIC_WEB3FORMS_KEY`, with CI as a fail-closed backstop. Local and
+`deploytest` builds run keyless and render the form **visibly disabled** — no
+`access_key` field, every control disabled, a notice pointing at the email
+address and phone numbers. What never renders under any configuration is a
+form that posts an empty `access_key`, which Web3Forms answers with a 200
+while delivering nothing.
+
+**Sprint 1 does not close until a test enquiry physically arrives.** It has
+not. The key requires the client to confirm an activation email.
+
+### Findings that changed the plan
+
+- **"Keep the gallery subfolder copies only" would have deleted the live
+  imagery.** `gallery/1.png`–`10.png` are not duplicates, and the old
+  `WorkHighlightsSection.jsx` globbed `assets/gallery/*.png` *non-recursively* —
+  those ten are exactly what visitors saw. The 50 subfolder images were never
+  displayed. Only 9 byte-identical files were dropped, verified by md5.
+- **The "corrupt" screenshot is a 94-byte HTML 403 page** saved with a `.jpg`
+  extension. A download that failed silently. Some intended image was never
+  obtained.
+- **"86 source images" = 82 photographs + 3 unreferenced GIFs + Vite's default
+  `react.svg`.** 72 were staged after de-duplication.
+- **Only 2 of 72 images can back a full-bleed band** (3600×2401 and 1920×1320;
+  49 are 900×500 web exports). The design wanted three parallax bands. **The
+  budget was cut to two** — `/partnerships` uses a solid crimson treatment with
+  the star motif. A knowingly soft photograph reads as an oversight; a solid
+  band reads as a choice.
+- **The old hero was `show_jan.mp4`**, not a photograph — 29MB of SD video
+  autoplaying on the homepage.
+- **`favicon.svg` was referenced but did not exist**, 404ing on every page.
+
+### Also
+
+- View Transitions dropped: 15.4KB of client JS for a cosmetic fade. The build
+  now emits **zero** `.js` files; client JS is 2.4KB of inlined `motion.js`.
+- `@astrojs/sitemap` added (approved). Four routes, 404 filtered.
+- `.htaccess`, `robots.txt`, `404.astro`, `og-default.jpg`, `favicon.svg`.
+- Deploy is `workflow_dispatch` **only**. eventserve.co.za is live and is the
+  client's only web presence, so the first production deploy replaces it. Until
+  cutover the only permitted target is `deploytest`, which is blocked outright
+  by `.htaccess` and verified over SSH rather than HTTP.
+- Whole site builds to 2.2MB with no broken image references.
+
+### Not done — all blocked on external access, not on work
+
+Web3Forms key and a delivered test enquiry; SSH secrets and the deploy test;
+the production cutover. Hyundai and African Bank logos, vector brand artwork,
+original-resolution photography and the gallery-to-event mapping for alt text
+are all requested from the client.
+
+---
+
 ## v2.0.0 — 2026-09-04 — Document cleanup (pre-Sprint 1)
 
 Documentation and repo hygiene only. No application code changed. The Astro
