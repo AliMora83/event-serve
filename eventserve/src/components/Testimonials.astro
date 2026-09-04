@@ -1,0 +1,45 @@
+---
+import testimonials from '@data/testimonials.json';
+---
+<section class="section" aria-labelledby="testimonials-heading">
+  <div class="wrap">
+    <h2 id="testimonials-heading" class="t__heading">What our clients say</h2>
+    <ul class="t__grid">
+      {testimonials.map((item, i) => (
+        <li class="t__card" data-reveal data-reveal-step={i}>
+          <blockquote>
+            <p>{item.quote}</p>
+          </blockquote>
+          <p class="t__name">{item.name}</p>
+          <p class="t__org">{item.org}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .t__heading { text-align: center; margin-bottom: var(--space-6); }
+
+  .t__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-4);
+  }
+
+  /* Dark cards, not white. The old white cards had light-grey body copy
+     that failed contrast badly. */
+  .t__card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+
+  .t__card blockquote { margin: 0 0 var(--space-4); }
+  .t__card blockquote p { color: var(--c-text); margin: 0; }
+
+  .t__name { font-weight: 600; margin: 0; }
+  .t__org  { color: var(--c-text-muted); font-size: var(--fs-small); margin: 0; }
+</style>

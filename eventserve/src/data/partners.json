@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Hyundai South Africa",
+    "logo": "/images/logos/hyundai.svg",
+    "role": "Official vehicle sponsor, 18th South African Sport Awards",
+    "body": "We secured and managed Hyundai's position as official vehicle sponsor for the 18th edition of the South African Sport Awards, integrating the brand across the event experience.",
+    "permission": "Granted."
+  },
+  {
+    "name": "South African Sport Awards",
+    "logo": "/images/logos/sasa.svg",
+    "role": "Sponsorship and partnership management",
+    "body": "One of South Africa's premier celebrations of sporting excellence. We connected brands including Hyundai, Icebolethu Funerals and African Bank with athletes, sporting personalities and national audiences.",
+    "permission": "Granted."
+  },
+  {
+    "name": "African Bank",
+    "logo": "/images/logos/african-bank.svg",
+    "role": "Brand partnership",
+    "body": "TODO \u2014 client to supply one concrete detail: which event, what year, what the activation was. Until it lands, ship two cards rather than an obviously empty third.",
+    "permission": "Granted."
+  }
+]

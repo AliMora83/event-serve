@@ -1,0 +1,90 @@
+/* ==========================================================================
+   EventServe design tokens
+   Single source of truth. Never hardcode a colour or spacing value in a
+   component — the contrast failures on the previous build came from
+   per-section values drifting apart.
+   ========================================================================== */
+
+:root {
+  /* --- Surfaces ---------------------------------------------------------- */
+  --c-ink:            #0F0E0E;  /* page background */
+  --c-surface:        #171515;  /* cards, form fields */
+  --c-surface-raised: #211E1E;  /* hover / elevated cards */
+  --c-hairline:       #2C2929;  /* 1px rules, field borders */
+
+  /* --- Brand crimson ------------------------------------------------------
+     Sourced from the old tailwind.config.js `primary: #aa2a3bff` (alpha
+     stripped). Three values, three jobs — VERIFIED against #0F0E0E:
+       #AA2A3B  2.85:1  fails body AND large text. FILLS ONLY.
+       #C4374A  3.66:1  hover states only.
+       #E8657A  6.03:1  passes body text. Use this for crimson type.
+     Using the fill value as type is what broke the "Making a Difference"
+     heading on the old build.                                               */
+  --c-crimson:        #AA2A3B;  /* fills only: buttons, bars, the star glyph */
+  --c-crimson-hover:  #C4374A;  /* interactive hover state                   */
+  --c-crimson-text:   #E8657A;  /* crimson TYPE on dark — passes AA          */
+
+  /* --- Type -------------------------------------------------------------- */
+  --c-text:           #F3F4F6;  /* primary copy                             */
+  --c-text-muted:     #B0ADAD;  /* secondary copy, 9:1 on ink               */
+  --c-text-faint:     #8A8686;  /* captions, legal — decorative only        */
+  --c-on-crimson:     #FFFFFF;
+
+  /* --- Feedback ---------------------------------------------------------
+     Deliberately NOT green. The old success banner was stock-alert green
+     and broke the palette.                                                  */
+  --c-success-bg:     rgba(170, 42, 59, 0.12);
+  --c-success-border: var(--c-crimson);
+  --c-success-text:   var(--c-text);
+  --c-error-text:     #F0798C;
+
+  /* --- Typography --------------------------------------------------------
+     Montserrat, carried from the old tailwind.config.js. The old build's
+     fontFamily block declared eight keys that were all Montserrat, so it
+     collapses to one family. Loaded via <link> in BaseLayout — NOT a CSS
+     @import, which is a render-blocking waterfall.                          */
+  --font-display: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-body:    'Montserrat', system-ui, -apple-system, sans-serif;
+
+  --fs-hero:    clamp(2.75rem, 7vw, 5.5rem);
+  --fs-h1:      clamp(2.25rem, 5vw, 3.75rem);
+  --fs-h2:      clamp(1.75rem, 3.5vw, 2.75rem);
+  --fs-h3:      clamp(1.25rem, 2vw, 1.5rem);
+  --fs-stat:    clamp(2.5rem, 5vw, 4rem);
+  --fs-body:    clamp(1rem, 1.1vw, 1.125rem);
+  --fs-small:   0.875rem;
+
+  --lh-tight:   1.05;
+  --lh-heading: 1.15;
+  --lh-body:    1.65;
+
+  --tracking-display: -0.02em;
+
+  /* --- Layout ------------------------------------------------------------ */
+  --measure:      68ch;   /* max line length for body copy */
+  --page-max:     1280px;
+  --gutter:       clamp(1.25rem, 5vw, 4rem);
+  --section-y:    clamp(4rem, 10vw, 8rem);
+
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* --- Motion ------------------------------------------------------------ */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast:   180ms;
+  --dur-base:   420ms;
+  --dur-slow:   700ms;
+  --stagger:    80ms;
+
+  --z-header: 100;
+  --z-modal:  200;
+}

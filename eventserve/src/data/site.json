@@ -1,0 +1,35 @@
+{
+  "name": "EventServe",
+  "tagline": "Creating unforgettable moments for your special events",
+  "founded": 2020,
+  "email": "info@eventserve.co.za",
+  "phones": [
+    "073 463 4425",
+    "064 050 4442"
+  ],
+  "cities": [
+    "Johannesburg",
+    "Cape Town",
+    "Durban",
+    "Bloemfontein"
+  ],
+  "nav": [
+    {
+      "label": "Home",
+      "href": "/"
+    },
+    {
+      "label": "About",
+      "href": "/about"
+    },
+    {
+      "label": "Partnerships",
+      "href": "/partnerships"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact"
+    }
+  ],
+  "founder": "Romeo Leko"
+}

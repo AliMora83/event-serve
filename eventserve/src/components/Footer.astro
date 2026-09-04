@@ -1,0 +1,90 @@
+---
+import site from '@data/site.json';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div>
+      <p class="footer__brand">EventServe</p>
+      <p class="footer__note">
+        Creating memorable events since {site.founded}
+      </p>
+    </div>
+
+    <nav aria-label="Footer">
+      <h2 class="footer__heading">Quick links</h2>
+      <ul>
+        {site.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+        <li><a href="/#services">Services</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="footer__heading">Contact</h2>
+      <p>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+      <p>
+        {site.phones.map((phone, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true"> / </span>}
+            <a href={`tel:+27${phone.replace(/\D/g, '').slice(1)}`}>{phone}</a>
+          </>
+        ))}
+      </p>
+      <p class="footer__note">{site.cities.join(' · ')}</p>
+    </div>
+  </div>
+
+  <div class="wrap footer__legal">
+    <p>© {year} EventServe. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--c-hairline);
+    padding-block: var(--space-7) var(--space-4);
+    font-size: var(--fs-small);
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .footer__brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: var(--space-1);
+  }
+
+  .footer__heading {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer ul { list-style: none; margin: 0; padding: 0; }
+  .footer li { margin-bottom: var(--space-2); }
+
+  .footer a {
+    color: var(--c-text-muted);
+    text-decoration: none;
+  }
+  .footer a:hover { color: var(--c-text); text-decoration: underline; }
+
+  .footer__note { color: var(--c-text-faint); }
+
+  .footer__legal {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--c-hairline);
+    color: var(--c-text-faint);
+  }
+  .footer__legal p { margin: 0; }
+</style>

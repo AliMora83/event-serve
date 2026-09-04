@@ -1,0 +1,51 @@
+---
+import stats from '@data/stats.json';
+---
+<section class="section stats" aria-labelledby="stats-heading">
+  <div class="wrap">
+    <h2 id="stats-heading" class="visually-hidden">EventServe by the numbers</h2>
+    <ul class="stats__grid">
+      {stats.map((stat, i) => (
+        <li class="stat" data-reveal data-reveal-step={i}>
+          <p class="stat__value" data-count-to={stat.value} data-count-suffix={stat.suffix}>
+            0{stat.suffix}
+          </p>
+          <p class="stat__label">{stat.label}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .stats__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .stat {
+    background: var(--c-surface);
+    border: 1px solid var(--c-hairline);
+    border-top: 3px solid var(--c-crimson);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+
+  .stat__value {
+    font-family: var(--font-display);
+    font-size: var(--fs-stat);
+    font-weight: 700;
+    line-height: var(--lh-tight);
+    color: var(--c-crimson-text);
+    margin: 0 0 var(--space-2);
+  }
+
+  .stat__label {
+    color: var(--c-text-muted);
+    margin: 0;
+  }
+</style>

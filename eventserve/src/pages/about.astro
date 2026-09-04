@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import site from '@data/site.json';
+---
+<BaseLayout
+  title="About EventServe | 15+ years of event management experience"
+  description="Founded in 2020, EventServe is led by a founder with over 15 years in event management, delivering events across South Africa."
+>
+  <section class="section">
+    <div class="wrap">
+      <h1>About EventServe</h1>
+
+      <!--
+        FOUNDER FRAMING — this paragraph is what resolves the "15+ years"
+        vs "since 2020" conflict. Do not drop it.
+      -->
+      <p class="lede">
+        EventServe was founded in {site.founded} by {site.founder}, who brings
+        more than 15 years of experience in event management to the company.
+      </p>
+
+      <p>TODO — carry over the existing About copy from the current build.</p>
+    </div>
+  </section>
+
+  <!--
+    IMPACT — moved here from the home page. It's a genuine differentiator
+    for public-sector and NPO clients and would have been lost otherwise.
+    Note: no parallax on this one. Three bands site-wide is the budget and
+    the home page and partnerships page use all three.
+  -->
+  <section class="section impact" aria-labelledby="impact-heading">
+    <div class="wrap">
+      <SectionHeading title="Impact" star={true} id="impact-heading" />
+      <h3 class="impact__sub">Making a difference through every event</h3>
+      <p class="lede">
+        Our impact extends beyond creating memorable events. We bring together
+        people, ideas and experiences that create lasting change. Each event is
+        an opportunity to inspire, connect, and make a meaningful difference in
+        our community.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="wrap">
+      <SectionHeading title="Where we work" />
+      <p class="lede">
+        We deliver events in {site.cities.slice(0, -1).join(', ')} and
+        {' '}{site.cities.at(-1)}.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Crimson subheading, using the TEXT crimson token. The old build used
+     the fill crimson here and it failed contrast at heading size. */
+  .impact__sub {
+    color: var(--c-crimson-text);
+    font-size: var(--fs-h2);
+    margin-bottom: var(--space-4);
+  }
+</style>

@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "event-production",
+    "title": "Event production",
+    "icon": "production",
+    "summary": "Optional. Section renders on titles alone."
+  },
+  {
+    "slug": "virtual-hybrid",
+    "title": "Virtual & hybrid experiences",
+    "icon": "virtual",
+    "summary": "Optional. Section renders on titles alone."
+  },
+  {
+    "slug": "live-broadcast",
+    "title": "Live-to-air broadcast",
+    "icon": "broadcast",
+    "summary": "Optional. Section renders on titles alone."
+  },
+  {
+    "slug": "rsvp-accreditation",
+    "title": "RSVP & accreditation",
+    "icon": "rsvp",
+    "summary": "Optional. Section renders on titles alone."
+  },
+  {
+    "slug": "brand-activations",
+    "title": "Brand activations",
+    "icon": "activation",
+    "summary": "Optional. Section renders on titles alone."
+  },
+  {
+    "slug": "multimedia-content",
+    "title": "Multimedia content",
+    "icon": "multimedia",
+    "summary": "Overlaps heavily with video production \u2014 merge or differentiate."
+  },
+  {
+    "slug": "video-production",
+    "title": "Video production",
+    "icon": "video",
+    "summary": "See note on multimedia content."
+  },
+  {
+    "slug": "pr-marketing",
+    "title": "PR & marketing",
+    "icon": "pr",
+    "summary": "Optional. Section renders on titles alone."
+  }
+]

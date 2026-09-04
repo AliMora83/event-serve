@@ -1,0 +1,19 @@
+---
+interface Props {
+  title: string;
+  /** Shows the crimson star. Reserved for the two or three most important
+      headings on a page — it loses meaning if every section has one. */
+  star?: boolean;
+  id?: string;
+}
+const { title, star = false, id } = Astro.props;
+---
+<div class="heading-mark" data-reveal>
+  {star && (
+    <svg class="heading-mark__star" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 1.5l3.09 6.83 7.41.81-5.5 5.02 1.5 7.34L12 17.9l-6.5 3.6 1.5-7.34-5.5-5.02 7.41-.81z"/>
+    </svg>
+  )}
+  <h2 id={id}>{title}</h2>
+  <span class="heading-mark__rule" aria-hidden="true"></span>
+</div>

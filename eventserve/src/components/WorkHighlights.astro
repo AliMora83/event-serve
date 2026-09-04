@@ -1,0 +1,88 @@
+---
+/**
+ * Old build bled off both edges with no affordance that it scrolled.
+ * This uses scroll-snap plus visible arrow controls and a keyboard-reachable
+ * scroller.
+ */
+const slides = [
+  { src: '/images/work/01.jpg', alt: 'TODO — describe the event' },
+  { src: '/images/work/02.jpg', alt: 'TODO' },
+  { src: '/images/work/03.jpg', alt: 'TODO' },
+  { src: '/images/work/04.jpg', alt: 'TODO' }
+];
+---
+<section class="section--tight highlights" aria-labelledby="work-heading">
+  <div class="wrap highlights__head">
+    <h2 id="work-heading">Work highlights</h2>
+    <div class="highlights__controls">
+      <button class="highlights__btn" data-scroll="-1" aria-label="Previous">‹</button>
+      <button class="highlights__btn" data-scroll="1" aria-label="Next">›</button>
+    </div>
+  </div>
+
+  <ul class="highlights__track" tabindex="0" data-highlight-track>
+    {slides.map((slide) => (
+      <li class="highlights__item">
+        <img src={slide.src} alt={slide.alt} loading="lazy" decoding="async" />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .highlights { background: var(--c-crimson); padding-block: var(--space-6); }
+
+  .highlights__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+  }
+  .highlights__head h2 { margin: 0; color: var(--c-on-crimson); }
+
+  .highlights__controls { display: flex; gap: var(--space-2); }
+
+  .highlights__btn {
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    color: var(--c-on-crimson);
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  .highlights__btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+  .highlights__track {
+    display: flex;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0;
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .highlights__item {
+    flex: 0 0 clamp(240px, 28vw, 360px);
+    scroll-snap-align: start;
+  }
+  .highlights__item img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-scroll]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const track = document.querySelector('[data-highlight-track]');
+      if (!track) return;
+      const dir = Number((btn as HTMLElement).dataset.scroll);
+      track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' });
+    });
+  });
+</script>

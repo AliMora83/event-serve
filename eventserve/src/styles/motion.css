@@ -1,0 +1,112 @@
+/* ==========================================================================
+   Motion
+   The reduced-motion block is FIRST-CLASS, not an afterthought. Everything
+   below it is written on the assumption this block exists.
+   ========================================================================== */
+
+/* --- Scroll reveal -------------------------------------------------------
+   Elements start hidden ONLY when JS is available. Without JS they render
+   normally, so the site degrades to a static page rather than a blank one. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity   var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* --- Parallax ------------------------------------------------------------
+   background-attachment: fixed is ignored on iOS Safari and janks on
+   Android. This uses an oversized child driven by transform instead.       */
+.parallax {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.parallax__media {
+  position: absolute;
+  inset: -20% 0 -20% 0;   /* overscan so the translate never exposes an edge */
+  width: 100%;
+  height: 140%;
+  object-fit: cover;
+  will-change: transform;
+  z-index: -2;
+}
+
+.parallax__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 10, 10, 0.94) 0%,
+    rgba(10, 10, 10, 0.86) 45%,
+    rgba(10, 10, 10, 0.55) 100%
+  );
+}
+
+/* --- Marquee -------------------------------------------------------------
+   Continuous horizontal motion is a vestibular trigger. Pausable on hover,
+   fully stopped under reduced motion.                                      */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--c-crimson);
+  padding-block: var(--space-2);
+}
+
+.marquee__track {
+  display: inline-flex;
+  gap: var(--space-6);
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.marquee:hover .marquee__track,
+.marquee:focus-within .marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* --- Count-up ------------------------------------------------------------ */
+.stat__value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .marquee__track {
+    animation: none;
+    transform: none;
+  }
+
+  .parallax__media {
+    transform: none !important;
+  }
+}

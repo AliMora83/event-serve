@@ -1,10 +1,34 @@
+# ============================================================================
+# DISABLED — 2026-09-03, Sprint 1.1 document cleanup.
+#
+# Renamed to `.disabled` so GitHub will not parse or run it.
+#
+# Why:
+#   1. It bot-commits to `main` on every push and fights sprint-closing pushes.
+#   2. Its output is wrong. Every field below except `version` is hardcoded,
+#      and it describes a product that does not exist in this repository:
+#      a QR check-in / pass-generation app. Specifically wrong:
+#        stack         "TypeScript / Vite / Tailwind / PDF.js"  -> Astro 5 / vanilla CSS
+#        live_url      "https://pass.namka.org"                 -> eventserve.co.za
+#        deploy_target "Hostinger VPS (Nginx)"                  -> HostAfrica shared cPanel
+#        repo          "AliMora83/Events-Website"               -> AliMora83/event-serve
+#   3. It greps `Version:` out of Master.md, which the pre-2026-09-03 Master.md
+#      did not match (`**Version:** 1.0.1`), so `version` fell back to "0.0.0".
+#
+# The generated PROJECT-SYNC.json has been deleted alongside this.
+#
+# When to revisit: after v1.0, once someone has confirmed whether the
+# namka-control dashboard reads PROJECT-SYNC.json or Master.md. Deleting the
+# wrong one drops this project off the dashboard silently, which is why this is
+# disabled rather than removed. See DOC-CLEANUP.md ruling 2.
+# ============================================================================
+
 name: Generate PROJECT-SYNC.json
 
 on:
   push:
     branches:
       - main
-      - master
 
 permissions:
   contents: write
@@ -32,19 +56,19 @@ jobs:
 
           cat > PROJECT-SYNC.json << ENDJSON
           {
-            "project": "Event-Serve",
+            "project": "Event Serve",
             "repo": "AliMora83/Events-Website",
             "branch": "main",
             "stack": "TypeScript / Vite / Tailwind / PDF.js",
             "status": "Active",
-            "priority": 2,
-            "priority_label": "🟡 Priority 2 — Active Development",
-            "progress_percent": 55,
-            "progress_label": "Pass generation active · QR scanning integration in dev",
+            "priority": 1,
+            "priority_label": "🟢 Priority 1 — High Impact",
+            "progress_percent": 30,
+            "progress_label": "Pass generation active · Check-in logic in dev",
             "current_phase": "Phase 2 — Check-in Logic",
-            "next_step": "Implement real-time check-in sync with EventSaaS API",
+            "next_step": "QR scanner integration & Real-time check-in API",
             "blocker": null,
-            "live_url": "https://serve.namka.org",
+            "live_url": "https://pass.namka.org",
             "deploy_target": "Hostinger VPS (Nginx)",
             "agents": ["Antigravity"],
             "version": "$VERSION",

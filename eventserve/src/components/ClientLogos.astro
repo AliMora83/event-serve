@@ -1,0 +1,46 @@
+---
+import clients from '@data/clients.json';
+/**
+ * Old build put mismatched logos on white chips against black. This
+ * normalises them to a single height and desaturates until hover, which
+ * hides most source-file inconsistency.
+ */
+---
+<section class="section--tight" aria-labelledby="clients-heading">
+  <div class="wrap">
+    <h2 id="clients-heading" class="clients__heading">Organisations we've served</h2>
+    <ul class="clients">
+      {clients.map((client, i) => (
+        <li data-reveal data-reveal-step={i}>
+          <img src={client.logo} alt={client.name} loading="lazy" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .clients__heading { text-align: center; margin-bottom: var(--space-5); }
+
+  .clients {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .clients img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(1) brightness(2);
+    opacity: 0.65;
+    transition: opacity var(--dur-fast) var(--ease-out),
+                filter var(--dur-fast) var(--ease-out);
+  }
+  .clients li:hover img { opacity: 1; filter: none; }
+</style>

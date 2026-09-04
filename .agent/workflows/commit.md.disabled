@@ -1,0 +1,46 @@
+---
+description: DISABLED — see note below. Do not run.
+---
+
+<!--
+================================================================================
+DISABLED — 2026-09-04, Sprint 1.1 document cleanup.
+
+Renamed to `.md.disabled` so it no longer appears as a runnable workflow,
+matching how generate-project-sync.yml and update-master-date.yml were handled.
+
+Why:
+  1. It auto-pushes to `main`. Steps 6-11 run `git add .`, commit with a fixed
+     generic message ("chore: refactor and update code"), and `git push origin
+     main` — several marked `// turbo`, so they run without confirmation. The
+     project's working agreement is a sprint branch, a reviewed diff, then a
+     merge and a tag. This bypasses all of it.
+  2. Its build steps are already broken. `npm run lint` and `npm run build`
+     refer to the Vite/React/ESLint setup that Sprint 1.1 Task 3 replaces with
+     Astro. `npm run lint` has no equivalent in the scaffold's package.json.
+  3. A generic commit message on an unreviewed `git add .` is how unrelated
+     project metadata arrived in this repo in the first place.
+
+When to revisit: after Sprint 1.1 Task 3, if a per-project agent workflow is
+still wanted. It would need a real lint/build target for Astro, and it should
+stop at the commit — pushing to `main` stays a human decision.
+
+Original contents preserved verbatim below.
+================================================================================
+-->
+
+1. Run linting to check for code issues
+// turbo
+2. npm run lint
+3. Analyze the linting output. If there are errors, fix them. If there are warnings or improvement opportunities, refactor the code.
+4. Verify that the application builds successfully
+// turbo
+5. npm run build
+6. Stage all changes
+// turbo
+7. git add .
+8. Commit the changes with a descriptive message summarizing the updates
+9. git commit -m "chore: refactor and update code"
+10. Push changes to remote origin main
+// turbo
+11. git push origin main

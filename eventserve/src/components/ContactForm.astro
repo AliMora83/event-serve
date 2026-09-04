@@ -1,0 +1,150 @@
+---
+import site from '@data/site.json';
+/**
+ * Web3Forms. Replaces the old Netlify Forms setup, which NEVER DELIVERED a
+ * message — the site is hosted on HostAfrica, not Netlify, so every POST
+ * since January went nowhere while the visitor saw a success banner.
+ *
+ * Four fixes from the old build:
+ *   1. preventDefault() is called. The old handler didn't, so the native POST
+ *      fired AND the success state rendered regardless of the outcome.
+ *   2. Success only renders on an actual ok response. Failure tells the person
+ *      to email directly.
+ *   3. Contact details stay visible in both states.
+ *   4. The success message uses brand crimson, not stock alert green.
+ */
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+---
+<div class="contact">
+  <div class="contact__details">
+    <h3>Talk to us</h3>
+    <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    {site.phones.map((phone) => (
+      <p><a href={`tel:+27${phone.replace(/\D/g, '').slice(1)}`}>{phone}</a></p>
+    ))}
+    <p class="contact__cities">{site.cities.join(' · ')}</p>
+  </div>
+
+  <form class="contact__form" data-contact-form>
+    <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+    <input type="hidden" name="subject" value="New enquiry from eventserve.co.za" />
+    <input type="hidden" name="from_name" value="EventServe website" />
+    <div class="field">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" required autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
+    </div>
+    <div class="field">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+    </div>
+
+    <!-- Honeypot. Must be named "botcheck" — that's Web3Forms' convention. -->
+    <div class="visually-hidden" aria-hidden="true">
+      <label for="botcheck">Leave this empty</label>
+      <input id="botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <button class="btn btn--primary" type="submit">Send message</button>
+
+    <p class="form-status" role="status" data-form-status hidden></p>
+  </form>
+</div>
+
+<script>
+  const form = document.querySelector('[data-contact-form]') as HTMLFormElement | null;
+  const status = document.querySelector('[data-form-status]') as HTMLElement | null;
+  const submit = form?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();          // the old build's missing line
+    if (!status || !submit) return;
+
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+    status.hidden = true;
+    status.classList.remove('is-error');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form)
+      });
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        status.textContent = "Thanks — we'll be in touch shortly.";
+        form.reset();
+      } else {
+        throw new Error(result.message || 'Submission failed');
+      }
+    } catch {
+      status.textContent =
+        "That didn't send. Please email info@eventserve.co.za or call us instead.";
+      status.classList.add('is-error');
+    } finally {
+      status.hidden = false;
+      submit.disabled = false;
+      submit.textContent = 'Send message';
+    }
+  });
+</script>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .contact { grid-template-columns: 1fr; }
+  }
+
+  .contact__details a { color: var(--c-text-muted); text-decoration: none; }
+  .contact__details a:hover { color: var(--c-crimson-text); }
+  .contact__cities { color: var(--c-text-faint); font-size: var(--fs-small); }
+
+  .field { margin-bottom: var(--space-3); }
+
+  .field label {
+    display: block;
+    font-size: var(--fs-small);
+    color: var(--c-text-muted);
+    margin-bottom: var(--space-1);
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    background: var(--c-surface);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-sm);
+    color: var(--c-text);
+    font: inherit;
+    padding: var(--space-2) var(--space-3);
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .field input:focus,
+  .field textarea:focus { border-color: var(--c-crimson); }
+
+  .form-status {
+    margin-top: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--c-success-bg);
+    border-left: 3px solid var(--c-success-border);
+    border-radius: var(--radius-sm);
+    color: var(--c-success-text);
+  }
+
+  .form-status.is-error {
+    border-left-color: var(--c-error-text);
+    color: var(--c-error-text);
+  }
+</style>
