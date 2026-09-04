@@ -1,0 +1,136 @@
+# EventServe — build and deploy to HostAfrica shared cPanel over SSH.
+#
+# Push to main deploys STAGING only. Production is a deliberate manual run.
+# Every sprint should end with something the client can look at, and nothing
+# should reach the live domain by accident.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Where to deploy'
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+
+concurrency:
+  # Never let two deploys rsync the same directory at once.
+  group: deploy-${{ github.event.inputs.target || 'staging' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.target || 'staging' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # The build FAILS if PUBLIC_WEB3FORMS_KEY is missing — see
+      # src/components/ContactForm.astro. That is intentional: a contact form
+      # that builds clean and silently delivers nothing is the exact bug this
+      # sprint exists to fix. If this step fails, set the secret.
+      - name: Build
+        env:
+          PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
+        run: npm run build
+
+      - name: Resolve target path
+        id: target
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event.inputs.target || 'staging' }}" = "production" ]; then
+            path="${{ vars.PROD_PATH }}"
+          else
+            path="${{ vars.STAGING_PATH }}"
+          fi
+
+          # rsync --delete against a wrong or empty path is destructive.
+          # Refuse anything that isn't an absolute path well below root.
+          case "$path" in
+            ''|'/'|'/home'|'/home/'*/ ) echo "::error::Refusing to deploy to '$path'"; exit 1 ;;
+            /*) ;;
+            *) echo "::error::Target path must be absolute, got '$path'"; exit 1 ;;
+          esac
+          if [ "$(printf '%s' "$path" | awk -F/ '{print NF-1}')" -lt 3 ]; then
+            echo "::error::Target path '$path' is suspiciously shallow"; exit 1
+          fi
+
+          echo "path=$path" >> "$GITHUB_OUTPUT"
+
+      - name: Configure SSH
+        env:
+          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          HOST: ${{ secrets.SSH_HOST }}
+          PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+
+          if [ -n "$KNOWN_HOSTS" ]; then
+            printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            # Trust-on-first-use fallback. Prefer setting SSH_KNOWN_HOSTS —
+            # generate it with: ssh-keyscan -p PORT HOST
+            echo "::warning::SSH_KNOWN_HOSTS not set; falling back to ssh-keyscan"
+            ssh-keyscan -p "${PORT:-22}" "$HOST" > ~/.ssh/known_hosts 2>/dev/null
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          HOST: ${{ secrets.SSH_HOST }}
+          USER: ${{ secrets.SSH_USER }}
+          PORT: ${{ secrets.SSH_PORT }}
+          DEST: ${{ steps.target.outputs.path }}
+        run: |
+          set -euo pipefail
+          # Trailing slash on dist/ copies its CONTENTS, not the directory.
+          #
+          # --delete removes files no longer in the build, but cPanel owns
+          # some entries in public_html that are not ours. Deleting
+          # .well-known breaks AutoSSL renewal; deleting cgi-bin upsets the
+          # panel. Both are excluded.
+          rsync -az --delete \
+            --exclude '.well-known/' \
+            --exclude 'cgi-bin/' \
+            --exclude '.htpasswd' \
+            --human-readable --stats \
+            -e "ssh -i ~/.ssh/id_deploy -p ${PORT:-22} -o StrictHostKeyChecking=yes" \
+            dist/ "$USER@$HOST:$DEST"
+
+      - name: Verify routes
+        env:
+          BASE: ${{ vars.DEPLOY_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BASE:-}" ]; then
+            echo "::warning::DEPLOY_URL not set; skipping route check"; exit 0
+          fi
+          fail=0
+          # Astro emits directory output. /about must resolve without the
+          # trailing slash too — verify rather than assume, per SPRINT-1.1.
+          for p in / /about /partnerships /contact; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -L "$BASE$p")
+            printf '%-16s %s\n' "$p" "$code"
+            [ "$code" = "200" ] || fail=1
+          done
+          code=$(curl -s -o /dev/null -w '%{http_code}' -L "$BASE/definitely-not-a-page")
+          printf '%-16s %s (expect 404)\n' "/404" "$code"
+          [ "$code" = "404" ] || fail=1
+          exit $fail

@@ -60,6 +60,46 @@ Still worth checking what `gradflow` did, in case a component in the port relied
 **Done when:** staging loads, four routes resolve, a test enquiry reaches the client's inbox.
 **Tag `v0.1`.**
 
+### Deploy pipeline — configuration required
+
+`.github/workflows/deploy.yml` builds and rsyncs `dist/` over SSH to cPanel.
+**Push to `main` deploys staging only.** Production is a manual
+`workflow_dispatch` run, so nothing reaches the live domain by accident.
+
+It cannot run until these are set on the GitHub repo.
+
+**Secrets** (Settings → Secrets and variables → Actions → Secrets):
+
+| Secret | What it is |
+|---|---|
+| `SSH_HOST` | cPanel server hostname |
+| `SSH_USER` | cPanel account username |
+| `SSH_PRIVATE_KEY` | Private half of a key whose public half is in cPanel → SSH Access → Manage Keys. Generate a **deploy-only** key; do not reuse a personal one |
+| `SSH_PORT` | Optional. Defaults to 22 — HostAfrica often uses a non-standard port |
+| `SSH_KNOWN_HOSTS` | Optional but recommended. `ssh-keyscan -p PORT HOST`. Without it the workflow falls back to trust-on-first-use and warns |
+| `PUBLIC_WEB3FORMS_KEY` | Web3Forms access key. **The build fails without it** — by design |
+
+**Variables** (same page → Variables):
+
+| Variable | Example |
+|---|---|
+| `STAGING_PATH` | `/home/<user>/staging.eventserve.co.za` |
+| `PROD_PATH` | `/home/<user>/public_html` |
+| `DEPLOY_URL` | `https://staging.eventserve.co.za` — enables the post-deploy route check |
+
+Both environments (`staging`, `production`) should exist under Settings →
+Environments. Adding a required reviewer on `production` is worth doing.
+
+**Safety notes.** `rsync --delete` removes anything in the target that is not
+in the build, so the workflow refuses shallow or non-absolute paths outright,
+and excludes `.well-known/` (deleting it breaks AutoSSL renewal), `cgi-bin/`
+and `.htpasswd`, which cPanel owns.
+
+`staging.eventserve.co.za` must be created as a subdomain in cPanel first, and
+its document root is what `STAGING_PATH` points at. Staging is kept out of
+search results by an `X-Robots-Tag` header in `.htaccess` keyed on the
+hostname — not by `robots.txt`, since the same build is promoted to live.
+
 ## Sprint 2 — Shared components *(days 2–4)*
 
 Port from `legacy/src/components/`: Navbar, Footer, Hero, Marquee, ExperienceStats,
@@ -165,7 +205,7 @@ calm rather than made at midnight.
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Remaining content arrives late | Partnerships ships with two cards | Fallbacks defined. Only the form key truly blocks |
-| A fourth wrong-product doc appears | Time lost re-litigating | Investigate what `.agent/` syncs before Sprint 2 |
+| A fourth wrong-product doc appears | Time lost re-litigating | `.agent/` investigated and cleared — it syncs nothing. Antigravity's workspace config is the remaining suspect |
 | Logo permissions refused | Partnerships page loses its proof | Ask in Sprint 1. Fall back to naming brands in text without logos |
 | African Bank has no real story | Visibly empty third card | Two cards is the fallback, decided in Sprint 4 |
 | Numbers change again | Credibility damage if collateral disagrees | Lock all three figures with the client in Sprint 2 and don't reopen |
