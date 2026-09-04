@@ -22,10 +22,9 @@
  * rest smaller. Those are fine inside a card or a carousel slide, and visibly
  * soft stretched across a viewport.
  *
- * The design has THREE parallax bands and two adequate photographs. The third
- * band (`/partnerships`) is knowingly under-resolved until the client supplies
- * originals. `astro:assets` will not rescue this — it downscales, it does not
- * invent detail.
+ * The design originally had THREE parallax bands and two adequate photographs.
+ * The budget was cut to TWO rather than ship a soft one: /partnerships now uses
+ * a solid crimson band. `astro:assets` downscales; it does not invent detail.
  * ---------------------------------------------------------------------------
  */
 
@@ -42,14 +41,14 @@ import stage from './hero/bg-01.jpg';
 // named in the partnerships copy. Was the old ImpactSection background.
 import sportAwards from './hero/sasa-image.jpeg';
 
-// UNDER-RESOLVED at 900x500 behind a full-bleed band. Chosen from
-// Presidential_Gala per ruling; replace when originals arrive.
-import redCarpet from './gallery/Presidential_Gala/Presidential_Gala_1.png';
+// No `red-carpet` entry. The /partnerships band was cut from parallax to a
+// solid crimson treatment (SolidBand.astro) because the best candidate was
+// 900x500 behind a full-bleed band. gallery/Presidential_Gala/ stays staged
+// and unreferenced, ready if original photography arrives.
 
 export const heroImages = {
   stage,
   'sport-awards': sportAwards,
-  'red-carpet': redCarpet,
 } as const;
 
 export type HeroKey = keyof typeof heroImages;

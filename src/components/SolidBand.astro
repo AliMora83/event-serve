@@ -1,0 +1,81 @@
+---
+/**
+ * Full-bleed band with a solid crimson treatment and the star motif, for use
+ * where no photograph of adequate resolution exists.
+ *
+ * WHY THIS EXISTS
+ * The site has exactly two photographs wide enough to back a full-bleed band
+ * (sasa-image.jpeg 3600x2401, bg-01.jpg 1920x1320) and the design wanted
+ * three. A knowingly soft photograph reads as an oversight; a solid band reads
+ * as a choice. The parallax budget is therefore TWO bands, both on the
+ * homepage — see CLAUDE.md.
+ *
+ * TO RESTORE THE PHOTOGRAPH when original artwork arrives: swap this element
+ * back to <ParallaxBand image={...}> in the consuming page. That is the whole
+ * change. Note that doing so puts the parallax budget back to three, which was
+ * cut deliberately, so it is a design decision and not just a swap.
+ *
+ * Colours are set on this component rather than inherited. --c-text-muted
+ * measures 3.04:1 on --c-crimson and fails AA, so a band that inherited page
+ * defaults could silently drop below threshold.
+ */
+interface Props {
+  minHeight?: string;
+}
+const { minHeight = '520px' } = Astro.props;
+---
+<section class="solid-band" style={`--band-min-h: ${minHeight}`}>
+  <!-- Decorative only. The motif is the brand's existing star, oversized and
+       bled off the edge; it carries no meaning and is hidden from AT. -->
+  <svg class="solid-band__motif" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+    <path d="M12 1.5l3.09 6.83 7.41.81-5.5 5.02 1.5 7.34L12 17.9l-6.5 3.6 1.5-7.34-5.5-5.02 7.41-.81z"/>
+  </svg>
+
+  <div class="wrap solid-band__content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .solid-band {
+    position: relative;
+    overflow: hidden;
+    min-height: var(--band-min-h);
+    display: flex;
+    align-items: center;
+    padding-block: var(--section-y);
+    background: var(--c-crimson);
+    /* Fills only — this is the sanctioned use of --c-crimson. */
+    color: var(--c-on-crimson);
+  }
+
+  .solid-band__content {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Force the on-crimson palette. Anything inheriting --c-text-muted here
+     would measure 3.04:1 and fail AA. */
+  .solid-band :global(h2),
+  .solid-band :global(p),
+  .solid-band :global(.band__lede) {
+    color: var(--c-on-crimson);
+  }
+
+  .solid-band__motif {
+    position: absolute;
+    z-index: 0;
+    right: -4%;
+    bottom: -28%;
+    width: min(46vw, 420px);
+    height: auto;
+    color: var(--c-on-crimson);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    .solid-band__motif { right: -18%; bottom: -14%; width: 64vw; }
+  }
+</style>

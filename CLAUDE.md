@@ -75,8 +75,17 @@ fixed:
 **Reduced motion is handled globally** at the foot of `src/styles/motion.css`
 and checked in `src/scripts/motion.js`. Never add motion that bypasses it.
 
-**Parallax budget is three bands site-wide**: home hero, home partnerships
-band, partnerships page band. A fourth makes it read as decoration.
+**Parallax budget is two bands site-wide**, both on the homepage: the hero
+(`bg-01.jpg`) and the partnerships band (`sasa-image.jpeg`). A third makes it
+read as decoration.
+
+Cut from three in Sprint 1.1. Only two photographs in the library are wide
+enough to back a full-bleed band — everything else is a 900x500 web export —
+and the `/partnerships` band now uses `SolidBand.astro`, a solid crimson
+treatment with the star motif. A knowingly soft photograph reads as an
+oversight; a solid band reads as a choice. If original photography arrives,
+restoring it is a one-line swap **and** a reopening of this budget, not just
+a swap.
 
 **Never touch DNS or MX records.** `info@eventserve.co.za` is a mailbox on the
 same hosting. Mail routing is out of scope for every sprint.

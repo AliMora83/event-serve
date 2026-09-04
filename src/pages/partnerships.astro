@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SectionHeading from '@components/SectionHeading.astro';
-import ParallaxBand from '@components/ParallaxBand.astro';
+import SolidBand from '@components/SolidBand.astro';
 import { Image } from 'astro:assets';
 import partners from '@data/partners.json';
-import { heroImages, pageImages, clientLogos, type ClientLogoKey } from '@assets/images';
+import { pageImages, clientLogos, type ClientLogoKey } from '@assets/images';
 import approach from '@data/approach.json';
 ---
 <BaseLayout
@@ -102,15 +102,23 @@ import approach from '@data/approach.json';
     </div>
   </section>
 
-  <!-- 5. WHERE BRANDS MEET EXPERIENCES — parallax band 3 of 3 -->
-  <ParallaxBand image={heroImages['red-carpet']} speed={0.2}>
+  <!--
+    5. WHERE BRANDS MEET EXPERIENCES — solid treatment, not parallax.
+    The parallax budget is TWO bands, both on the homepage. This one was cut
+    because no photograph here is wide enough to back it: the best candidate
+    was 900x500 behind a full-bleed band, which reads as an oversight rather
+    than a choice. Restore with <ParallaxBand image={...}> if the client
+    supplies original-resolution photography — and re-open the budget question
+    at the same time.
+  -->
+  <SolidBand>
     <h2>From the red carpet to the sporting arena</h2>
     <p class="band__lede">
       Whether you're sponsoring an established event, securing a strategic brand
       partnership, or building a bespoke activation, we bring the relationships,
       creativity and execution to make it happen.
     </p>
-  </ParallaxBand>
+  </SolidBand>
 
   <!-- 6. CTA -->
   <section class="section cta">

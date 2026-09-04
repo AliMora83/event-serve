@@ -3,9 +3,15 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 /**
  * Full-bleed image band with transform-driven parallax.
- * Used in exactly THREE places site-wide: the home hero, the home
- * Partnerships band, and "Where brands meet experiences" on /partnerships.
- * Adding a fourth will make the effect feel decorative rather than deliberate.
+ *
+ * Used in exactly TWO places site-wide, both on the homepage: the hero and the
+ * Partnerships band. Adding a third will make the effect feel decorative
+ * rather than deliberate.
+ *
+ * The /partnerships band was cut to a solid treatment in Sprint 1.1 — see
+ * SolidBand.astro. Only two photographs in src/assets/ are wide enough to back
+ * a band at all, so this component should only ever receive one of those two.
+ * A 900x500 source stretched full-bleed is visibly soft.
  */
 interface Props {
   image: ImageMetadata;

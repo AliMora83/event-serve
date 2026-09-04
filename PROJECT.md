@@ -182,7 +182,7 @@ Shorter than planned — the Services route was cut, so this sprint has slack.
 
 ## Sprint 6 — Polish *(days 12–13)*
 
-Parallax tuned on three bands, tested on real iOS and Android.
+Parallax tuned on two bands (budget cut from three in Sprint 1.1), tested on real iOS and Android.
 Full pass with reduced motion enabled.
 Lighthouse, target 90+ mobile.
 Keyboard and screen reader walkthrough. Contrast audit against final content.
