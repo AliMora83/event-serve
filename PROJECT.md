@@ -52,7 +52,10 @@ Keep one tool per branch at a time. Two agents editing the same working tree pro
 Docs cleanup, scaffold installed, old build moved to `legacy/`, images staged.
 cPanel deploy pipeline, `staging.eventserve.co.za`, `.htaccess`.
 Web3Forms wired and **verified by a delivered message**.
-Remove `@astrojs/react` and `lottie-react`. Check what `gradflow` does before removing it.
+Confirm the new tree has no React: `@astrojs/react`, `lottie-react` and `gradflow`
+live in the **old** build's `package.json`, which moves to `legacy/`. Nothing to
+remove from the Astro scaffold — dependencies there are `astro` and `sharp` only.
+Still worth checking what `gradflow` did, in case a component in the port relied on it.
 
 **Done when:** staging loads, four routes resolve, a test enquiry reaches the client's inbox.
 **Tag `v0.1`.**
@@ -92,7 +95,7 @@ Image migration, all 86 files:
 
 # Phase 2 — Pages and launch
 
-**Days 8–15.** Outcome: five routes live on the production domain.
+**Days 8–15.** Outcome: four routes live on the production domain.
 
 ## Sprint 4 — Partnerships *(days 8–9)*
 

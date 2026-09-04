@@ -76,22 +76,32 @@ Move the existing Vite/React build to `legacy/` and commit it before installing 
 
 ## 3.3 Install the scaffold
 
-Extract `eventserve-scaffold.zip`. It collides with the existing `src/`, `public/`, `package.json` and `.gitignore` — hence 3.2 first.
+The scaffold is already extracted at `eventserve/`. Move its contents up to the
+repo root **after** 3.2 — it collides with `src/`, `public/`, `package.json` and
+`.gitignore`, which is why the old build moves to `legacy/` first.
 
 `npm install`, then confirm both `npm run dev` and `npm run build` complete clean.
 
-## 3.4 Images — correction to the scaffold
+Dependencies are `astro` and `sharp` only. No React, no Lottie. If either appears,
+something went wrong in the move.
 
-The scaffold puts images in `public/images/`. **That was wrong.** `public/` is a straight passthrough with no optimisation, and you found 86 PNGs of photographs at 46MB.
+## 3.4 Images — staging only, full migration is Sprint 3
 
-Move them to `src/assets/` and serve through `astro:assets`, which gives AVIF/WebP conversion and responsive sizing automatically. This is the single largest contributor to the Sprint 5 Lighthouse target.
+The scaffold's components still reference `public/images/` in 17 places across
+8 files. That is **known and expected** — the paths are placeholders and every
+image renders broken until Sprint 3 rewires them.
 
-- [ ] Migrate `src/assets/` galleries, keeping the **subfolder copies only** — drop the 9 root-level duplicates (~5MB)
+`src/assets/images.ts` documents the pattern and lists all 17 references.
+
+**In this sprint, only stage the files:**
+
+- [ ] Move the old build's `src/assets/` galleries across, keeping the **subfolder copies only** — drop the 9 root-level duplicates (~5MB)
 - [ ] Skip `Screenshot-2025-10-16-at-16.53.31.jpg` (corrupt, 4KB, no dimensions)
 - [ ] Delete `public/vite.svg` and `public/.DS_Store`
 - [ ] **`show_jan.mp4` (29MB) does not get deployed.** It moves to Vimeo. Remove it from the repo, note the pending Vimeo URL in `PROJECT.md`, and stub the embed with a poster frame for Sprint 2
 - [ ] Generate `favicon.svg` and `og-default.jpg` from `Events-white-01` / `EventsLogo.png`
-- [ ] `sasa-image.jpeg` at 3600×2401 is the SA Sport Awards shot — this is the partnerships band background. Keep at high resolution, let `astro:assets` handle the responsive sizes
+- [ ] `sasa-image.jpeg` at 3600×2401 is the SA Sport Awards shot — the partnerships band background. Keep at full resolution
+- [ ] **Do not rewire components yet.** Populating `images.ts` and swapping the 17 references is Sprint 3, alongside writing alt text for all 86
 
 ## 3.5 Contact form — Web3Forms
 
@@ -110,7 +120,7 @@ states. Your job is the wiring and the proof:
   - **No SSH:** FTP-based deploy Action, or document a manual upload procedure in `PROJECT.md`
 - [ ] Set up **`staging.eventserve.co.za`** as a subdomain, deploy there, not to the live site. Every sprint should end with something the client can look at
 - [ ] Add `.htaccess` for the Apache/LiteSpeed stack: HTTPS redirect, `Cache-Control` on hashed assets, gzip/brotli, custom 404
-- [ ] Confirm all five routes resolve on staging. Astro's default directory output gives `/about/index.html`, which Apache serves correctly — verify rather than assume
+- [ ] Confirm all four routes resolve on staging. Astro's default directory output gives `/about/index.html`, which Apache serves correctly — verify rather than assume
 - [ ] **Do not touch DNS or MX records.** `info@eventserve.co.za` is almost certainly a mailbox on this hosting. Nothing in this sprint should go near mail routing
 
 ## 3.7 Verify the motion foundation
@@ -132,7 +142,7 @@ states. Your job is the wiring and the proof:
 - Old build preserved in `legacy/`, Astro installed, `build` clean
 - Images migrated to `src/assets/`, duplicates dropped, video removed
 - **A test enquiry has actually arrived in the client's inbox**
-- `staging.eventserve.co.za` live, all five routes resolving
+- `staging.eventserve.co.za` live, all four routes resolving
 - `Master.md` and `PROJECT.md` both present, each describing what it should
 
 ## Closing
