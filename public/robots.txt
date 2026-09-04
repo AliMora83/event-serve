@@ -1,0 +1,9 @@
+# Staging is excluded by an X-Robots-Tag header in .htaccess, not here —
+# the same build is promoted to production, so this file must stay
+# production-correct.
+#
+# No Sitemap line yet: @astrojs/sitemap is not installed (adding a dependency
+# needs sign-off). Add it here once it is, or the line points at a 404.
+
+User-agent: *
+Allow: /

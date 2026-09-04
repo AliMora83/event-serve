@@ -14,6 +14,24 @@ import site from '@data/site.json';
  *   4. The success message uses brand crimson, not stock alert green.
  */
 const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+
+/**
+ * Fail the BUILD, not the visitor.
+ *
+ * Without this, a missing key produces `access_key=""`, the page builds and
+ * deploys clean, and the form dies at runtime with a generic error. That is
+ * precisely the failure mode that ran unnoticed from January: a form that
+ * looks fine and delivers nothing. A broken contact form must never be
+ * shippable in silence.
+ *
+ * Dev is left alone so the site runs without a key.
+ */
+if (import.meta.env.PROD && !WEB3FORMS_KEY) {
+  throw new Error(
+    'PUBLIC_WEB3FORMS_KEY is not set. The contact form would build but never ' +
+    'deliver. Set it in .env (see .env.example) or in the deploy environment.'
+  );
+}
 ---
 <div class="contact">
   <div class="contact__details">

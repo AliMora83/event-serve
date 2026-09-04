@@ -1,0 +1,91 @@
+# EventServe — Apache / LiteSpeed (HostAfrica shared cPanel)
+# Ships from public/ to public_html/ as part of dist/.
+# Astro builds directory output: /about/ -> /about/index.html.
+
+# ---------------------------------------------------------------------------
+# HTTPS
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS. HTTP_HOST is preserved so this is correct on both the live
+  # domain and the staging subdomain.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Staging must never be indexed
+#
+# One build is promoted from staging to live, so robots.txt cannot differ
+# between them. The header is applied per-host instead, which means the live
+# site is unaffected and there is no file to forget to change at promotion.
+# ---------------------------------------------------------------------------
+<IfModule mod_setenvif.c>
+  SetEnvIf Host ^staging\. IS_STAGING=1
+</IfModule>
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow" env=IS_STAGING
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Custom 404
+# ---------------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# Caching
+#
+# Everything Astro emits under /_astro/ is content-hashed, so it is immutable
+# and safe to cache for a year. HTML is not hashed and must revalidate, or
+# visitors keep a stale page after a deploy.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|woff2?|avif|webp|jpe?g|png|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  <FilesMatch "\.(html|xml|json|txt)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Defence in depth. Cheap, and the site takes no user data beyond the form.
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType font/woff2                "access plus 1 year"
+  ExpiresByType image/avif                "access plus 1 year"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Compression
+#
+# LiteSpeed honours mod_deflate directives. Brotli is used when the server
+# provides it; the deflate block is the fallback, not a duplicate.
+# Images and fonts are already compressed — recompressing them wastes CPU.
+# ---------------------------------------------------------------------------
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Hygiene
+# ---------------------------------------------------------------------------
+Options -Indexes
+
+<FilesMatch "^\.(env|git|DS_Store)">
+  Require all denied
+</FilesMatch>
