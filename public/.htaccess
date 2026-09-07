@@ -1,4 +1,4 @@
-# Events Serve — Apache / LiteSpeed (HostAfrica shared cPanel)
+# Events Serve — Apache / LiteSpeed (Afrihost shared cPanel)
 # Ships from public/ to public_html/ as part of dist/.
 # Astro builds directory output: /about/ -> /about/index.html.
 

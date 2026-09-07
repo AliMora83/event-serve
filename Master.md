@@ -27,7 +27,7 @@ Last updated: 2026-09-03
 | Progress | 5% |
 | Stack | Astro 5 / vanilla CSS / static |
 | Repo | AliMora83/event-serve |
-| Deploy | HostAfrica shared cPanel (Apache) |
+| Deploy | Afrihost shared cPanel (Apache), FTPS |
 | Staging | None — no staging environment exists; `deploytest` only |
 | Live | eventsserve.co.za |
 | Next step | Sprint 1.1 — audit complete, foundation in progress |

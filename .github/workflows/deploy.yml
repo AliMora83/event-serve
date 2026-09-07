@@ -1,4 +1,4 @@
-# Events Serve — build and deploy to HostAfrica shared cPanel over SSH.
+# Events Serve — build and deploy to Afrihost shared cPanel over FTPS.
 #
 # MANUAL TRIGGER ONLY. There is deliberately no `push:` trigger.
 #
@@ -9,6 +9,19 @@
 #
 # Until cutover day, use the `deploytest` target. It writes to a subdirectory
 # and cannot touch the live site.
+#
+# TRANSPORT: FTPS, not SSH.
+#
+# SSH IS NOT AVAILABLE ON THIS HOSTING PACKAGE. Every SSH port times out while
+# cPanel answers on 2083. This is a property of the Afrihost shared package,
+# not a misconfiguration — do not spend another afternoon on it, and do not
+# "restore" the rsync-over-SSH version of this file. The site is a static
+# dist/ build; it never needed a shell.
+#
+# Because the target is now an FTP directory rather than an absolute
+# filesystem path, DEPLOYTEST_PATH and PROD_PATH are retired and replaced by
+# FTP_DEPLOYTEST_DIR and FTP_PROD_DIR, which are relative to the FTP account's
+# root. See PROJECT.md for how to confirm what that root actually is.
 
 name: Deploy
 
@@ -70,150 +83,205 @@ jobs:
           PUBLIC_WEB3FORMS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_KEY }}
         run: npm run build
 
-      - name: Resolve target
-        id: target
+      # The deployed .htaccess already blocks /_deploytest/ via a REQUEST_URI
+      # rewrite. Appending `Require all denied` is the second mechanism:
+      # independent of mod_rewrite, and scoped to this directory only.
+      #
+      # Under SSH this was appended to the remote file after upload. FTP has no
+      # remote shell, so the append happens here, to the build output, before
+      # upload. Same two mechanisms, same result on the server. It is written
+      # into dist/ in CI and is never committed — public/.htaccess in the repo
+      # does not contain it, and a production build never runs this step.
+      - name: Seal the deploy test directory
+        if: github.event.inputs.target == 'deploytest'
         run: |
           set -euo pipefail
-          if [ "${{ github.event.inputs.target }}" = "production" ]; then
-            path="${{ vars.PROD_PATH }}"
-            url="${{ vars.PROD_URL }}"
+          printf '\n# Appended by the deploy workflow. This directory is not public.\nRequire all denied\n' >> dist/.htaccess
+          echo "Sealed dist/.htaccess before upload"
+
+      - name: Resolve target
+        id: target
+        env:
+          TARGET: ${{ github.event.inputs.target }}
+          FTP_PROD_DIR: ${{ vars.FTP_PROD_DIR }}
+          FTP_DEPLOYTEST_DIR: ${{ vars.FTP_DEPLOYTEST_DIR }}
+          PROD_URL: ${{ vars.PROD_URL }}
+          DEPLOYTEST_URL: ${{ vars.DEPLOYTEST_URL }}
+        run: |
+          set -euo pipefail
+          if [ "$TARGET" = "production" ]; then
+            dir="$FTP_PROD_DIR"
+            url="$PROD_URL"
           else
             # deploytest and cleanup-deploytest share the same directory.
-            path="${{ vars.DEPLOYTEST_PATH }}"
-            url="${{ vars.DEPLOYTEST_URL }}"
+            dir="$FTP_DEPLOYTEST_DIR"
+            url="$DEPLOYTEST_URL"
           fi
 
-          # rsync --delete against a wrong or empty path is destructive.
+          # A clean-slate sync against a wrong or empty directory is
+          # destructive, exactly as rsync --delete was.
           #
           # Normalise trailing slashes FIRST. Without this, a pattern meant to
-          # catch a bare home directory also matches any legitimate deeper path
-          # written with a trailing slash — which rsync targets often are.
-          path="${path%/}"
+          # catch a bare root also matches any legitimate deeper path written
+          # with a trailing slash — which FTP targets always are, because the
+          # action requires one.
+          dir="${dir%/}"
 
-          case "$path" in
-            ''|'/'|'/home') echo "::error::Refusing to deploy to '$path'"; exit 1 ;;
-            /*) ;;
-            *) echo "::error::Target path must be absolute, got '$path'"; exit 1 ;;
+          # These guards are the SSH-era checks rebased into FTP terms. The
+          # old rules were "must be absolute" and "must contain at least three
+          # slashes", both of which described an absolute filesystem path like
+          # /home/<user>/public_html. An FTP directory is relative to the FTP
+          # account root, so the equivalent assertions are: non-empty, NOT
+          # absolute, no parent traversal, and at least one real segment.
+          case "$dir" in
+            ''|'.'|'./') echo "::error::Refusing to deploy to the FTP root ('$dir')"; exit 1 ;;
+            /*) echo "::error::FTP dir must be relative to the FTP root, got absolute '$dir'"; exit 1 ;;
+            *..*) echo "::error::FTP dir must not contain '..', got '$dir'"; exit 1 ;;
           esac
-          if [ "$(printf '%s' "$path" | awk -F/ '{print NF-1}')" -lt 3 ]; then
-            echo "::error::Target path '$path' is suspiciously shallow"; exit 1
-          fi
 
-          # Belt and braces: the deploytest path must be a subdirectory, so a
-          # mis-set variable cannot aim the test run at the live document root.
-          # Applies to cleanup too — an rm -rf must not be aimable at the
-          # document root by editing one repo variable.
-          if [ "${{ github.event.inputs.target }}" != "production" ]; then
-            case "$path" in
+          # Belt and braces: the deploytest directory must be a subdirectory, so
+          # a mis-set variable cannot aim the test run at the live document
+          # root. Applies to cleanup too — a clean-slate wipe must not be
+          # aimable at the document root by editing one repo variable.
+          #
+          # The */_deploytest pattern also enforces the "at least one segment"
+          # rule for these two targets: it cannot match a bare '_deploytest'
+          # sitting at the FTP root.
+          if [ "$TARGET" != "production" ]; then
+            case "$dir" in
               */_deploytest) ;;
-              *) echo "::error::deploytest path must end in /_deploytest, got '$path'"; exit 1 ;;
+              *) echo "::error::deploytest dir must end in /_deploytest, got '$dir'"; exit 1 ;;
             esac
           fi
 
-          echo "path=$path" >> "$GITHUB_OUTPUT"
-          echo "url=$url"   >> "$GITHUB_OUTPUT"
+          # SamKirkland/FTP-Deploy-Action requires a trailing slash on
+          # server-dir. Emit both forms: the bare one for the guards and for
+          # lftp, the slashed one for the action.
+          echo "dir=$dir"             >> "$GITHUB_OUTPUT"
+          echo "server_dir=$dir/"     >> "$GITHUB_OUTPUT"
+          echo "url=$url"             >> "$GITHUB_OUTPUT"
 
-      - name: Configure SSH
-        env:
-          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          HOST: ${{ secrets.SSH_HOST }}
-          PORT: ${{ secrets.SSH_PORT }}
-        run: |
-          set -euo pipefail
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          printf '%s\n' "$KEY" > ~/.ssh/id_deploy
-          chmod 600 ~/.ssh/id_deploy
-
-          if [ -n "$KNOWN_HOSTS" ]; then
-            printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-          else
-            # Prefer setting SSH_KNOWN_HOSTS: ssh-keyscan -p PORT HOST
-            echo "::warning::SSH_KNOWN_HOSTS not set; falling back to ssh-keyscan"
-            ssh-keyscan -p "${PORT:-22}" "$HOST" > ~/.ssh/known_hosts 2>/dev/null
-          fi
-          chmod 600 ~/.ssh/known_hosts
-
-      - name: Deploy
+      # The action keeps a sync-state file (.ftp-deploy-sync-state.json) in
+      # server-dir and uses it to upload only what changed. Deleting it from
+      # the server is not dangerous, but it does force a full re-upload of the
+      # entire site on the next run.
+      #
+      # dangerous-clean-slate is deliberately NOT set here. On production it
+      # would delete every file in public_html before uploading, including the
+      # cPanel-owned entries excluded below.
+      #
+      # The excludes carry over from the rsync version: .well-known must
+      # survive or AutoSSL renewal breaks, cgi-bin upsets the panel, and
+      # _deploytest is excluded so a production run does not sweep away a test
+      # directory that is still being inspected.
+      - name: Deploy over FTPS
         if: github.event.inputs.target != 'cleanup-deploytest'
-        env:
-          HOST: ${{ secrets.SSH_HOST }}
-          USER: ${{ secrets.SSH_USER }}
-          PORT: ${{ secrets.SSH_PORT }}
-          DEST: ${{ steps.target.outputs.path }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ steps.target.outputs.server_dir }}
+          state-name: .ftp-deploy-sync-state.json
+          dangerous-clean-slate: false
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.well-known/**
+            **/cgi-bin/**
+            **/.htpasswd
+            **/_deploytest/**
+
+      # ----------------------------------------------------------------------
+      # Verification — deploytest
+      #
+      # The directory is deliberately unreachable, so a 200 is impossible and a
+      # 403 is the only meaningful HTTP signal. What this test exists to prove
+      # is that the transport works and the paths are right, which is why the
+      # substantive checks read the remote filesystem rather than fetching it.
+      #
+      # Under SSH that was a `find` over the wire. lftp gives the same recursive
+      # listing over FTPS, so file-count parity and the key-file assertion both
+      # survive intact.
+      #
+      # The permission audit does NOT survive. FTP directory listings do not
+      # report modes reliably across servers — LIST output is a de facto
+      # convention, not a spec, and cPanel's FTP daemon is not obliged to give
+      # us anything comparable to `find -perm`. Rather than assert something we
+      # cannot trust, the check is dropped. If file modes are ever in question,
+      # check them in cPanel's File Manager.
+      # ----------------------------------------------------------------------
+      - name: Install lftp
+        if: github.event.inputs.target == 'deploytest'
         run: |
           set -euo pipefail
-          # Trailing slash on dist/ copies its CONTENTS, not the directory.
-          #
-          # --delete removes files no longer in the build, but cPanel owns some
-          # entries in public_html that are not ours. Deleting .well-known
-          # breaks AutoSSL renewal; deleting cgi-bin upsets the panel. Both are
-          # excluded. _deploytest is excluded too, so a production run does not
-          # sweep away a test directory that is still being inspected.
-          rsync -az --delete \
-            --exclude '.well-known/' \
-            --exclude 'cgi-bin/' \
-            --exclude '.htpasswd' \
-            --exclude '_deploytest/' \
-            --human-readable --stats \
-            -e "ssh -i ~/.ssh/id_deploy -p ${PORT:-22} -o StrictHostKeyChecking=yes" \
-            dist/ "$USER@$HOST:$DEST"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp
+          lftp --version | head -1
 
-      # The deployed .htaccess already blocks /_deploytest/ via a REQUEST_URI
-      # rewrite. Appending `Require all denied` to the copy that lands there is
-      # the second mechanism: independent of mod_rewrite, and scoped to this
-      # directory only because it is written after the fact, never committed.
-      - name: Seal the deploy test directory
+      - name: Verify over FTPS
         if: github.event.inputs.target == 'deploytest'
         env:
-          HOST: ${{ secrets.SSH_HOST }}
-          USER: ${{ secrets.SSH_USER }}
-          PORT: ${{ secrets.SSH_PORT }}
-          DEST: ${{ steps.target.outputs.path }}
-        run: |
-          set -euo pipefail
-          ssh -i ~/.ssh/id_deploy -p "${PORT:-22}" -o StrictHostKeyChecking=yes \
-            "$USER@$HOST" "printf '\n# Appended by the deploy workflow. This directory is not public.\nRequire all denied\n' >> '$DEST/.htaccess'"
-          echo "Sealed $DEST/.htaccess"
-
-      # Deploy-test verification runs over SSH, not HTTP — the directory is
-      # deliberately unreachable, so a 200 is impossible and a 403 is the only
-      # meaningful HTTP signal. What this test exists to prove is that rsync
-      # works, the paths are right and the permissions are sane. None of that
-      # needs a public URL.
-      - name: Verify over SSH
-        if: github.event.inputs.target == 'deploytest'
-        env:
-          HOST: ${{ secrets.SSH_HOST }}
-          USER: ${{ secrets.SSH_USER }}
-          PORT: ${{ secrets.SSH_PORT }}
-          DEST: ${{ steps.target.outputs.path }}
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          DIR: ${{ steps.target.outputs.dir }}
           BASE: ${{ steps.target.outputs.url }}
         run: |
           set -euo pipefail
-          SSH="ssh -i $HOME/.ssh/id_deploy -p ${PORT:-22} -o StrictHostKeyChecking=yes $USER@$HOST"
+
+          # Explicit TLS (AUTH TLS on port 21), matching the action's
+          # `protocol: ftps`. lftp's ftps:// scheme would mean IMPLICIT TLS on
+          # 990, which is a different thing — hence ftp:// plus ssl-force.
+          #
+          # Certificate verification stays ON. If this step fails on the
+          # certificate, fix the certificate or pin the CA; do not add
+          # `set ssl:verify-certificate no`.
+          #
+          # --env-password reads LFTP_PASSWORD from the environment so the
+          # password never appears in the process arguments.
+          lftp --env-password -u "$FTP_USER" "ftp://$FTP_HOST" -e "
+            set ssl:verify-certificate yes;
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            cd \"$DIR\";
+            find .;
+            bye
+          " > /tmp/remote_raw.txt
+
+          # Normalise './x' -> 'x', drop directories (trailing /) and blanks.
+          sed 's|^\./||' /tmp/remote_raw.txt | grep -v '/$' | grep . > /tmp/remote_files.txt || true
+
+          if [ ! -s /tmp/remote_files.txt ]; then
+            echo "::error::Remote listing of '$DIR' is empty — the upload did not land where expected"
+            exit 1
+          fi
 
           echo "--- file count: local build vs remote ---"
           local_n=$(find dist -type f | wc -l | tr -d ' ')
-          remote_n=$($SSH "find '$DEST' -type f | wc -l" | tr -d ' ')
+          # The action writes its own sync-state file into server-dir. It is
+          # not part of the build, so it is excluded from the comparison.
+          remote_n=$(grep -vc '^\.ftp-deploy-sync-state\.json$' /tmp/remote_files.txt || true)
           echo "  local  $local_n"
-          echo "  remote $remote_n"
-          # Remote is local + 0; the .htaccess append edits a file, adds none.
+          echo "  remote $remote_n (excluding the sync-state file)"
+          # The .htaccess seal is appended before upload, so it edits a file
+          # and adds none. Remote is local + 0.
           [ "$local_n" = "$remote_n" ] || { echo "::error::file count mismatch"; exit 1; }
 
           echo "--- key files present ---"
           for f in index.html .htaccess robots.txt 404.html about/index.html contact/index.html partnerships/index.html; do
-            if $SSH "test -f '$DEST/$f'"; then echo "  ok      $f"; else echo "  MISSING $f"; exit 1; fi
+            if grep -Fxq "$f" /tmp/remote_files.txt; then echo "  ok      $f"; else echo "  MISSING $f"; exit 1; fi
           done
 
-          echo "--- permissions (cPanel wants 644 files / 755 dirs) ---"
-          $SSH "find '$DEST' -type f ! -perm 644 | head -20" > /tmp/badf || true
-          $SSH "find '$DEST' -type d ! -perm 755 | head -20" > /tmp/badd || true
-          if [ -s /tmp/badf ]; then echo "  files with unexpected mode:"; sed 's/^/    /' /tmp/badf; else echo "  all files 644"; fi
-          if [ -s /tmp/badd ]; then echo "  dirs with unexpected mode:";  sed 's/^/    /' /tmp/badd; else echo "  all dirs 755"; fi
+          echo "--- permissions ---"
+          echo "  skipped: FTP cannot report file modes reliably. Check in cPanel File Manager if needed."
 
-          echo "--- ownership and sample listing ---"
-          $SSH "ls -la '$DEST' | head -15"
+          echo "--- sample listing ---"
+          head -15 /tmp/remote_files.txt | sed 's/^/    /'
 
           echo "--- the block actually blocks ---"
           if [ -n "${BASE:-}" ]; then
@@ -274,17 +342,64 @@ jobs:
 
           exit $fail
 
-      # _deploytest must not outlive the test it exists for.
-      - name: Remove the deploy test directory
+      # ----------------------------------------------------------------------
+      # Cleanup — _deploytest must not outlive the test it exists for.
+      #
+      # FTP-Deploy-Action cannot delete a remote directory. The equivalent is a
+      # sync of an EMPTY local directory with dangerous-clean-slate, which
+      # deletes every remote file in server-dir (including the sync-state file)
+      # and uploads nothing.
+      #
+      # The directory itself survives, empty. That is acceptable: the
+      # RewriteCond in public/.htaccess returns 403 for any /_deploytest URL
+      # whether or not anything is inside it.
+      # ----------------------------------------------------------------------
+
+      # THIS CHECK MUST STAY IN ITS OWN STEP, BEFORE THE ACTION RUNS.
+      #
+      # The Resolve target step has already proven the suffix, and this repeats
+      # it immediately before the only step in this workflow that can destroy
+      # data. It is deliberately redundant. Do not fold it into the action's
+      # inputs or into the step below — a guard that runs inside the thing it
+      # is guarding is not a guard.
+      - name: Pre-flight — refuse to wipe anything but _deploytest
         if: github.event.inputs.target == 'cleanup-deploytest'
         env:
-          HOST: ${{ secrets.SSH_HOST }}
-          USER: ${{ secrets.SSH_USER }}
-          PORT: ${{ secrets.SSH_PORT }}
-          DEST: ${{ steps.target.outputs.path }}
+          DIR: ${{ steps.target.outputs.dir }}
         run: |
           set -euo pipefail
-          # DEST is already proven to end in /_deploytest by the resolve step.
-          ssh -i ~/.ssh/id_deploy -p "${PORT:-22}" -o StrictHostKeyChecking=yes \
-            "$USER@$HOST" "rm -rf -- '$DEST' && echo removed: '$DEST'"
-          echo "Deploy test directory removed."
+          case "$DIR" in
+            */_deploytest) ;;
+            *) echo "::error::REFUSING clean-slate wipe of '$DIR' — it does not end in /_deploytest"; exit 1 ;;
+          esac
+          case "$DIR" in
+            /*|*..*) echo "::error::REFUSING clean-slate wipe of '$DIR' — absolute or traversing"; exit 1 ;;
+          esac
+          echo "Pre-flight ok. Clean-slate wipe is scoped to: $DIR/"
+
+      - name: Prepare an empty directory to sync
+        if: github.event.inputs.target == 'cleanup-deploytest'
+        run: |
+          set -euo pipefail
+          rm -rf ./.empty-clean-slate
+          mkdir -p ./.empty-clean-slate
+          echo "Prepared an empty local directory."
+
+      - name: Wipe the deploy test directory over FTPS
+        if: github.event.inputs.target == 'cleanup-deploytest'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./.empty-clean-slate/
+          server-dir: ${{ steps.target.outputs.server_dir }}
+          state-name: .ftp-deploy-sync-state.json
+          # The one place this is used. Scoped by the pre-flight step above.
+          dangerous-clean-slate: true
+          log-level: standard
+
+      - name: Confirm the wipe
+        if: github.event.inputs.target == 'cleanup-deploytest'
+        run: echo "Deploy test directory emptied. It remains as an empty directory, still 403 via the parent .htaccess."

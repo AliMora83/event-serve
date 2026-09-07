@@ -1,7 +1,7 @@
 # Events Serve Website Rebuild — Project Plan
 
 **Client:** Events Serve (eventsserve.co.za)
-**Stack:** Astro 5, static output, deployed to HostAfrica shared cPanel
+**Stack:** Astro 5, static output, deployed to Afrihost shared cPanel over FTPS
 **Build tools:** Claude Code (repo, terminal, refactors) + Antigravity IDE (UI work, browser-verified changes)
 **Approach:** Port with fixes. Same structure and identity as the current site, corrected content, contrast and performance. Not a redesign.
 **Timeline:** 15 working days, full-time. Launch target: 3 weeks from Sprint 1.
@@ -83,7 +83,13 @@ Sprint 2 stubs the embed with a poster frame.
 
 ### Deploy pipeline — configuration required
 
-`.github/workflows/deploy.yml` builds and rsyncs `dist/` over SSH to cPanel.
+`.github/workflows/deploy.yml` builds `dist/` and uploads it over **FTPS** to
+cPanel.
+
+**SSH is not available on this hosting package.** Every SSH port times out
+while cPanel answers on 2083. This is a property of the Afrihost shared
+package, not a misconfiguration. Do not try to restore an SSH/rsync deploy —
+the site is a static build and never needed a shell.
 
 **Manual trigger only. There is deliberately no push trigger.**
 eventsserve.co.za is live and is the client's only web presence. There is no
@@ -92,7 +98,7 @@ Deploying has to be a decision someone makes, never a side effect of merging.
 
 **No production deploys until cutover day.** Until then use the `deploytest`
 target, which writes to `public_html/_deploytest/` and cannot touch the live
-site. The workflow refuses a `deploytest` path that does not end in
+site. The workflow refuses a `deploytest` directory that does not end in
 `/_deploytest`, and a production run additionally requires typing
 `REPLACE-LIVE-SITE` into the confirm field.
 
@@ -100,53 +106,92 @@ site. The workflow refuses a `deploytest` path that does not end in
 
 | Secret | What it is |
 |---|---|
-| `SSH_HOST` | cPanel server hostname |
-| `SSH_USER` | cPanel account username |
-| `SSH_PRIVATE_KEY` | Private half of a key whose public half is in cPanel → SSH Access → Manage Keys. Generate a **deploy-only** key; do not reuse a personal one |
-| `SSH_PORT` | Optional. Defaults to 22 — HostAfrica often uses a non-standard port |
-| `SSH_KNOWN_HOSTS` | Optional but recommended. `ssh-keyscan -p PORT HOST`. Without it the workflow falls back to trust-on-first-use and warns |
+| `FTP_HOST` | FTP hostname from cPanel → FTP Accounts → Configure FTP Client. Hostname only, no scheme and no path |
+| `FTP_USER` | Full FTP username, usually `user@eventsserve.co.za` |
+| `FTP_PASSWORD` | That FTP account's password. Create a **deploy-only** FTP account; do not reuse the cPanel login |
 | `PUBLIC_WEB3FORMS_KEY` | Web3Forms access key. Required for `production`; `deploytest` builds without it |
+
+`SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT` and `SSH_KNOWN_HOSTS`
+are retired. Delete them — a stale private key in a repo secret is a liability
+with no remaining use.
 
 **Variables** (same page → Variables):
 
 | Variable | Example |
 |---|---|
-| `DEPLOYTEST_PATH` | `/home/<user>/public_html/_deploytest` |
+| `FTP_DEPLOYTEST_DIR` | `public_html/_deploytest` |
 | `DEPLOYTEST_URL` | `https://eventsserve.co.za/_deploytest` |
-| `PROD_PATH` | `/home/<user>/public_html` |
+| `FTP_PROD_DIR` | `public_html` |
 | `PROD_URL` | `https://eventsserve.co.za` |
 
-Both environments (`deploytest`, `production`) should exist under Settings →
-Environments. Put a required reviewer on `production`.
+`DEPLOYTEST_PATH` and `PROD_PATH` are retired. They were absolute filesystem
+paths, which an FTP session has no concept of: an FTP directory is relative to
+whatever the account's root happens to be. **Confirm that root before trusting
+either value** — see below.
+
+All three environments (`deploytest`, `cleanup-deploytest`, `production`)
+should exist under Settings → Environments. Put a required reviewer on
+`production`.
+
+**Confirming the FTP root.** Do not guess it. An account created against the
+domain may land in `public_html/`, in which case `FTP_PROD_DIR` is `.` and the
+guards will reject it; an account created at the cPanel level lands in the
+home directory, where `public_html` is a child. Log in once with any FTP
+client and check what you see immediately after connecting:
+
+- If the first listing shows `public_html`, `mail`, `etc`, `logs` — you are in
+  the home directory. Use `public_html` and `public_html/_deploytest`.
+- If the first listing shows `index.html`, `_astro`, `about` — you are already
+  inside the document root. Make a new FTP account whose directory is the home
+  directory instead; the workflow refuses to target the FTP root, deliberately.
 
 **Proving the transport before cutover.** Run the workflow with target
 `deploytest`.
 
 `_deploytest/` is **blocked outright**, not merely noindexed — a rewrite rule
-in `.htaccess` returns 403 for any `/_deploytest` URL, and the deploy job
-appends `Require all denied` to the copy that lands there. It puts a complete
+in `.htaccess` returns 403 for any `/_deploytest` URL, and the workflow appends
+`Require all denied` to the copy that is uploaded there. It puts a complete
 duplicate of the site on the live domain, and a noindex header still permits
 the fetch during exactly the window that matters.
 
-Because it is unreachable, **verification runs over SSH, not HTTP**: local vs
-remote file count, presence of the key files, file and directory permissions,
-and an ownership listing. That is what the test exists to prove — rsync, paths
-and permissions — none of which needs a public URL. The one HTTP call asserts
-a **403**, and fails the run on a 200.
+Because it is unreachable, **verification reads the remote directory over
+FTPS** rather than fetching it: the workflow installs `lftp`, takes a recursive
+listing, and asserts local vs remote file count and the presence of the key
+files. Both are hard failures. The one HTTP call asserts a **403**, and fails
+the run on a 200.
+
+The old SSH verification also audited file and directory modes. That check is
+gone: FTP listings do not report modes reliably, and asserting something we
+cannot trust is worse than not asserting it. If modes are ever in question,
+check them in cPanel's File Manager.
 
 The header assertions (`X-Content-Type-Options`, `Referrer-Policy`,
 `Cache-Control: immutable`) and the 404 check need a fetchable URL and a
 document root, so they run for the first time at cutover, against production.
 
 **Then clean up.** Run the workflow again with target `cleanup-deploytest`.
-It removes the directory over SSH and skips the build entirely. `_deploytest`
-should not outlive the test it exists for — it must not sit on the live domain
-for weeks.
+It skips the build entirely. `_deploytest` should not outlive the test it
+exists for — it must not sit on the live domain for weeks.
 
-**Safety notes.** `rsync --delete` removes anything in the target that is not
-in the build, so the workflow refuses shallow or non-absolute paths, and
-excludes `.well-known/` (deleting it breaks AutoSSL renewal), `cgi-bin/`,
-`.htpasswd` and `_deploytest/`.
+The FTP action cannot delete a remote directory, so cleanup syncs an *empty*
+local directory with `dangerous-clean-slate`, which deletes every file inside
+`FTP_DEPLOYTEST_DIR`. The directory itself survives, empty; the parent
+`.htaccess` still returns 403 for it. A dedicated pre-flight step re-asserts
+the `/_deploytest` suffix immediately before that action runs — it is the only
+step in the workflow that can destroy data, so the guard is deliberately
+duplicated and deliberately outside the thing it guards.
+
+**Safety notes.** `dangerous-clean-slate` is used on cleanup only and is
+explicitly `false` for both deploys, so a production run never deletes ahead
+of uploading. The upload additionally excludes `.well-known/` (deleting it
+breaks AutoSSL renewal), `cgi-bin/`, `.htpasswd` and `_deploytest/`. The path
+guards, rebased from the SSH version into FTP terms, reject an empty target,
+an absolute path, anything containing `..`, and — for both deploytest targets —
+anything not ending in `/_deploytest`.
+
+The action keeps a sync-state file (`.ftp-deploy-sync-state.json`) in the
+target directory and uses it to upload only what changed. Deleting it is not
+dangerous, but it forces a full re-upload of the whole site next run.
 
 ## Sprint 2 — Shared components *(days 2–4)*
 

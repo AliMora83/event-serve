@@ -8,6 +8,60 @@
 
 ---
 
+## v0.2 — 2026-09-07 — Deploy transport: SSH replaced by FTPS
+
+### SSH is not available on this hosting package
+
+Every SSH port times out while cPanel answers on 2083. This is a property of
+the shared package as sold, not a firewall rule to work around and not a key
+problem. The deploy has been rewritten around FTPS
+(`SamKirkland/FTP-Deploy-Action@v4.3.5`, `protocol: ftps`, explicit TLS). The
+site is a static `dist/` build and never needed a shell.
+
+`SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT` and `SSH_KNOWN_HOSTS`
+are retired and should be deleted from repo secrets. `DEPLOYTEST_PATH` and
+`PROD_PATH` are retired too — they were absolute filesystem paths, which an
+FTP session has no concept of. They are replaced by `FTP_DEPLOYTEST_DIR` and
+`FTP_PROD_DIR`, relative to the FTP account root.
+
+### Every guard was preserved, two were rebased, one was dropped
+
+Rebased into FTP terms: the old "must be absolute" and "at least three
+slashes" checks described an absolute path like `/home/<user>/public_html`.
+The FTP equivalents reject an empty target, an absolute path, and anything
+containing `..`. The `/_deploytest` suffix check is unchanged, and now also
+carries the "at least one segment" rule, since `*/_deploytest` cannot match a
+bare `_deploytest` at the FTP root.
+
+**Dropped: the file-mode audit.** FTP listings do not report modes reliably
+across servers, and asserting something we cannot trust is worse than not
+asserting it. File-count parity and the key-file assertion were *not* dropped —
+the workflow installs `lftp` and takes a recursive listing over FTPS, with
+certificate verification on, to keep both as hard failures.
+
+The `Require all denied` seal on `_deploytest` moved from a post-upload remote
+append to a pre-upload append into `dist/.htaccess`, because FTP has no remote
+shell. Same two mechanisms, same result on the server, still never committed.
+
+Cleanup cannot delete a remote directory over FTP. It now syncs an empty local
+directory with `dangerous-clean-slate`, which empties `FTP_DEPLOYTEST_DIR`; the
+directory itself survives, still 403 via the parent `.htaccess`. A dedicated
+pre-flight step re-asserts the `/_deploytest` suffix immediately before that
+action — the one step that can destroy data, so the guard is duplicated and
+sits outside the thing it guards.
+
+### Correction to the v0.1 entry: the host is Afrihost, not HostAfrica
+
+The v0.1 audit recorded the host as "HostAfrica shared cPanel". It is
+**Afrihost**. The substance of that finding is unaffected — the site is on
+shared cPanel, not Netlify, and the old Netlify Forms integration never
+delivered a message. Only the company name was wrong. Corrected in `CLAUDE.md`,
+`PROJECT.md`, `README.md`, `Master.md`, `SPRINT-1.1.md`, `public/.htaccess`,
+`src/components/ContactForm.astro` and the deploy workflow header. The v0.1
+entry above is left as written, this file being append-only.
+
+---
+
 ## v0.1 — 2026-09-04 — Sprint 1.1, Foundation
 
 Astro 5 installed and running at the repo root; the old Vite/React build is

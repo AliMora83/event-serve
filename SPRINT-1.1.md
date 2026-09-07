@@ -8,7 +8,7 @@ Audit accepted. Excellent work — several findings changed the plan. Answers to
 
 ## Answers to your questions
 
-1. **Hosting: HostAfrica, shared cPanel.** Not Netlify. This confirms your finding — **Netlify Forms has never worked** and no submission has ever been delivered. Every visitor who used that form since January saw a false success message. Treat this as confirmed, not suspected.
+1. **Hosting: Afrihost, shared cPanel.** Not Netlify. This confirms your finding — **Netlify Forms has never worked** and no submission has ever been delivered. Every visitor who used that form since January saw a false success message. Treat this as confirmed, not suspected.
 2. **The QR check-in app is not a real project here.** `Master.md` is wrong metadata that landed in this repo. It does not get merged and it does not get handed anywhere.
 3. **Disable both GitHub Actions.** Yes.
 4. **`AGENT-ONBOARDING.md`** — commit the deletion.
@@ -115,9 +115,8 @@ states. Your job is the wiring and the proof:
 
 ## 3.6 Deploy — shared cPanel
 
-- [ ] Check whether the plan includes SSH. cPanel sidebar will show "Terminal" or "SSH Access"
-  - **SSH available:** GitHub Action running rsync over SSH to `public_html/` on push to `main`. Store host, user and key as repo secrets
-  - **No SSH:** FTP-based deploy Action, or document a manual upload procedure in `PROJECT.md`
+- [x] Check whether the plan includes SSH. cPanel sidebar will show "Terminal" or "SSH Access"
+  - **RESOLVED: no SSH.** Every SSH port times out on this Afrihost shared package while cPanel answers on 2083. The deploy uses `SamKirkland/FTP-Deploy-Action@v4.3.5` over FTPS instead. Do not retry SSH — see `PROJECT.md` for the configuration
 - [ ] Set up **`staging.eventsserve.co.za`** as a subdomain, deploy there, not to the live site. Every sprint should end with something the client can look at
 - [ ] Add `.htaccess` for the Apache/LiteSpeed stack: HTTPS redirect, `Cache-Control` on hashed assets, gzip/brotli, custom 404
 - [ ] Confirm all four routes resolve on staging. Astro's default directory output gives `/about/index.html`, which Apache serves correctly — verify rather than assume

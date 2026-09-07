@@ -19,7 +19,18 @@ npm run preview  # serve the build locally
 
 ## Deploy
 
-HostAfrica shared cPanel. `dist/` is uploaded to `public_html/`.
+Afrihost shared cPanel. `dist/` is uploaded to `public_html/` over **FTPS**
+by `.github/workflows/deploy.yml`, which is manual-trigger only.
+
+**SSH is not available on this hosting package** — every SSH port times out
+while cPanel answers on 2083. That is how the package is sold, not a
+misconfiguration, so don't sink time into retrying it. The site is a static
+build and never needed a shell.
+
+Configuration (secrets `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`; variables
+`FTP_PROD_DIR`, `FTP_DEPLOYTEST_DIR`, `PROD_URL`, `DEPLOYTEST_URL`) is
+documented in `PROJECT.md`, including how to confirm the FTP root before
+trusting the directory values.
 
 There is no staging environment, and there never has been. The live site is the
 only one. Pre-cutover verification uses the deploy workflow's `deploytest`

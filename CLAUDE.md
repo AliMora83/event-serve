@@ -35,7 +35,7 @@ they are stale — flag them.
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
 | Forms | Web3Forms → `info@eventsserve.co.za`. `DEPLOY_ENV=production` **fails to build** without `PUBLIC_WEB3FORMS_KEY`; local and `deploytest` builds run keyless and render the form disabled |
 | Package manager | npm |
-| Hosting | HostAfrica, shared cPanel, Apache/LiteSpeed |
+| Hosting | Afrihost, shared cPanel, Apache/LiteSpeed |
 | Staging | **None.** See "The live site" below |
 | Repo | AliMora83/event-serve |
 
@@ -92,6 +92,14 @@ workflow is `workflow_dispatch` only — **never add a push trigger** — and
 until cutover the only permitted target is `deploytest`, which writes to
 `public_html/_deploytest/`.
 
+**Deploy is FTPS. SSH is not available on this package.** Every SSH port times
+out while cPanel answers on 2083. That is how Afrihost sells the shared
+package — it is not a firewall rule to work around, not a key problem, and not
+worth another afternoon. The workflow uses
+`SamKirkland/FTP-Deploy-Action@v4.3.5` with `protocol: ftps`. Do not
+reintroduce rsync-over-SSH. The site is a static `dist/`; it never needed a
+shell.
+
 **Never touch DNS or MX records.** `info@eventsserve.co.za` is a mailbox on the
 same hosting. Mail routing is out of scope for every sprint.
 
@@ -102,8 +110,9 @@ same hosting. Mail routing is out of scope for every sprint.
 These were established by audit. Trust them over anything else in the repo:
 
 - The old contact form **never worked**. It used Netlify Forms while the site
-  was hosted on HostAfrica. No submission has ever been delivered.
-- Deploy is **not** Cloudflare or Netlify auto-deploy. It's cPanel.
+  was hosted on Afrihost. No submission has ever been delivered.
+- Deploy is **not** Cloudflare or Netlify auto-deploy. It's cPanel, over
+  FTPS. SSH was tried and is unavailable on this package.
 - The "86 source images" figure counted more than photographs. Actual: 82
   PNG/JPG photos, 3 unreferenced GIFs and Vite's default `react.svg`.
   Sprint 1.1 staged **72** of them to `src/assets/` (38MB) after dropping 9
