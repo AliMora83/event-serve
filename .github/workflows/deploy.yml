@@ -1,4 +1,4 @@
-# EventServe — build and deploy to HostAfrica shared cPanel over SSH.
+# Events Serve — build and deploy to HostAfrica shared cPanel over SSH.
 #
 # MANUAL TRIGGER ONLY. There is deliberately no `push:` trigger.
 #

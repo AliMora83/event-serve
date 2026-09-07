@@ -1,5 +1,5 @@
 /* ==========================================================================
-   EventServe design tokens
+   Events Serve design tokens
    Single source of truth. Never hardcode a colour or spacing value in a
    component — the contrast failures on the previous build came from
    per-section values drifting apart.

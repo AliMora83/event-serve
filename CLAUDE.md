@@ -1,10 +1,10 @@
-# EventServe Website — Agent Context
+# Events Serve Website — Agent Context
 
 Auto-loaded by Claude Code. Read this first, every session.
 
 ## What this project is
 
-A marketing website for **EventServe** (eventserve.co.za), a South African event
+A marketing website for **Events Serve** (eventserve.co.za), a South African event
 management company working in Johannesburg, Cape Town, Durban and Bloemfontein.
 
 Four routes: Home, About, Partnerships, Contact.

@@ -1,6 +1,6 @@
-# EventServe Website Rebuild — Project Plan
+# Events Serve Website Rebuild — Project Plan
 
-**Client:** EventServe (eventserve.co.za)
+**Client:** Events Serve (eventserve.co.za)
 **Stack:** Astro 5, static output, deployed to HostAfrica shared cPanel
 **Build tools:** Claude Code (repo, terminal, refactors) + Antigravity IDE (UI work, browser-verified changes)
 **Approach:** Port with fixes. Same structure and identity as the current site, corrected content, contrast and performance. Not a redesign.
@@ -188,7 +188,11 @@ Image migration, all 86 files:
 ## Sprint 4 — Partnerships *(days 8–9)*
 
 Page hero, trimmed intro, partner cards, six approach points, image band, CTA.
-"Events Serve" corrected to "EventServe" throughout the source copy.
+Brand name normalised throughout the source copy. **Direction reversed on
+7 Sep 2026:** this line originally read *"Events Serve" corrected to
+"EventServe"*. The client's brand is the **two-word** form, which the logo
+artwork itself sets as "Events" over "SERVE", so the rename ran the other way —
+one word to two, 23 occurrences across `src/` and `public/`.
 
 Ships with brand names as text if logo permissions haven't arrived.
 Ships with two cards if African Bank still has no concrete fact.

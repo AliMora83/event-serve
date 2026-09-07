@@ -1,6 +1,6 @@
-# EventServe
+# Events Serve
 
-Marketing website for EventServe (eventserve.co.za). Astro 5, static output,
+Marketing website for Events Serve (eventserve.co.za). Astro 5, static output,
 no client-side framework.
 
 Four routes: Home, About, Partnerships, Contact. Services is a homepage

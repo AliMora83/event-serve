@@ -1,4 +1,4 @@
-# 🤖 AI Changelog — EventServe
+# 🤖 AI Changelog — Events Serve
 
 > Append-only history. Newest entries first. One entry per sprint.
 >

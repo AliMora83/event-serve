@@ -1,5 +1,5 @@
 /* ==========================================================================
-   EventServe motion
+   Events Serve motion
    No dependencies. Reveal + parallax + count-up share ONE rAF loop and ONE
    observer pattern so nothing fights for the main thread.
    ========================================================================== */
