@@ -4,7 +4,7 @@ Auto-loaded by Claude Code. Read this first, every session.
 
 ## What this project is
 
-A marketing website for **Events Serve** (eventserve.co.za), a South African event
+A marketing website for **Events Serve** (eventsserve.co.za), a South African event
 management company working in Johannesburg, Cape Town, Durban and Bloemfontein.
 
 Four routes: Home, About, Partnerships, Contact.
@@ -33,7 +33,7 @@ they are stale — flag them.
 | Fonts | Montserrat 400/600/700, loaded via `<link>` in `BaseLayout` |
 | JS framework | **None.** No React, no View Transitions. The only client JS is `motion.js` |
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
-| Forms | Web3Forms → `info@eventserve.co.za`. `DEPLOY_ENV=production` **fails to build** without `PUBLIC_WEB3FORMS_KEY`; local and `deploytest` builds run keyless and render the form disabled |
+| Forms | Web3Forms → `info@eventsserve.co.za`. `DEPLOY_ENV=production` **fails to build** without `PUBLIC_WEB3FORMS_KEY`; local and `deploytest` builds run keyless and render the form disabled |
 | Package manager | npm |
 | Hosting | HostAfrica, shared cPanel, Apache/LiteSpeed |
 | Staging | **None.** See "The live site" below |
@@ -85,14 +85,14 @@ oversight; a solid band reads as a choice. If original photography arrives,
 restoring it is a one-line swap **and** a reopening of this budget, not just
 a swap.
 
-**The live site is the only environment.** eventserve.co.za is the client's
+**The live site is the only environment.** eventsserve.co.za is the client's
 sole web presence and there is no staging subdomain. The first production
 deploy REPLACES it, so it happens once, on cutover day, by hand. The deploy
 workflow is `workflow_dispatch` only — **never add a push trigger** — and
 until cutover the only permitted target is `deploytest`, which writes to
 `public_html/_deploytest/`.
 
-**Never touch DNS or MX records.** `info@eventserve.co.za` is a mailbox on the
+**Never touch DNS or MX records.** `info@eventsserve.co.za` is a mailbox on the
 same hosting. Mail routing is out of scope for every sprint.
 
 **Ask before installing a dependency** that isn't already in `package.json`.

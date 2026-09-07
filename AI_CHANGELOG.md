@@ -85,7 +85,7 @@ not. The key requires the client to confirm an activation email.
   now emits **zero** `.js` files; client JS is 2.4KB of inlined `motion.js`.
 - `@astrojs/sitemap` added (approved). Four routes, 404 filtered.
 - `.htaccess`, `robots.txt`, `404.astro`, `og-default.jpg`, `favicon.svg`.
-- Deploy is `workflow_dispatch` **only**. eventserve.co.za is live and is the
+- Deploy is `workflow_dispatch` **only**. eventsserve.co.za is live and is the
   client's only web presence, so the first production deploy replaces it. Until
   cutover the only permitted target is `deploytest`, which is blocked outright
   by `.htaccess` and verified over SSH rather than HTTP.
@@ -126,7 +126,7 @@ visitor who submitted an enquiry since January saw "Thank you for contacting
 us!" while nothing was sent anywhere. The honeypot was inert too — the blueprint
 declared `netlify-honeypot="bot-field"` but the live form had no such field.
 
-Replacement is Web3Forms to `info@eventserve.co.za`. Sprint 1 does not close
+Replacement is Web3Forms to `info@eventsserve.co.za`. Sprint 1 does not close
 until a test enquiry has physically arrived.
 
 **3. Three wrong-product documents have now surfaced in this repo.** All three

@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://eventserve.co.za',
+  site: 'https://eventsserve.co.za',
   build: { inlineStylesheets: 'auto' },
 
   integrations: [

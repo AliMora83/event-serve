@@ -1,6 +1,6 @@
 # Events Serve
 
-Marketing website for Events Serve (eventserve.co.za). Astro 5, static output,
+Marketing website for Events Serve (eventsserve.co.za). Astro 5, static output,
 no client-side framework.
 
 Four routes: Home, About, Partnerships, Contact. Services is a homepage
@@ -21,9 +21,13 @@ npm run preview  # serve the build locally
 
 HostAfrica shared cPanel. `dist/` is uploaded to `public_html/`.
 
-Staging is `staging.eventserve.co.za`. Deploy there first, every time.
+There is no staging environment, and there never has been. The live site is the
+only one. Pre-cutover verification uses the deploy workflow's `deploytest`
+target, which writes to `public_html/_deploytest/` and is blocked from public
+view; the first production deploy REPLACES the live site and happens once, by
+hand, on cutover day.
 
-Do not touch DNS or MX records — `info@eventserve.co.za` is a mailbox on the
+Do not touch DNS or MX records — `info@eventsserve.co.za` is a mailbox on the
 same hosting.
 
 ## Structure

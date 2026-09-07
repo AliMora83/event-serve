@@ -1,6 +1,6 @@
 # Events Serve Website Rebuild — Project Plan
 
-**Client:** Events Serve (eventserve.co.za)
+**Client:** Events Serve (eventsserve.co.za)
 **Stack:** Astro 5, static output, deployed to HostAfrica shared cPanel
 **Build tools:** Claude Code (repo, terminal, refactors) + Antigravity IDE (UI work, browser-verified changes)
 **Approach:** Port with fixes. Same structure and identity as the current site, corrected content, contrast and performance. Not a redesign.
@@ -86,7 +86,7 @@ Sprint 2 stubs the embed with a poster frame.
 `.github/workflows/deploy.yml` builds and rsyncs `dist/` over SSH to cPanel.
 
 **Manual trigger only. There is deliberately no push trigger.**
-eventserve.co.za is live and is the client's only web presence. There is no
+eventsserve.co.za is live and is the client's only web presence. There is no
 staging subdomain, so the first production deploy REPLACES the existing site.
 Deploying has to be a decision someone makes, never a side effect of merging.
 
@@ -112,9 +112,9 @@ site. The workflow refuses a `deploytest` path that does not end in
 | Variable | Example |
 |---|---|
 | `DEPLOYTEST_PATH` | `/home/<user>/public_html/_deploytest` |
-| `DEPLOYTEST_URL` | `https://eventserve.co.za/_deploytest` |
+| `DEPLOYTEST_URL` | `https://eventsserve.co.za/_deploytest` |
 | `PROD_PATH` | `/home/<user>/public_html` |
-| `PROD_URL` | `https://eventserve.co.za` |
+| `PROD_URL` | `https://eventsserve.co.za` |
 
 Both environments (`deploytest`, `production`) should exist under Settings →
 Environments. Put a required reviewer on `production`.
@@ -225,7 +225,7 @@ SEO: titles, descriptions, sitemap, robots.txt, structured data. 404 page. Analy
 
 **Not work days.** Client review, fixes, then the cutover deploy to `public_html/` — the first and only production run.
 
-Do not touch MX records. `info@eventserve.co.za` is a mailbox on the same hosting.
+Do not touch MX records. `info@eventsserve.co.za` is a mailbox on the same hosting.
 
 Post-launch: verify the form on the production domain.
 **Tag `v1.0`.**

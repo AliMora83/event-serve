@@ -9,7 +9,7 @@
 #      and it describes a product that does not exist in this repository:
 #      a QR check-in / pass-generation app. Specifically wrong:
 #        stack         "TypeScript / Vite / Tailwind / PDF.js"  -> Astro 5 / vanilla CSS
-#        live_url      "https://pass.namka.org"                 -> eventserve.co.za
+#        live_url      "https://pass.namka.org"                 -> eventsserve.co.za
 #        deploy_target "Hostinger VPS (Nginx)"                  -> HostAfrica shared cPanel
 #        repo          "AliMora83/Events-Website"               -> AliMora83/event-serve
 #   3. It greps `Version:` out of Master.md, which the pre-2026-09-03 Master.md

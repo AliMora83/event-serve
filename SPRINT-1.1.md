@@ -109,7 +109,7 @@ image renders broken until Sprint 3 rewires them.
 real response handling, `botcheck` honeypot, error state, details visible in both
 states. Your job is the wiring and the proof:
 
-- [ ] Generate an access key at web3forms.com against **info@eventserve.co.za** — the client needs to confirm the activation email. This is a public client-side key, but store it as `PUBLIC_WEB3FORMS_KEY` in `.env` for tidiness and add `.env.example`
+- [ ] Generate an access key at web3forms.com against **info@eventsserve.co.za** — the client needs to confirm the activation email. This is a public client-side key, but store it as `PUBLIC_WEB3FORMS_KEY` in `.env` for tidiness and add `.env.example`
 - [ ] Remove the hidden Netlify blueprint form from `index.html` and all `data-netlify` attributes
 - [ ] **Verify end to end.** Submit a real test and confirm it arrives in the client's inbox. This sprint does not close until a message is delivered
 
@@ -118,10 +118,10 @@ states. Your job is the wiring and the proof:
 - [ ] Check whether the plan includes SSH. cPanel sidebar will show "Terminal" or "SSH Access"
   - **SSH available:** GitHub Action running rsync over SSH to `public_html/` on push to `main`. Store host, user and key as repo secrets
   - **No SSH:** FTP-based deploy Action, or document a manual upload procedure in `PROJECT.md`
-- [ ] Set up **`staging.eventserve.co.za`** as a subdomain, deploy there, not to the live site. Every sprint should end with something the client can look at
+- [ ] Set up **`staging.eventsserve.co.za`** as a subdomain, deploy there, not to the live site. Every sprint should end with something the client can look at
 - [ ] Add `.htaccess` for the Apache/LiteSpeed stack: HTTPS redirect, `Cache-Control` on hashed assets, gzip/brotli, custom 404
 - [ ] Confirm all four routes resolve on staging. Astro's default directory output gives `/about/index.html`, which Apache serves correctly — verify rather than assume
-- [ ] **Do not touch DNS or MX records.** `info@eventserve.co.za` is almost certainly a mailbox on this hosting. Nothing in this sprint should go near mail routing
+- [ ] **Do not touch DNS or MX records.** `info@eventsserve.co.za` is almost certainly a mailbox on this hosting. Nothing in this sprint should go near mail routing
 
 ## 3.7 Verify the motion foundation
 
@@ -142,7 +142,7 @@ states. Your job is the wiring and the proof:
 - Old build preserved in `legacy/`, Astro installed, `build` clean
 - Images migrated to `src/assets/`, duplicates dropped, video removed
 - **A test enquiry has actually arrived in the client's inbox**
-- `staging.eventserve.co.za` live, all four routes resolving
+- `staging.eventsserve.co.za` live, all four routes resolving
 - `Master.md` and `PROJECT.md` both present, each describing what it should
 
 ## Closing

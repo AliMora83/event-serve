@@ -19,7 +19,7 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
  * Local and preview builds run keyless with the form visibly disabled.
  * The production build demands the key.
  *
- * There is no staging host: eventserve.co.za is live and is the client's only
+ * There is no staging host: eventsserve.co.za is live and is the client's only
  * web presence, so the first deploy replaces it. That removes the environment
  * that used to justify keyless builds, and would otherwise leave every local
  * `npm run build` demanding a key the client has not activated yet.
@@ -61,7 +61,7 @@ if (import.meta.env.PROD && !formConfigured) {
   console.warn(
     '\n  ⚠  Building WITHOUT PUBLIC_WEB3FORMS_KEY — the contact form is ' +
     'disabled in this output.\n     Do not upload this build to ' +
-    'eventserve.co.za. For the real thing: DEPLOY_ENV=production.\n'
+    'eventsserve.co.za. For the real thing: DEPLOY_ENV=production.\n'
   );
 }
 
@@ -88,7 +88,7 @@ if (import.meta.env.PROD && !formConfigured) {
     {formConfigured && (
       <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
     )}
-    <input type="hidden" name="subject" value="New enquiry from eventserve.co.za" />
+    <input type="hidden" name="subject" value="New enquiry from eventsserve.co.za" />
     <input type="hidden" name="from_name" value="Events Serve website" />
     <div class="field">
       <label for="name">Name</label>
@@ -147,7 +147,7 @@ if (import.meta.env.PROD && !formConfigured) {
       }
     } catch {
       status.textContent =
-        "That didn't send. Please email info@eventserve.co.za or call us instead.";
+        "That didn't send. Please email info@eventsserve.co.za or call us instead.";
       status.classList.add('is-error');
     } finally {
       status.hidden = false;

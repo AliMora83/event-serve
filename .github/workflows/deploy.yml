@@ -2,7 +2,7 @@
 #
 # MANUAL TRIGGER ONLY. There is deliberately no `push:` trigger.
 #
-# eventserve.co.za is LIVE and is the client's only web presence. There is no
+# eventsserve.co.za is LIVE and is the client's only web presence. There is no
 # staging subdomain. The first deploy to public_html REPLACES the existing
 # site, so deploying must be a decision someone makes, never a side effect of
 # merging to main. Do not add a push trigger without changing that fact first.
@@ -43,7 +43,7 @@ jobs:
         if: github.event.inputs.target == 'production'
         run: |
           if [ "${{ github.event.inputs.confirm }}" != "REPLACE-LIVE-SITE" ]; then
-            echo "::error::Production deploy REPLACES the live eventserve.co.za."
+            echo "::error::Production deploy REPLACES the live eventsserve.co.za."
             echo "::error::Re-run with confirm = REPLACE-LIVE-SITE if that is intended."
             exit 1
           fi

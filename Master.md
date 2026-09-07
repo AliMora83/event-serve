@@ -28,8 +28,8 @@ Last updated: 2026-09-03
 | Stack | Astro 5 / vanilla CSS / static |
 | Repo | AliMora83/event-serve |
 | Deploy | HostAfrica shared cPanel (Apache) |
-| Staging | staging.eventserve.co.za |
-| Live | eventserve.co.za |
+| Staging | None — no staging environment exists; `deploytest` only |
+| Live | eventsserve.co.za |
 | Next step | Sprint 1.1 — audit complete, foundation in progress |
 | Blocker | Client content: founder name, 8 service descriptions, logo permissions |
 

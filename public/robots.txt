@@ -8,4 +8,4 @@ Allow: /
 # if it ignores this line.
 Disallow: /_deploytest/
 
-Sitemap: https://eventserve.co.za/sitemap-index.xml
+Sitemap: https://eventsserve.co.za/sitemap-index.xml
