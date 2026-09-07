@@ -77,13 +77,34 @@ import work04 from './gallery/4.png';
 export const workImages: ImageMetadata[] = [work01, work02, work03, work04];
 
 /* --- Brand ----------------------------------------------------------------
- * PLACEHOLDER, same basis as public/favicon.svg: no vector logo exists in this
- * repo, and a PNG cannot honestly be traced to SVG. Events-white-01.png is
- * what the old Navbar used, so this is the faithful port, not a guess.
- * Swap for real SVG artwork when the client supplies it.
+ * Client-supplied 7 Sep 2026. NOT a re-export of the previous mark — it is a
+ * DIFFERENT LOGO. The old Events-white-01.png is a script "Events" inside a
+ * thin crimson outline; the new one is block type on a filled crimson shape.
+ * Swapping it changes the visible identity, not just the file.
+ *
+ * TWO MARKS ARE ON DISK BUT DELIBERATELY NOT IMPORTED. Vite emits any imported
+ * asset whether or not anything renders it, so importing either would ship a
+ * PNG that no page uses:
+ *
+ *   ./brand/Events-black.png       dark type, for a LIGHT background. This site
+ *                                  has none — every surface is --c-ink or
+ *                                  --c-surface. 29KB. Re-import as
+ *                                  `brand.logoLight` when a light surface exists.
+ *   ./brand/Events-white-01.png    the superseded script mark. 44KB. Kept
+ *                                  pending client sign-off on the swap. The
+ *                                  placeholder public/favicon.svg that embedded
+ *                                  a raster of it was deleted 7 Sep 2026, so
+ *                                  nothing depends on this file any more.
+ *   ./brand/Events-favicon.png     the "ES" monogram master, 1323x1182. Source
+ *                                  for scripts/generate-favicons.mjs, which
+ *                                  writes the favicon, touch icon and OG image
+ *                                  into public/. Never imported or served.
+ *
+ * Still raster, not vector — a PNG cannot honestly be traced to SVG. Swap for
+ * real vector artwork when the client supplies it.
  * -------------------------------------------------------------------------- */
 
-import logo from './brand/Events-white-01.png';
+import logo from './brand/Events-white.png';
 
 export const brand = { logo } as const;
 

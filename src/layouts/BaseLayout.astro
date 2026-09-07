@@ -28,7 +28,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!--
+      Derivatives of the client's "ES" monogram, generated from
+      src/assets/brand/Events-favicon.png by scripts/generate-favicons.mjs.
+      Re-run it by hand if the source mark changes — public/ bypasses
+      astro:assets, so nothing regenerates these. Only the derivatives live in
+      public/; the masters stay in src/assets/brand/ and are never served.
+    -->
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -9,7 +9,9 @@ const isActive = (href: string) =>
 <header class="header">
   <div class="wrap header__inner">
     <a class="header__brand" href="/">
-      <Image src={brand.logo} alt="Events Serve" width={120} height={112} densities={[1, 2]} />
+      <!-- 120x97 is the new mark's own 1323:1071 ratio. The previous logo was
+           1776:1657, so the old height={112} would now distort it. -->
+      <Image src={brand.logo} alt="Events Serve" width={120} height={97} densities={[1, 2]} />
     </a>
 
     <button
