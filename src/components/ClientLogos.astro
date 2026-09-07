@@ -3,9 +3,13 @@ import { Image } from 'astro:assets';
 import clients from '@data/clients.json';
 import { clientLogos, type ClientLogoKey } from '@assets/images';
 /**
- * Old build put mismatched logos on white chips against black. This
- * normalises them to a single height and desaturates until hover, which
- * hides most source-file inconsistency.
+ * Old build put mismatched logos on white chips against black. The first fix
+ * desaturated them to a single height, which only worked for transparent
+ * artwork — and none of these six files is transparent. See `.logo-tile` in
+ * base.css for why the frame replaced the filter.
+ *
+ * Alt text is the organisation name here, unlike the /partnerships grid: these
+ * logos carry the meaning themselves, with no adjacent heading to name them.
  */
 ---
 <section class="section--tight" aria-labelledby="clients-heading">
@@ -15,10 +19,11 @@ import { clientLogos, type ClientLogoKey } from '@assets/images';
       {clients.map((client, i) => (
         <li data-reveal data-reveal-step={i}>
           <Image
+            class="logo-tile"
             src={clientLogos[client.logo as ClientLogoKey]}
             alt={client.name}
-            widths={[160, 320]}
-            sizes="160px"
+            widths={[148, 296]}
+            sizes="148px"
             loading="lazy"
           />
         </li>
@@ -30,6 +35,13 @@ import { clientLogos, type ClientLogoKey } from '@assets/images';
 <style>
   .clients__heading { text-align: center; margin-bottom: var(--space-5); }
 
+  /*
+    Centred flex-wrap rather than a grid, so a ragged final row stays centred
+    under the rest. Six 148px tiles plus 24px gaps need 1008px and the content
+    box is 1152px at --page-max, so they sit on one row at desktop, 4+2 at
+    tablet and 2+2+2 at 375px. The tile is fixed-width, so nothing reflows
+    inside it at any of those widths.
+  */
   .clients {
     list-style: none;
     margin: 0;
@@ -38,17 +50,8 @@ import { clientLogos, type ClientLogoKey } from '@assets/images';
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: var(--space-6);
+    gap: var(--space-4);
   }
 
-  .clients img {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
-    filter: grayscale(1) brightness(2);
-    opacity: 0.65;
-    transition: opacity var(--dur-fast) var(--ease-out),
-                filter var(--dur-fast) var(--ease-out);
-  }
-  .clients li:hover img { opacity: 1; filter: none; }
+  .clients li { display: flex; }
 </style>

@@ -64,11 +64,11 @@ import approach from '@data/approach.json';
           <li class="partner" data-reveal data-reveal-step={i}>
             {partner.logoKey && (
               <Image
-                class="partner__logo"
+                class="logo-tile partner__logo"
                 src={clientLogos[partner.logoKey as ClientLogoKey]}
                 alt=""
-                widths={[64, 128]}
-                sizes="64px"
+                widths={[148, 296]}
+                sizes="148px"
                 loading="lazy"
               />
             )}
@@ -166,7 +166,10 @@ import approach from '@data/approach.json';
     padding: var(--space-5);
   }
 
-  .partner__logo { height: 32px; width: auto; margin-bottom: var(--space-4); filter: grayscale(1) brightness(2); }
+  /* Geometry, border and background all come from `.logo-tile` in base.css —
+     the homepage strip uses the same class. Only the spacing below is
+     specific to sitting above a partner name. */
+  .partner__logo { margin-bottom: var(--space-4); }
   .partner__role { color: var(--c-crimson-text); font-size: var(--fs-small); margin-bottom: var(--space-3); }
   .partner__body { color: var(--c-text-muted); font-size: var(--fs-small); }
 

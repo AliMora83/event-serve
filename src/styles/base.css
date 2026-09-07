@@ -69,6 +69,42 @@ a { color: inherit; }
 
 .section--tight { padding-block: calc(var(--section-y) * 0.6); }
 
+/* --- Logo tiles -----------------------------------------------------------
+ * ONE treatment for every third-party logo on the site, because every logo
+ * file we hold is opaque and each bakes in its own background: white
+ * (Dept_sport, Netball, SABC, Hyundai), black (SAFA, SASA), green (KUDU),
+ * navy (African-Bank).
+ *
+ * That rules out tinting. The old homepage strip used
+ * `grayscale(1) brightness(2)`, which is written for transparent artwork: on
+ * these files it drove the white-backed logos to solid white blocks and lifted
+ * the black-backed ones to muddy grey. It also rules out a plate, which only
+ * moves the problem — a light plate silhouettes the black-backed pair, a dark
+ * one silhouettes the white-backed four.
+ *
+ * So the frame is the consistency, not the fill. Every logo gets an identical
+ * box and is left to carry its own background inside it.
+ *
+ * THE BOX IS DELIBERATELY WIDER THAN 2:1. Inner content area is 122x58, ratio
+ * 2.10; the widest logo is SASA/Dept_sport at 2.00. That guarantees height is
+ * the binding constraint, so all six render at exactly 58px tall no matter
+ * their aspect ratio. Change either dimension and re-check that ratio, or the
+ * logos stop matching.
+ *
+ * No hover state: these are not links, and the old one existed only to undo
+ * the desaturation.
+ * -------------------------------------------------------------------------- */
+.logo-tile {
+  box-sizing: border-box;
+  width: 148px;
+  height: 84px;
+  padding: var(--space-2);
+  object-fit: contain;
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--radius-md);
+}
+
 /* --- Buttons ------------------------------------------------------------- */
 .btn {
   display: inline-flex;

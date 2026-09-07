@@ -87,9 +87,22 @@ import logo from './brand/Events-white-01.png';
 
 export const brand = { logo } as const;
 
-/* --- Client logos ---------------------------------------------------------
- * These six are the real clientele row. Verified, not assumed: the old
+/* --- Client and partner logos ---------------------------------------------
+ * One map, two consumers: ClientLogos.astro reads the six clientele keys via
+ * clients.json, the /partnerships grid reads three brand keys via
+ * partners.json. `sasa` appears in both — the SA Sport Awards is a client and
+ * the subject of a partnership entry.
+ *
+ * The first six are the real clientele row. Verified, not assumed: the old
  * ClienteleSection.jsx imported exactly these six files and nothing else.
+ *
+ * EVERY FILE HERE IS OPAQUE. Not one carries an alpha channel, and they bake
+ * in three different backgrounds — white (Dept_sport, Netball, SABC, Hyundai),
+ * black (SAFA, SASA), navy (African-Bank), green (KUDU). Anything that assumes
+ * a transparent logo will fail on some of them: a light plate silhouettes the
+ * black-backed pair, a dark one silhouettes the white-backed four. The
+ * partners grid frames them in a uniform tile instead of tinting them; see
+ * .partner__logo in partnerships.astro.
  * -------------------------------------------------------------------------- */
 
 import deptSport from './logos/Dept_sport.png';
@@ -99,6 +112,11 @@ import sabc from './logos/SABC.png';
 import safa from './logos/SAFA.png';
 import sasa from './logos/SASA.png';
 
+// Partner brands. Supplied by the client 7 Sep 2026, which retired the
+// "no source" note that stood here.
+import hyundai from './logos/Hyundai.jpg';
+import africanBank from './logos/African-Bank.jpg';
+
 export const clientLogos = {
   'dept-sport': deptSport,
   kudu,
@@ -106,17 +124,8 @@ export const clientLogos = {
   sabc,
   safa,
   sasa,
+  hyundai,
+  'african-bank': africanBank,
 } as const;
 
 export type ClientLogoKey = keyof typeof clientLogos;
-
-/* --- Still unresolved -----------------------------------------------------
- * partners.json wants three brand logos and the repo holds one of them:
- *
- *   hyundai        no source
- *   african-bank   no source
- *   sasa           logos/SASA.png exists, as raster not vector
- *
- * Requested from the client. Until they arrive, ClientLogos and the partners
- * grid must tolerate a missing logo rather than render a broken image.
- * -------------------------------------------------------------------------- */

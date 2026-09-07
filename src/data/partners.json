@@ -1,7 +1,7 @@
 [
   {
     "name": "Hyundai South Africa",
-    "logoKey": null,
+    "logoKey": "hyundai",
     "role": "Official vehicle sponsor, 18th South African Sport Awards",
     "body": "We secured and managed Hyundai's position as official vehicle sponsor for the 18th edition of the South African Sport Awards, integrating the brand across the event experience.",
     "permission": "Granted."
@@ -15,7 +15,7 @@
   },
   {
     "name": "African Bank",
-    "logoKey": null,
+    "logoKey": "african-bank",
     "role": "Brand partnership",
     "body": "TODO — client to supply one concrete detail: which event, what year, what the activation was. Until it lands, ship two cards rather than an obviously empty third.",
     "permission": "Granted."
