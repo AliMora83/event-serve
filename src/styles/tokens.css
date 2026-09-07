@@ -17,16 +17,29 @@
                                    its border must use THIS, not --c-hairline. */
 
   /* --- Brand crimson ------------------------------------------------------
-     Sourced from the old tailwind.config.js `primary: #aa2a3bff` (alpha
-     stripped). Three values, three jobs — VERIFIED against #0F0E0E:
-       #AA2A3B  2.85:1  fails body AND large text. FILLS ONLY.
-       #C4374A  3.66:1  hover states only.
-       #E8657A  6.03:1  passes body text. Use this for crimson type.
+     Base is #931E2E, the crimson in the client's own logo artwork. It replaced
+     #AA2A3B (from the old tailwind.config.js `primary`) on 7 Sep 2026 — the
+     site had been using a red the logo does not contain.
+
+     Three values, three jobs. The two derived tokens keep the same lightness
+     STEPS as the old set (+0.077 and +0.237 in HSL L) and the same saturation
+     ratios, rebased onto the darker new base.
+
+     VERIFIED. Two backgrounds matter, and --c-surface is the harder one —
+     it is lighter than the page, so it gives a light foreground LESS contrast:
+                        on #0F0E0E   on #171515
+       #931E2E            2.26:1       2.14:1   fails both. FILLS ONLY.
+       #AE2A3C            2.93:1       2.77:1   hover fills only.
+       #EB3F5B            4.95:1       4.67:1   passes AA 4.5:1 on both.
+     White on #931E2E is 8.52:1, so buttons improved (was 6.77:1).
+
+     #EB3F5B is deliberately checked against --c-surface, not just the page:
+     .partner__role on /partnerships is crimson type inside a --c-surface card.
      Using the fill value as type is what broke the "Making a Difference"
      heading on the old build.                                               */
-  --c-crimson:        #AA2A3B;  /* fills only: buttons, bars, the star glyph */
-  --c-crimson-hover:  #C4374A;  /* interactive hover state                   */
-  --c-crimson-text:   #E8657A;  /* crimson TYPE on dark — passes AA          */
+  --c-crimson:        #931E2E;  /* fills only: buttons, bars, the star glyph */
+  --c-crimson-hover:  #AE2A3C;  /* interactive hover state                   */
+  --c-crimson-text:   #EB3F5B;  /* crimson TYPE on dark — passes AA          */
 
   /* --- Type -------------------------------------------------------------- */
   --c-text:           #F3F4F6;  /* primary copy                             */
@@ -37,7 +50,7 @@
   /* --- Feedback ---------------------------------------------------------
      Deliberately NOT green. The old success banner was stock-alert green
      and broke the palette.                                                  */
-  --c-success-bg:     rgba(170, 42, 59, 0.12);
+  --c-success-bg:     rgba(147, 30, 46, 0.12);  /* --c-crimson at 12%          */
   --c-success-border: var(--c-crimson);
   --c-success-text:   var(--c-text);
   --c-error-text:     #F0798C;

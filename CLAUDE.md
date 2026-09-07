@@ -66,7 +66,7 @@ uses `--c-field-border`, which meets WCAG 1.4.11's 3:1 non-text threshold.
 
 **Three crimsons, three jobs.** Using the wrong one is the specific bug being
 fixed:
-- `--c-crimson` `#AA2A3B` — fills only: buttons, bars, the star glyph
+- `--c-crimson` `#931E2E` — fills only: buttons, bars, the star glyph
 - `--c-crimson-hover` — hover states
 - `--c-crimson-text` — crimson type on dark. The other two fail AA at 4.5:1
 
