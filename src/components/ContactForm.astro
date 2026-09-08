@@ -2,8 +2,14 @@
 import site from '@data/site.json';
 /**
  * Web3Forms. Replaces the old Netlify Forms setup, which NEVER DELIVERED a
- * message — the site is hosted on Afrihost, not Netlify, so every POST
- * since January went nowhere while the visitor saw a success banner.
+ * message — at the time the site was hosted on Afrihost cPanel, not Netlify,
+ * and Netlify Forms only works on Netlify, so every POST since January went
+ * nowhere while the visitor saw a success banner.
+ *
+ * The site DID move to Netlify on 2026-09-08. That does not resurrect the old
+ * integration and is not a reason to go back to it: Netlify Forms would need
+ * the form re-declared and re-detected at build time, and Web3Forms already
+ * delivers to the client's mailbox directly. Do not "simplify" this back.
  *
  * Four fixes from the old build:
  *   1. preventDefault() is called. The old handler didn't, so the native POST
@@ -16,52 +22,54 @@ import site from '@data/site.json';
 const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
 /**
- * Local and preview builds run keyless with the form visibly disabled.
- * The production build demands the key.
+ * Local, deploy-preview and branch-deploy builds run keyless with the form
+ * visibly disabled. The production build demands the key.
  *
- * There is no staging host: eventsserve.co.za is live and is the client's only
- * web presence, so the first deploy replaces it. That removes the environment
- * that used to justify keyless builds, and would otherwise leave every local
- * `npm run build` demanding a key the client has not activated yet.
+ * Netlify sets CONTEXT on every build:
  *
- * The rule is therefore explicit-production, with CI as a fail-closed backstop:
+ *   production        production branch (main)  KEY REQUIRED
+ *   deploy-preview    a pull request            keyless OK, form disabled
+ *   branch-deploy     any other branch          keyless OK, form disabled
+ *   (unset)           local `npm run build`     keyless OK, form disabled
  *
- *   local, no DEPLOY_ENV      keyless OK, form disabled
- *   DEPLOY_ENV=deploytest     keyless OK, form disabled
- *   DEPLOY_ENV=production     KEY REQUIRED, anywhere, including locally
- *   CI with DEPLOY_ENV unset  KEY REQUIRED — a misconfigured workflow must
- *                             fail rather than quietly ship a dead form
+ * This replaces a DEPLOY_ENV check that the retired FTPS workflow set by hand.
+ * DEPLOY_ENV is gone: nothing sets it any more, so a rule keyed on it would be
+ * permanently false and the production build would ship a dead form.
  *
- * The local case matters more than it looks: the cutover may well be a manual
- * upload of a locally built dist/. Anyone doing that must set
- * DEPLOY_ENV=production, and the warning below fires on every keyless build so
- * an unmarked one is hard to upload by accident.
+ * THE CI CLAUSE IS A FAIL-CLOSED BACKSTOP AND IS DELIBERATE. On Netlify
+ * CONTEXT is always set, so it never fires there; it exists to catch a build
+ * in some other CI where CONTEXT is absent. It is worth the redundancy:
+ * the live site spent four days serving an ENABLED form with an empty
+ * access_key, which Web3Forms answers with a 200 while delivering nothing.
+ * A visitor saw a success banner and the enquiry went nowhere. That silent
+ * success is the exact failure this backstop exists to catch, and it is the
+ * second time this project has shipped it — the Netlify Forms version ran for
+ * nine months. Do not simplify this away.
  *
  * What we will not do under any configuration is render a form that posts an
- * empty access_key. Web3Forms answers that with a 200 and delivers nothing —
- * the exact silent-success shape that hid the Netlify failure for nine months.
- * When there is no key there is no access_key field and no enabled control.
+ * empty access_key. When there is no key there is no access_key field and no
+ * enabled control.
  */
-const DEPLOY_ENV = process.env.DEPLOY_ENV ?? '';
-const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
-const requiresKey = DEPLOY_ENV === 'production' || (isCI && DEPLOY_ENV === '');
+const CONTEXT = process.env.CONTEXT ?? '';
+const isCI = process.env.CI === 'true';
+const requiresKey = CONTEXT === 'production' || (isCI && CONTEXT === '');
 
 const formConfigured = Boolean(WEB3FORMS_KEY);
 
 if (import.meta.env.PROD && requiresKey && !formConfigured) {
   throw new Error(
-    'PUBLIC_WEB3FORMS_KEY is not set and this is a production build. The ' +
-    'contact form would build but never deliver. Set it in .env (see ' +
-    '.env.example) or as a repo secret. For a local or deploy-test build, ' +
-    'leave DEPLOY_ENV unset — the form will render visibly disabled.'
+    'PUBLIC_WEB3FORMS_KEY is not set for a production build. The contact ' +
+    'form would build but never deliver. Set PUBLIC_WEB3FORMS_KEY in the ' +
+    'Netlify site environment variables (Site configuration -> Environment ' +
+    'variables), or in .env for a local build.'
   );
 }
 
 if (import.meta.env.PROD && !formConfigured) {
   console.warn(
     '\n  ⚠  Building WITHOUT PUBLIC_WEB3FORMS_KEY — the contact form is ' +
-    'disabled in this output.\n     Do not upload this build to ' +
-    'eventsserve.co.za. For the real thing: DEPLOY_ENV=production.\n'
+    'disabled in this output.\n     Expected for a preview or a local ' +
+    'build; a production deploy requires the key.\n'
   );
 }
 

@@ -1,7 +1,10 @@
 ---
 /**
- * Minimal 404. Exists so .htaccess's `ErrorDocument 404 /404.html` resolves —
- * without it Apache serves its own bare error page.
+ * Minimal 404. Netlify serves the publish directory's 404.html for any
+ * unmatched route automatically, so this page is what visitors get. It
+ * previously existed to satisfy .htaccess's `ErrorDocument 404 /404.html`;
+ * that file was removed with the FTPS pipeline on 2026-09-08, but the page is
+ * still required.
  *
  * Deliberately unstyled beyond the tokens and free of copy. Sprint 1 builds no
  * page content; this is plumbing. Give it real wording when the voice is
