@@ -106,7 +106,8 @@
 # ABOVE the catch-all below or it will never be reached.
 # ---------------------------------------------------------------------
 
-# HOLDING PAGE — delete this whole section to go live.
+# HOLDING PAGE — delete this whole section to go live. The forced catch-all
+# that drives it is at the foot of this section, scoped to production.
 #
 # `force = true` is what makes the catch-all shadow the real routes, but it
 # shadows STATIC FILES too — verified against `netlify dev`, where /_astro/*
@@ -161,7 +162,18 @@
   to = "/sitemap-0.xml"
   status = 200
 
-[[redirects]]
+# HOLDING PAGE — delete this block to go live.
+#
+# Scoped to the production context, so ONLY production builds are held.
+# Deploy previews and branch deploys intentionally bypass this rule and
+# serve the real site, which is what makes a PR reviewable while the
+# holding page is up.
+#
+# The passthrough rules above are deliberately left GLOBAL. They are inert
+# in any context where this catch-all does not fire — each one hands a path
+# straight back to the file server that would have served it anyway — and
+# scoping them would break assets on previews.
+[[context.production.redirects]]
   from = "/*"
   to = "/construction"
   status = 200
