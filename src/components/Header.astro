@@ -10,8 +10,24 @@ const isActive = (href: string) =>
   <div class="wrap header__inner">
     <a class="header__brand" href="/">
       <!-- 120x97 is the new mark's own 1323:1071 ratio. The previous logo was
-           1776:1657, so the old height={112} would now distort it. -->
-      <Image src={brand.logo} alt="Events Serve" width={120} height={97} densities={[1, 2]} />
+           1776:1657, so the old height={112} would now distort it.
+
+           loading="eager" is deliberate and must stay. Astro's <Image>
+           defaults to lazy, and lazily the mark never rendered at all: on load
+           it sat at complete:false, naturalWidth:0, with no request for the
+           file ever issued. The brand mark is in the header on every route and
+           is visible before any scroll, so there is nothing for lazy loading
+           to defer usefully. fetchpriority="high" gets it into the first
+           batch of requests rather than behind the hero photograph. -->
+      <Image
+        src={brand.logo}
+        alt="Events Serve"
+        width={120}
+        height={97}
+        densities={[1, 2]}
+        loading="eager"
+        fetchpriority="high"
+      />
     </a>
 
     <button
