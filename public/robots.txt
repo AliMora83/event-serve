@@ -3,9 +3,4 @@
 User-agent: *
 Allow: /
 
-# Pre-cutover deploy tests land at /_deploytest/. Belt and braces only: that
-# directory is blocked outright in .htaccess, so a crawler cannot fetch it even
-# if it ignores this line.
-Disallow: /_deploytest/
-
 Sitemap: https://eventsserve.co.za/sitemap-index.xml
