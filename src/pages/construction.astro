@@ -1,0 +1,190 @@
+---
+/**
+ * Holding page.
+ *
+ * Standalone by design: no BaseLayout, no Header, no Footer, no motion.js.
+ * netlify.toml rewrites every route here with a forced 200, so this document
+ * is what a visitor sees for the whole site — nothing from the main build
+ * should leak in and nothing here should depend on the main build.
+ *
+ * Only tokens.css is imported. It carries no selectors, just the custom
+ * properties, so importing it costs a :root block rather than the site's
+ * layout and component CSS.
+ *
+ * TO GO LIVE: delete the redirect block at the foot of netlify.toml. This
+ * file can stay; it is noindex and unlinked.
+ *
+ * THE BRAND MARK is a plain <img> against public/, deliberately NOT
+ * astro:assets. It ships as the exact bytes on disk: no webp transcode, no
+ * density variants, no recolour, no matting. 200x162 is the file's own
+ * 1323x1071 (measured with sips) scaled down; both attributes are set so the
+ * layout does not shift while the PNG loads. eager + high priority for the
+ * same reason as Header.astro — lazily the mark never rendered at all, and
+ * here it is the only image on the only page, so there is nothing to defer.
+ *
+ * That costs the 6KB webp the pipeline was producing; the raw PNG is 27KB.
+ * Deliberate, so the artwork is untouched.
+ *
+ * /Events-white.png needs its own passthrough rule in netlify.toml — it is
+ * un-hashed, so the forced catch-all shadows it otherwise. The file must
+ * also be COMMITTED; Netlify builds from the repo, not from anyone's
+ * working copy.
+ *
+ * This block is frontmatter, so none of it reaches the browser. While the
+ * catch-all is live this page is the entire public site — keep notes here,
+ * not in an HTML comment.
+ */
+import site from '@data/site.json';
+import '@styles/tokens.css';
+
+const phone = site.phones[0];
+// tel: needs the E.164 form; the display string is the local one.
+const phoneHref = `+27${phone.replace(/\s+/g, '').slice(1)}`;
+---
+<!doctype html>
+<html lang="en-ZA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events Serve — Coming Soon</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="description"
+      content="The new Events Serve website is on its way. Reach us by email or phone in the meantime."
+    />
+
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <main class="holding">
+      <img
+        class="holding__mark"
+        src="/Events-white.png"
+        alt="Events Serve"
+        width="200"
+        height="162"
+        loading="eager"
+        fetchpriority="high"
+      />
+
+      <h1 class="holding__title">Our new website is on its way</h1>
+
+      <p class="holding__sub">
+        Events Serve is still taking bookings — get in touch and we will get
+         back to you.
+      </p>
+
+      <p class="holding__contact">
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={`tel:${phoneHref}`}>{phone}</a>
+      </p>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Scoped to this document. No reliance on base.css — the reset lives here. */
+  :global(html) {
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  :global(*),
+  :global(*::before),
+  :global(*::after) {
+    box-sizing: inherit;
+  }
+
+  :global(body) {
+    margin: 0;
+    background: var(--c-ink);
+    color: var(--c-text);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .holding {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: var(--space-4);
+    min-height: 100dvh;
+    padding: var(--section-y) var(--gutter);
+    text-align: center;
+  }
+
+  .holding__mark {
+    height: auto;
+    max-width: 100%;
+    margin-bottom: var(--space-2);
+  }
+
+  .holding__title {
+    margin: 0;
+    /* The rule is crimson --c-crimson, a FILL, not type — 2.26:1 as a
+       foreground would fail AA. The heading itself stays --c-text. */
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--c-crimson);
+    font-family: var(--font-display);
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    line-height: var(--lh-heading);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .holding__sub {
+    max-width: var(--measure);
+    margin: 0;
+    color: var(--c-text-muted);
+    text-wrap: pretty;
+  }
+
+  .holding__contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-5);
+    margin: var(--space-2) 0 0;
+  }
+
+  .holding__contact a {
+    padding: var(--space-1) 0;
+    color: var(--c-text);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--c-field-border);
+    transition: color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .holding__contact a:hover,
+  .holding__contact a:focus-visible {
+    /* --c-crimson-text, not --c-crimson: this is type on dark. */
+    color: var(--c-crimson-text);
+    border-bottom-color: var(--c-crimson-text);
+  }
+
+  .holding__contact a:focus-visible {
+    outline: 2px solid var(--c-crimson-text);
+    outline-offset: 4px;
+  }
+
+  /* motion.css is not loaded here, so the global reduced-motion block that
+     lives at the foot of it does not apply. The only transition on the page
+     is restated under the query rather than left to escape it. */
+  @media (prefers-reduced-motion: reduce) {
+    .holding__contact a {
+      transition: none;
+    }
+  }
+</style>

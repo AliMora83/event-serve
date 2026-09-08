@@ -98,3 +98,71 @@
 # silently fails to match is worse than relying on a default that is
 # known to be correct.
 # ---------------------------------------------------------------------
+
+# ---------------------------------------------------------------------
+# Redirects
+#
+# Netlify takes the FIRST matching rule, so anything added later must go
+# ABOVE the catch-all below or it will never be reached.
+# ---------------------------------------------------------------------
+
+# HOLDING PAGE — delete this whole section to go live.
+#
+# `force = true` is what makes the catch-all shadow the real routes, but it
+# shadows STATIC FILES too — verified against `netlify dev`, where /_astro/*
+# and /favicon-32.png both came back as the holding page's HTML with
+# content-type text/html. The holding page's own brand mark and icon were
+# among the casualties. These passthrough rules run first and hand those
+# paths back to the file server; they are not optional decoration.
+[[redirects]]
+  from = "/_astro/*"
+  to = "/_astro/:splat"
+  status = 200
+
+# The holding page's brand mark. Un-hashed, straight out of public/, so it
+# needs a passthrough exactly like the favicon — without this the catch-all
+# serves HTML in its place and the mark is a broken image.
+[[redirects]]
+  from = "/Events-white.png"
+  to = "/Events-white.png"
+  status = 200
+
+[[redirects]]
+  from = "/favicon-32.png"
+  to = "/favicon-32.png"
+  status = 200
+
+[[redirects]]
+  from = "/apple-touch-icon.png"
+  to = "/apple-touch-icon.png"
+  status = 200
+
+[[redirects]]
+  from = "/og-default.jpg"
+  to = "/og-default.jpg"
+  status = 200
+
+# Crawler files. Verified shadowed without these: all three came back as
+# text/html at the holding page's byte count, so robots.txt was served as
+# HTML and neither sitemap was reachable. The holding page carries its own
+# noindex meta tag — that is what keeps it out of the index, not robots.txt.
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap-index.xml"
+  to = "/sitemap-index.xml"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap-0.xml"
+  to = "/sitemap-0.xml"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/construction"
+  status = 200
+  force = true
