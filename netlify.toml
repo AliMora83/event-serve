@@ -1,0 +1,100 @@
+# Events Serve — Netlify build and header configuration.
+#
+# This replaces public/.htaccess, which has been DELETED from the repo.
+#
+# It was not an exposure. Netlify does not serve dotfiles, so /.htaccess
+# returns 404 on the deploy — an earlier note in this file claiming it would
+# be publicly readable was wrong. It was simply dead weight: Apache config
+# shipped into dist/ on a host that has never read it.
+#
+# Most of the old .htaccess had no equivalent here because Netlify already
+# does it: HTTPS is forced, Brotli and gzip are automatic, 404.html is
+# served for unmatched routes, directory listings do not exist, and only
+# the publish directory is ever exposed. The _deploytest block died with
+# the FTP pipeline. What survives is the security headers and the cache
+# policy, below.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Node is pinned here so the version lives in the repo, reviewable in a
+  # diff, rather than only in the Netlify dashboard where a change leaves
+  # no trace. This value wins over the dashboard setting.
+  NODE_VERSION = "22"
+
+# ---------------------------------------------------------------------
+# Security headers
+#
+# Deliberately no Cache-Control in this block. Netlify combines the
+# values of every rule whose path matches, so a Cache-Control here would
+# collide with the ones below rather than being overridden by them.
+# Keeping the two concerns in non-overlapping rules avoids the problem
+# entirely.
+# ---------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# ---------------------------------------------------------------------
+# Hashed build output
+#
+# Everything Astro emits under /_astro/ is content-hashed, so the
+# filename changes whenever the bytes do. A year is safe, and immutable
+# tells the browser not to revalidate at all.
+# ---------------------------------------------------------------------
+[[headers]]
+  for = "/_astro/*"
+
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ---------------------------------------------------------------------
+# Un-hashed assets from public/
+#
+# This is a deliberate change from the .htaccess, not a port. The old
+# FilesMatch rule caught these by extension and gave them the same
+# one-year immutable policy as the hashed assets — but favicon-32.png,
+# og-default.jpg and apple-touch-icon.png keep their filenames when you
+# replace the artwork. Under the old rule, anyone who had visited the
+# site would keep the stale logo for up to a year with no way to bust it.
+#
+# You have said you intend to replace the logo files yourself later, so
+# this matters. A week is long enough to be worth caching and short
+# enough to recover from.
+# ---------------------------------------------------------------------
+[[headers]]
+  for = "/favicon-32.png"
+
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/apple-touch-icon.png"
+
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/og-default.jpg"
+
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# ---------------------------------------------------------------------
+# HTML — deliberately not configured here
+#
+# HTML must revalidate, or visitors keep a stale page after a deploy.
+# Netlify's default for HTML is already `max-age=0, must-revalidate`,
+# which is exactly what we want, so there is no rule for it above and
+# nothing to override.
+#
+# There is no /*.html block on purpose: whether [[headers]] `for` globs
+# match on file extension is unverified, and an unverified rule that
+# silently fails to match is worse than relying on a default that is
+# known to be correct.
+# ---------------------------------------------------------------------

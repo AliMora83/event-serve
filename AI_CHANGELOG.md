@@ -8,6 +8,86 @@
 
 ---
 
+## v0.3 — 2026-09-08 — Hosting moved to Netlify, FTPS pipeline removed
+
+The site is now hosted on **Netlify**, connected to this repo: production
+branch `main`, build `npm run build`, publish `dist`, configuration in
+`netlify.toml` at the repo root. Node is pinned to 22 in that file rather than
+in the dashboard.
+
+Deleted: `.github/workflows/deploy.yml` (405 lines) and `public/.htaccess`
+(113 lines), plus the `_deploytest` disallow in `public/robots.txt` and the
+`DEPLOY_ENV` block in `.env.example`. The entire v0.2 pipeline below is gone —
+FTPS transport, the three targets, the lftp verification, the clean-slate
+cleanup and its pre-flight guard. None of it is reachable and none of it
+should be rebuilt.
+
+### The safety property moved out of the repo, and that is a real loss
+
+The old workflow was `workflow_dispatch` only. That rule was a line in a
+version-controlled file: reviewable in a diff, and impossible to change
+without leaving a trace.
+
+Its replacement is Netlify's **auto-publish toggle, which is off**. A push to
+`main` builds but does not go live; promoting a build is a manual step in the
+dashboard. The safety outcome is the same, but the enforcement is not — it is
+a setting in a web UI that nothing in this repo can check, and if someone
+turns it on, every push reaches the client's only web presence with no human
+step. Recorded here because a future session reading the old rule in a diff
+will not otherwise learn where it went.
+
+### `DEPLOY_ENV` retired for Netlify's `CONTEXT`
+
+Nothing sets `DEPLOY_ENV` any more, so a key requirement gated on it would be
+permanently false — a production build would have shipped a dead form. The
+gate in `src/components/ContactForm.astro` now reads Netlify's `CONTEXT`
+(`production` | `deploy-preview` | `branch-deploy`).
+
+**A correction to how this was framed.** It was initially believed the old
+guard was dead and a Netlify production build would silently succeed without a
+key. The opposite was true: the guard also had a `CI=true` clause, Netlify
+sets `CI=true` on every build, and so *every* Netlify build — previews
+included — would have hard-failed without the key. Verified locally before the
+change: `CI=true` with no key exits 1, `CI` unset with no key exits 0.
+
+The CI backstop was **kept**, narrowed to `CI === 'true' && CONTEXT === ''`,
+so it never fires on Netlify and still catches a build in some other CI. It
+earns its place: the live site spent four days serving an enabled form with an
+empty `access_key`, which Web3Forms answers with a 200 while delivering
+nothing. That is the second silent-success failure this form has had — the
+Netlify Forms version ran for nine months — and it is exactly what the
+backstop is for.
+
+### Two errors in `netlify.toml` corrected
+
+Its header comment claimed `public/.htaccess`, if left in `public/`, would be
+served publicly at `/.htaccess`. That is wrong: Netlify does not serve
+dotfiles and the path returns 404. The file was dead weight, not an exposure.
+Deleted regardless.
+
+The file also ended on a comment about HTML revalidation with no `[[headers]]`
+block after it. The comment now states that Netlify's HTML default is already
+`max-age=0, must-revalidate` and is deliberately not overridden. No `/*.html`
+rule was added — whether `[[headers]]` globs match on file extension is
+unverified, and a rule that silently fails to match is worse than a default
+known to be correct.
+
+### Open issue carried forward: the form still does not deliver
+
+`POST https://api.web3forms.com/submit` returns **400**. The key is present
+and a well-formed UUID; the suspected cause is that it was never activated
+from the email Web3Forms sends to `info@eventsserve.co.za`. Unresolved, and
+recorded in `PROJECT.md` → Open issues. The site should not be described as
+having a working contact path until it is fixed.
+
+### Not touched
+
+GitHub repo secrets, variables and environments from the FTPS era are being
+removed separately and were deliberately left alone. `scripts/generate-favicons.mjs`
+and `.agent/` were checked and are unrelated to the deploy.
+
+---
+
 ## v0.2 — 2026-09-07 — Deploy transport: SSH replaced by FTPS
 
 ### SSH is not available on this hosting package

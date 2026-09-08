@@ -19,27 +19,26 @@ npm run preview  # serve the build locally
 
 ## Deploy
 
-Afrihost shared cPanel. `dist/` is uploaded to `public_html/` over **FTPS**
-by `.github/workflows/deploy.yml`, which is manual-trigger only.
+**Netlify**, connected to this repo. Production branch `main`, build
+`npm run build`, publish `dist`. Host config lives in `netlify.toml` at the
+repo root; there is no deploy workflow and there should not be one.
 
-**SSH is not available on this hosting package** — every SSH port times out
-while cPanel answers on 2083. That is how the package is sold, not a
-misconfiguration, so don't sink time into retrying it. The site is a static
-build and never needed a shell.
+**Auto-publishing is off.** Pushing to `main` builds the site but does not put
+it live — promoting a build to production is a manual step in the Netlify
+dashboard. Leave it that way: eventsserve.co.za is the client's only web
+presence.
 
-Configuration (secrets `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`; variables
-`FTP_PROD_DIR`, `FTP_DEPLOYTEST_DIR`, `PROD_URL`, `DEPLOYTEST_URL`) is
-documented in `PROJECT.md`, including how to confirm the FTP root before
-trusting the directory values.
+Pull requests get deploy previews, which Netlify serves `noindex`.
 
-There is no staging environment, and there never has been. The live site is the
-only one. Pre-cutover verification uses the deploy workflow's `deploytest`
-target, which writes to `public_html/_deploytest/` and is blocked from public
-view; the first production deploy REPLACES the live site and happens once, by
-hand, on cutover day.
+`PUBLIC_WEB3FORMS_KEY` is set in the Netlify environment variables for all
+contexts. A production build fails without it. See `PROJECT.md` for the full
+deploy notes and the current open issue with the form.
+
+The site was on Afrihost shared cPanel over FTPS until 2026-09-08. That
+pipeline and its `.htaccess` have been removed.
 
 Do not touch DNS or MX records — `info@eventsserve.co.za` is a mailbox on the
-same hosting.
+Afrihost hosting, which still handles mail for the domain.
 
 ## Structure
 

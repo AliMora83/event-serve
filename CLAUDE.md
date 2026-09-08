@@ -33,10 +33,10 @@ they are stale — flag them.
 | Fonts | Montserrat 400/600/700, loaded via `<link>` in `BaseLayout` |
 | JS framework | **None.** No React, no View Transitions. The only client JS is `motion.js` |
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
-| Forms | Web3Forms → `info@eventsserve.co.za`. `DEPLOY_ENV=production` **fails to build** without `PUBLIC_WEB3FORMS_KEY`; local and `deploytest` builds run keyless and render the form disabled |
+| Forms | Web3Forms → `info@eventsserve.co.za`. A build with `CONTEXT=production` **fails** without `PUBLIC_WEB3FORMS_KEY`; local, deploy-preview and branch-deploy builds run keyless and render the form disabled. **The key currently returns 400 — see PROJECT.md open issues** |
 | Package manager | npm |
-| Hosting | Afrihost, shared cPanel, Apache/LiteSpeed |
-| Staging | **None.** See "The live site" below |
+| Hosting | **Netlify.** Build `npm run build`, publish `dist`, config in `netlify.toml`. Was Afrihost cPanel/FTPS until 2026-09-08 |
+| Staging | Netlify deploy previews on pull requests. See "Deploying" below |
 | Repo | AliMora83/event-serve |
 
 ## Documents
@@ -85,23 +85,35 @@ oversight; a solid band reads as a choice. If original photography arrives,
 restoring it is a one-line swap **and** a reopening of this budget, not just
 a swap.
 
-**The live site is the only environment.** eventsserve.co.za is the client's
-sole web presence and there is no staging subdomain. The first production
-deploy REPLACES it, so it happens once, on cutover day, by hand. The deploy
-workflow is `workflow_dispatch` only — **never add a push trigger** — and
-until cutover the only permitted target is `deploytest`, which writes to
-`public_html/_deploytest/`.
+**Deploying — Netlify, and auto-publishing is LOCKED.** The production branch
+is `main`. A push to `main` triggers a build, but **that build does not go
+live**: auto-publishing is turned off in the Netlify UI, and promoting a
+successful build to production is a deliberate manual step someone takes in
+the dashboard.
 
-**Deploy is FTPS. SSH is not available on this package.** Every SSH port times
-out while cPanel answers on 2083. That is how Afrihost sells the shared
-package — it is not a firewall rule to work around, not a key problem, and not
-worth another afternoon. The workflow uses
-`SamKirkland/FTP-Deploy-Action@v4.3.5` with `protocol: ftps`. Do not
-reintroduce rsync-over-SSH. The site is a static `dist/`; it never needed a
-shell.
+This is the safety property that the old workflow got from being
+`workflow_dispatch` only. It is now a Netlify setting rather than a line in a
+YAML file, which means **it cannot be enforced by anything in this repo** —
+if someone re-enables auto-publish, every push to `main` goes straight to the
+client's only web presence. Do not turn it on. If you are asked to, say what
+it costs first.
+
+Pull requests get deploy previews. Netlify serves those with
+`X-Robots-Tag: noindex` by default (verified 2026-09-08), so a preview will
+not be indexed as a duplicate of the live site.
+
+`PUBLIC_WEB3FORMS_KEY` is set in the Netlify site environment variables for
+all contexts, not in the repo.
+
+**The FTPS/cPanel pipeline is gone.** `.github/workflows/deploy.yml`,
+`public/.htaccess`, the `_deploytest` target and the SSH investigation before
+it were all removed on 2026-09-08. Do not reintroduce any of it, and do not
+add a GitHub Actions deploy workflow — Netlify builds from the repo itself.
 
 **Never touch DNS or MX records.** `info@eventsserve.co.za` is a mailbox on the
-same hosting. Mail routing is out of scope for every sprint.
+**Afrihost** hosting, which still handles mail for the domain even though the
+website now builds on Netlify. Moving the site did not move the mail. Mail
+routing is out of scope for every sprint.
 
 **Ask before installing a dependency** that isn't already in `package.json`.
 
@@ -110,9 +122,15 @@ same hosting. Mail routing is out of scope for every sprint.
 These were established by audit. Trust them over anything else in the repo:
 
 - The old contact form **never worked**. It used Netlify Forms while the site
-  was hosted on Afrihost. No submission has ever been delivered.
-- Deploy is **not** Cloudflare or Netlify auto-deploy. It's cPanel, over
-  FTPS. SSH was tried and is unavailable on this package.
+  was hosted on Afrihost cPanel. No submission has ever been delivered.
+- The contact form has failed silently **twice**. After the Web3Forms port it
+  spent four days serving an enabled form with an empty `access_key`, which
+  returns HTTP 200 and delivers nothing — the visitor sees a success banner.
+  This is why `ContactForm.astro` keeps a fail-closed CI backstop alongside
+  the `CONTEXT` check. Do not simplify that logic away.
+- Deploy is Netlify, building from `main`, with **auto-publish off**. It was
+  Afrihost cPanel over FTPS until 2026-09-08; SSH was tried on that package
+  and was unavailable. None of that applies any more.
 - The "86 source images" figure counted more than photographs. Actual: 82
   PNG/JPG photos, 3 unreferenced GIFs and Vite's default `react.svg`.
   Sprint 1.1 staged **72** of them to `src/assets/` (38MB) after dropping 9

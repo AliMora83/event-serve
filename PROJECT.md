@@ -1,7 +1,7 @@
 # Events Serve Website Rebuild — Project Plan
 
 **Client:** Events Serve (eventsserve.co.za)
-**Stack:** Astro 5, static output, deployed to Afrihost shared cPanel over FTPS
+**Stack:** Astro 5, static output, deployed to Netlify
 **Build tools:** Claude Code (repo, terminal, refactors) + Antigravity IDE (UI work, browser-verified changes)
 **Approach:** Port with fixes. Same structure and identity as the current site, corrected content, contrast and performance. Not a redesign.
 **Timeline:** 15 working days, full-time. Launch target: 3 weeks from Sprint 1.
@@ -50,14 +50,18 @@ Keep one tool per branch at a time. Two agents editing the same working tree pro
 ## Sprint 1 — Foundation *(day 1)*
 
 Docs cleanup, scaffold installed, old build moved to `legacy/`, images staged.
-cPanel deploy pipeline (manual trigger, `deploytest` target), `.htaccess`.
-Web3Forms wired and **verified by a delivered message**.
+Deploy pipeline and host config. Web3Forms wired and **verified by a delivered
+message**.
+
+*(Historical: this sprint built an FTPS/cPanel pipeline with a `deploytest`
+target and an `.htaccess`. Both were removed on 2026-09-08 when the site moved
+to Netlify. See "Deploy" above.)*
 Confirm the new tree has no React: `@astrojs/react`, `lottie-react` and `gradflow`
 live in the **old** build's `package.json`, which moves to `legacy/`. Nothing to
 remove from the Astro scaffold — dependencies there are `astro` and `sharp` only.
 Still worth checking what `gradflow` did, in case a component in the port relied on it.
 
-**Done when:** a `deploytest` run proves the transport and that `.htaccess` applies, four routes resolve, and a test enquiry reaches the client's inbox. The production deploy waits for cutover day.
+**Done when:** a deploy preview builds clean, four routes resolve, and a test enquiry reaches the client's inbox. **Still open** — Web3Forms returns 400; see Open issues.
 **Tag `v0.1`.**
 
 ### gradflow — reproduce in CSS, Sprint 3
@@ -83,115 +87,103 @@ Sprint 2 stubs the embed with a poster frame.
 
 ### Deploy pipeline — configuration required
 
-`.github/workflows/deploy.yml` builds `dist/` and uploads it over **FTPS** to
-cPanel.
+The site is hosted on **Netlify**, connected to this repo. There is no deploy
+workflow in `.github/workflows/` and there should not be one — Netlify builds
+from the repository itself.
 
-**SSH is not available on this hosting package.** Every SSH port times out
-while cPanel answers on 2083. This is a property of the Afrihost shared
-package, not a misconfiguration. Do not try to restore an SSH/rsync deploy —
-the site is a static build and never needed a shell.
-
-**Manual trigger only. There is deliberately no push trigger.**
-eventsserve.co.za is live and is the client's only web presence. There is no
-staging subdomain, so the first production deploy REPLACES the existing site.
-Deploying has to be a decision someone makes, never a side effect of merging.
-
-**No production deploys until cutover day.** Until then use the `deploytest`
-target, which writes to `public_html/_deploytest/` and cannot touch the live
-site. The workflow refuses a `deploytest` directory that does not end in
-`/_deploytest`, and a production run additionally requires typing
-`REPLACE-LIVE-SITE` into the confirm field.
-
-**Secrets** (Settings → Secrets and variables → Actions → Secrets):
-
-| Secret | What it is |
+| | |
 |---|---|
-| `FTP_HOST` | FTP hostname from cPanel → FTP Accounts → Configure FTP Client. Hostname only, no scheme and no path |
-| `FTP_USER` | Full FTP username, usually `user@eventsserve.co.za` |
-| `FTP_PASSWORD` | That FTP account's password. Create a **deploy-only** FTP account; do not reuse the cPanel login |
-| `PUBLIC_WEB3FORMS_KEY` | Web3Forms access key. Required for `production`; `deploytest` builds without it |
+| Production branch | `main` |
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Config | `netlify.toml` at the repo root |
+| Node | 22, pinned in `netlify.toml` rather than the dashboard |
 
-`SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT` and `SSH_KNOWN_HOSTS`
-are retired. Delete them — a stale private key in a repo secret is a liability
-with no remaining use.
+**Auto-publishing is LOCKED.** A push to `main` builds, but the build does not
+go live. Promoting it to production is a manual step in the Netlify UI.
 
-**Variables** (same page → Variables):
+This replaces the safety property the old workflow had from being
+`workflow_dispatch` only, and it is worth being explicit about what changed:
+that rule lived in a file in this repo and was reviewable in a diff. This one
+is a toggle in a dashboard. Nothing in the repo can enforce it or even detect
+that it has been changed. If auto-publish is ever switched on, every push to
+`main` goes straight to the client's only web presence with no human step in
+between.
 
-| Variable | Example |
+**Deploy previews.** Pull requests get a preview build at a `*.netlify.app`
+URL. Netlify serves these with `X-Robots-Tag: noindex` by default (verified
+2026-09-08), so a preview is not indexable as a duplicate of the live site.
+Note that `astro.config.mjs` sets `site: 'https://eventsserve.co.za'`, so
+canonical URLs and the sitemap in a preview build still point at the live
+domain. That is correct for the production build and harmless in a preview
+that crawlers are told to ignore.
+
+**Environment variables** (Netlify → Site configuration → Environment
+variables):
+
+| Variable | Scope | What it is |
+|---|---|---|
+| `PUBLIC_WEB3FORMS_KEY` | All contexts | Web3Forms access key. A build with `CONTEXT=production` **fails** without it |
+
+Netlify sets `CONTEXT` itself, to `production`, `deploy-preview` or
+`branch-deploy`. Nothing needs to set it, and nothing should.
+
+**What the key gate does.** `src/components/ContactForm.astro` requires the key
+when `CONTEXT=production`, and keeps a fail-closed backstop for a build in some
+other CI where `CONTEXT` is absent. Local builds run keyless and render the
+form visibly disabled with a note telling the visitor to email instead. The one
+thing it will never do is render an enabled form with an empty `access_key` —
+see the open issue below for why that matters.
+
+### The FTPS pipeline, and what replaced each part of it
+
+Removed on 2026-09-08. Recorded here so nobody rebuilds it:
+
+| Old | Now |
 |---|---|
-| `FTP_DEPLOYTEST_DIR` | `public_html/_deploytest` |
-| `DEPLOYTEST_URL` | `https://eventsserve.co.za/_deploytest` |
-| `FTP_PROD_DIR` | `public_html` |
-| `PROD_URL` | `https://eventsserve.co.za` |
+| `.github/workflows/deploy.yml`, FTPS via `SamKirkland/FTP-Deploy-Action` | Netlify builds from `main` |
+| `deploytest` target writing to `public_html/_deploytest/` | Netlify deploy previews on pull requests |
+| `cleanup-deploytest` clean-slate wipe | Nothing to clean up |
+| `workflow_dispatch` only, no push trigger | Auto-publish off in the Netlify UI |
+| `public/.htaccess` — headers, caching, HTTPS, 404, compression | `netlify.toml` for headers and caching; Netlify does HTTPS, 404 and compression itself |
+| lftp verification of the upload | Netlify's own build and deploy log |
+| `DEPLOY_ENV=production` gating the form key | `CONTEXT=production` |
+| Secrets `FTP_HOST` / `FTP_USER` / `FTP_PASSWORD`, vars `FTP_*_DIR` | Deleted from GitHub separately |
 
-`DEPLOYTEST_PATH` and `PROD_PATH` are retired. They were absolute filesystem
-paths, which an FTP session has no concept of: an FTP directory is relative to
-whatever the account's root happens to be. **Confirm that root before trusting
-either value** — see below.
+SSH was investigated on the Afrihost package before FTPS and was unavailable —
+every port timed out while cPanel answered on 2083. That finding is now moot
+and is recorded only so it is not re-investigated.
 
-All three environments (`deploytest`, `cleanup-deploytest`, `production`)
-should exist under Settings → Environments. Put a required reviewer on
-`production`.
+## Open issues
 
-**Confirming the FTP root.** Do not guess it. An account created against the
-domain may land in `public_html/`, in which case `FTP_PROD_DIR` is `.` and the
-guards will reject it; an account created at the cPanel level lands in the
-home directory, where `public_html` is a child. Log in once with any FTP
-client and check what you see immediately after connecting:
+### Web3Forms returns 400 — the contact form does not deliver
 
-- If the first listing shows `public_html`, `mail`, `etc`, `logs` — you are in
-  the home directory. Use `public_html` and `public_html/_deploytest`.
-- If the first listing shows `index.html`, `_astro`, `about` — you are already
-  inside the document root. Make a new FTP account whose directory is the home
-  directory instead; the workflow refuses to target the FTP root, deliberately.
+**Unresolved as of 2026-09-08.** The access key is present and is a well-formed
+UUID, but `POST https://api.web3forms.com/submit` returns **HTTP 400**. The
+form therefore does not deliver, and the site should not be treated as having
+a working contact path until this is fixed.
 
-**Proving the transport before cutover.** Run the workflow with target
-`deploytest`.
+Suspected cause: the key was generated but never activated. Web3Forms sends an
+activation email to the address the key was created against
+(`info@eventsserve.co.za`) and the key does not work until someone clicks it.
+The client controls that mailbox.
 
-`_deploytest/` is **blocked outright**, not merely noindexed — a rewrite rule
-in `.htaccess` returns 403 for any `/_deploytest` URL, and the workflow appends
-`Require all denied` to the copy that is uploaded there. It puts a complete
-duplicate of the site on the live domain, and a noindex header still permits
-the fetch during exactly the window that matters.
+Next step is to confirm activation with the client before assuming anything is
+wrong with the integration code.
 
-Because it is unreachable, **verification reads the remote directory over
-FTPS** rather than fetching it: the workflow installs `lftp`, takes a recursive
-listing, and asserts local vs remote file count and the presence of the key
-files. Both are hard failures. The one HTTP call asserts a **403**, and fails
-the run on a 200.
+This matters more than a normal open issue because of the history. The form has
+now failed **silently** twice:
 
-The old SSH verification also audited file and directory modes. That check is
-gone: FTP listings do not report modes reliably, and asserting something we
-cannot trust is worse than not asserting it. If modes are ever in question,
-check them in cPanel's File Manager.
+1. The original Netlify Forms setup ran for nine months on a host that was not
+   Netlify. Every submission returned a success banner and went nowhere.
+2. After the Web3Forms port, the live site spent four days serving an enabled
+   form with an empty `access_key`. Web3Forms answers that with a **200** and
+   delivers nothing — so again, a success banner and no enquiry.
 
-The header assertions (`X-Content-Type-Options`, `Referrer-Policy`,
-`Cache-Control: immutable`) and the 404 check need a fetchable URL and a
-document root, so they run for the first time at cutover, against production.
-
-**Then clean up.** Run the workflow again with target `cleanup-deploytest`.
-It skips the build entirely. `_deploytest` should not outlive the test it
-exists for — it must not sit on the live domain for weeks.
-
-The FTP action cannot delete a remote directory, so cleanup syncs an *empty*
-local directory with `dangerous-clean-slate`, which deletes every file inside
-`FTP_DEPLOYTEST_DIR`. The directory itself survives, empty; the parent
-`.htaccess` still returns 403 for it. A dedicated pre-flight step re-asserts
-the `/_deploytest` suffix immediately before that action runs — it is the only
-step in the workflow that can destroy data, so the guard is deliberately
-duplicated and deliberately outside the thing it guards.
-
-**Safety notes.** `dangerous-clean-slate` is used on cleanup only and is
-explicitly `false` for both deploys, so a production run never deletes ahead
-of uploading. The upload additionally excludes `.well-known/` (deleting it
-breaks AutoSSL renewal), `cgi-bin/`, `.htpasswd` and `_deploytest/`. The path
-guards, rebased from the SSH version into FTP terms, reject an empty target,
-an absolute path, anything containing `..`, and — for both deploytest targets —
-anything not ending in `/_deploytest`.
-
-The action keeps a sync-state file (`.ftp-deploy-sync-state.json`) in the
-target directory and uses it to upload only what changed. Deleting it is not
-dangerous, but it forces a full re-upload of the whole site next run.
+Both failures looked like success from the outside. A 400 is at least loud.
+Do not "fix" it by suppressing the error or by rendering the form as if it
+worked; the gate in `ContactForm.astro` exists precisely to make a
+non-delivering form visibly non-delivering.
 
 ## Sprint 2 — Shared components *(days 2–4)*
 
@@ -268,9 +260,9 @@ SEO: titles, descriptions, sitemap, robots.txt, structured data. 404 page. Analy
 
 ## Days 14–15 — Review and cutover
 
-**Not work days.** Client review, fixes, then the cutover deploy to `public_html/` — the first and only production run.
+**Not work days.** Client review, fixes, then publishing the build in the Netlify UI — auto-publish is off, so going live is an explicit action.
 
-Do not touch MX records. `info@eventsserve.co.za` is a mailbox on the same hosting.
+Do not touch DNS or MX records. `info@eventsserve.co.za` is a mailbox on the Afrihost hosting, which still handles mail for the domain even though the website has moved to Netlify.
 
 Post-launch: verify the form on the production domain.
 **Tag `v1.0`.**

@@ -116,7 +116,8 @@ states. Your job is the wiring and the proof:
 ## 3.6 Deploy — shared cPanel
 
 - [x] Check whether the plan includes SSH. cPanel sidebar will show "Terminal" or "SSH Access"
-  - **RESOLVED: no SSH.** Every SSH port times out on this Afrihost shared package while cPanel answers on 2083. The deploy uses `SamKirkland/FTP-Deploy-Action@v4.3.5` over FTPS instead. Do not retry SSH — see `PROJECT.md` for the configuration
+  - **RESOLVED: no SSH.** Every SSH port times out on this Afrihost shared package while cPanel answers on 2083. The deploy used `SamKirkland/FTP-Deploy-Action@v4.3.5` over FTPS instead.
+  - **SUPERSEDED 2026-09-08.** The site moved to Netlify and the whole FTPS pipeline was deleted. This item is left as a record of what was decided at the time; it is not current guidance. See `PROJECT.md` → Deploy.
 - [ ] Set up **`staging.eventsserve.co.za`** as a subdomain, deploy there, not to the live site. Every sprint should end with something the client can look at
 - [ ] Add `.htaccess` for the Apache/LiteSpeed stack: HTTPS redirect, `Cache-Control` on hashed assets, gzip/brotli, custom 404
 - [ ] Confirm all four routes resolve on staging. Astro's default directory output gives `/about/index.html`, which Apache serves correctly — verify rather than assume
