@@ -19,7 +19,13 @@ import site from '@data/site.json';
  *   3. Contact details stay visible in both states.
  *   4. The success message uses brand crimson, not stock alert green.
  */
-const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+/*
+ * Trimmed on read. A value pasted into the Netlify dashboard with a stray
+ * space or newline is truthy but posts a malformed access_key, which the API
+ * answers with a 400 — the same visible symptom as a key that was never
+ * activated, and impossible to tell apart from the outside.
+ */
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY?.trim();
 
 /**
  * Local, deploy-preview and branch-deploy builds run keyless with the form
@@ -47,29 +53,57 @@ const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY;
  * nine months. Do not simplify this away.
  *
  * What we will not do under any configuration is render a form that posts an
- * empty access_key. When there is no key there is no access_key field and no
- * enabled control.
+ * empty OR MALFORMED access_key. When the key is missing or fails the format
+ * check below there is no access_key field and no enabled control.
  */
 const CONTEXT = process.env.CONTEXT ?? '';
 const isCI = process.env.CI === 'true';
 const requiresKey = CONTEXT === 'production' || (isCI && CONTEXT === '');
 
-const formConfigured = Boolean(WEB3FORMS_KEY);
+/*
+ * A Web3Forms access key is a UUID. Presence alone was not enough: the old
+ * Boolean() check passed any non-empty string, so a truncated or whitespace-
+ * damaged key rendered an ENABLED form that posted garbage and got a 400.
+ * That is the same class of failure as the empty-key incident — a form that
+ * looks live and delivers nothing — so it now fails the same way a missing
+ * key does, at build time, rather than in front of a visitor.
+ */
+const WEB3FORMS_KEY_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const keyPresent = Boolean(WEB3FORMS_KEY);
+const keyWellFormed = keyPresent && WEB3FORMS_KEY_PATTERN.test(WEB3FORMS_KEY!);
+
+const formConfigured = keyWellFormed;
 
 if (import.meta.env.PROD && requiresKey && !formConfigured) {
   throw new Error(
-    'PUBLIC_WEB3FORMS_KEY is not set for a production build. The contact ' +
-    'form would build but never deliver. Set PUBLIC_WEB3FORMS_KEY in the ' +
-    'Netlify site environment variables (Site configuration -> Environment ' +
-    'variables), or in .env for a local build.'
+    keyPresent
+      ? 'PUBLIC_WEB3FORMS_KEY is set but MALFORMED for a production build ' +
+        `(length ${WEB3FORMS_KEY!.length}, after trimming). A Web3Forms ` +
+        'access key is a UUID: 8-4-4-4-12 hex digits. The value is most ' +
+        'likely truncated, quoted, or carrying stray whitespace. A ' +
+        'malformed key builds fine and then posts an access_key the API ' +
+        'rejects with a 400, so the form would never deliver. Correct it ' +
+        'in the Netlify site environment variables (Site configuration -> ' +
+        'Environment variables), or in .env for a local build.'
+      : 'PUBLIC_WEB3FORMS_KEY is not set for a production build. The ' +
+        'contact form would build but never deliver. Set ' +
+        'PUBLIC_WEB3FORMS_KEY in the Netlify site environment variables ' +
+        '(Site configuration -> Environment variables), or in .env for a ' +
+        'local build.'
   );
 }
 
 if (import.meta.env.PROD && !formConfigured) {
   console.warn(
-    '\n  ⚠  Building WITHOUT PUBLIC_WEB3FORMS_KEY — the contact form is ' +
-    'disabled in this output.\n     Expected for a preview or a local ' +
-    'build; a production deploy requires the key.\n'
+    keyPresent
+      ? '\n  ⚠  Building with a MALFORMED PUBLIC_WEB3FORMS_KEY — the ' +
+        'contact form is disabled in this output.\n     The value is not ' +
+        'a UUID; check for truncation or stray whitespace.\n'
+      : '\n  ⚠  Building WITHOUT PUBLIC_WEB3FORMS_KEY — the contact form ' +
+        'is disabled in this output.\n     Expected for a preview or a ' +
+        'local build; a production deploy requires the key.\n'
   );
 }
 
@@ -139,13 +173,40 @@ if (import.meta.env.PROD && !formConfigured) {
     status.hidden = true;
     status.classList.remove('is-error');
 
+    /* Captured outside the try so the catch can report them. This handler
+       used to end in a bare `catch {}`, which discarded the Error thrown two
+       lines above it — and with it Web3Forms' own `message`, the only field
+       that tells an unactivated key apart from an invalid or malformed one.
+       The visitor-facing copy below is deliberately unchanged; this is a
+       developer-visible diagnostic only. */
+    let httpStatus: number | null = null;
+    let apiMessage: string | null = null;
+
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body: new FormData(form)
       });
-      const result = await response.json();
+      httpStatus = response.status;
+
+      /* Parsed in its own try so a non-JSON body (a gateway error page, a
+         rate-limit response) is distinguishable in the console from a
+         well-formed rejection, instead of both surfacing identically. */
+      let result: { success?: boolean; message?: string };
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        console.error(
+          `[contact form] Web3Forms returned HTTP ${response.status} with a ` +
+          'body that could not be parsed as JSON. This is a transport or ' +
+          'gateway failure, not a rejected key.',
+          parseError
+        );
+        throw new Error(`Unparseable response body (HTTP ${response.status})`);
+      }
+
+      apiMessage = result.message ?? null;
 
       if (response.ok && result.success) {
         status.textContent = "Thanks — we'll be in touch shortly.";
@@ -153,7 +214,12 @@ if (import.meta.env.PROD && !formConfigured) {
       } else {
         throw new Error(result.message || 'Submission failed');
       }
-    } catch {
+    } catch (error) {
+      console.error(
+        `[contact form] Submission failed. HTTP status: ${httpStatus ?? 'no response'}. ` +
+        `Web3Forms message: ${apiMessage ?? 'none'}.`,
+        error
+      );
       status.textContent =
         "That didn't send. Please email info@eventsserve.co.za or call us instead.";
       status.classList.add('is-error');
