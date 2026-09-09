@@ -3,8 +3,9 @@
 Marketing website for Events Serve (eventsserve.co.za). Astro 5, static output,
 no client-side framework.
 
-Four routes: Home, About, Partnerships, Contact. Services is a homepage
-section at `/#services`.
+Five routes: Home, About, Services, Partnerships, Contact. The homepage also
+keeps a titles-only `#services` section, fed by the same `services.json` as
+the `/services` page.
 
 > Replaces a README that belonged to the Atlas Conference project.
 

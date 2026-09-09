@@ -21,7 +21,7 @@ import { heroImages } from '@assets/images';
     <h1 class="hero__title">{site.tagline}</h1>
     <div class="hero__actions">
       <a class="btn btn--primary" href="/contact">Start a conversation</a>
-      <a class="btn btn--ghost" href="/#services">See what we do</a>
+      <a class="btn btn--ghost" href="/services">See what we do</a>
     </div>
   </ParallaxBand>
 
@@ -33,7 +33,7 @@ import { heroImages } from '@assets/images';
     <div class="wrap">
       <SectionHeading title="We do events" />
       <p class="lede">
-        TODO — carry over the existing "We do events" copy, plus the video
+        PLACEHOLDER — carry over the existing "We do events" copy, plus the video
         embed that currently sits beside it.
       </p>
       <a class="btn btn--ghost" href="/about">More about us</a>
@@ -42,10 +42,14 @@ import { heroImages } from '@assets/images';
 
   <WorkHighlights />
 
-  <!-- Services lives here as a section. There is no /services route —
-       removed from nav by decision, since the copy to justify a page doesn't
-       exist. services.json stays keyed by slug so /services/[slug] remains a
-       v1.1 option. -->
+  <!-- Services now has a real route at /services, in the nav, and the hero
+       button points there. This section stays as the homepage summary: the
+       SAME ServiceGrid without `detailed`, so it renders titles only while
+       /services renders the prose. Both read services.json, so they cannot
+       drift apart.
+
+       The #services id is kept because it is a published anchor — the hero
+       used to point at it. Removing it would break any external link. -->
   <section class="section" id="services">
     <div class="wrap">
       <SectionHeading title="What we offer" />

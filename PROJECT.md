@@ -6,7 +6,7 @@
 **Approach:** Port with fixes. Same structure and identity as the current site, corrected content, contrast and performance. Not a redesign.
 **Timeline:** 15 working days, full-time. Launch target: 3 weeks from Sprint 1.
 **No React.** Lottie animations are replaced with static SVG, so nothing hydrates.
-**Routes:** Home, About, Partnerships, Contact. Services is a homepage section (`/#services`), not a route.
+**Routes:** Home, About, Services, Partnerships, Contact. Services became a real route on 2026-09-09; the homepage keeps a titles-only `#services` section fed by the same data.
 **Founder:** Romeo Leko
 
 ---
@@ -61,7 +61,7 @@ live in the **old** build's `package.json`, which moves to `legacy/`. Nothing to
 remove from the Astro scaffold — dependencies there are `astro` and `sharp` only.
 Still worth checking what `gradflow` did, in case a component in the port relied on it.
 
-**Done when:** a deploy preview builds clean, four routes resolve, and a test enquiry reaches the client's inbox. **Still open** — Web3Forms returns 400; see Open issues.
+**Done when:** a deploy preview builds clean, five routes resolve, and a test enquiry reaches the client's inbox. **Still open** — Web3Forms returns 400; see Open issues.
 **Tag `v0.1`.**
 
 ### gradflow — reproduce in CSS, Sprint 3
@@ -127,6 +127,38 @@ variables):
 
 Netlify sets `CONTEXT` itself, to `production`, `deploy-preview` or
 `branch-deploy`. Nothing needs to set it, and nothing should.
+
+**The PLACEHOLDER guard.** A second fail-closed gate, added 2026-09-09 with the
+`/services` page. Unfinished copy carries the literal token `PLACEHOLDER`; the
+`placeholderGuard()` integration in `astro.config.mjs` scans the **rendered
+output** after each build — not the source, since that is what reaches a
+visitor — and refuses to let it ship.
+
+| `CONTEXT` | Behaviour when `PLACEHOLDER` is in the output |
+|---|---|
+| `production` | **Build fails**, exit 1, naming each file and its hit count |
+| `deploy-preview` | Warns, build succeeds |
+| `branch-deploy` | Warns, build succeeds |
+| unset (local `npm run build`, `astro dev`) | Warns, build succeeds |
+
+Gated on `CONTEXT=production` alone, with no CI clause — unlike the form key, a
+false negative costs nothing here, because previews are *meant* to render
+placeholder copy. Being able to see it is the point.
+
+It replaced a `TODO` convention that had spread into shipped markup, image alt
+text and documentation prose alike, so a guard keyed on it would have fired on
+its own documentation and been switched off within a week. `grep -rn TODO src/`
+now returns nothing; `grep -rn PLACEHOLDER src/` is the inventory of what is
+still unwritten.
+
+**What is currently behind it** (all of it blocks a production deploy):
+`services.json` (8 service descriptions), `testimonials.json` (3 org/role
+lines), `partners.json` (1 African Bank detail), body copy on `/` and `/about`,
+and **image alt text** in `WorkHighlights.astro` (×4) and `partnerships.astro`.
+
+The alt text is the item to watch. It is what a screen reader announces, so it
+is user-facing rather than source noise, and it needs the client's
+gallery-to-event mapping before it can be written.
 
 **What the key gate does.** `src/components/ContactForm.astro` requires the key
 when `CONTEXT=production`, and keeps a fail-closed backstop for a build in some
@@ -220,7 +252,7 @@ Image migration, all 86 files:
 
 # Phase 2 — Pages and launch
 
-**Days 8–15.** Outcome: four routes live on the production domain.
+**Days 8–15.** Outcome: five routes live on the production domain.
 
 ## Sprint 4 — Partnerships *(days 8–9)*
 

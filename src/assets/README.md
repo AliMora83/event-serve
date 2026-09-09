@@ -69,5 +69,10 @@ originals. `astro:assets` downscales; it cannot invent detail.
 ## Alt text
 
 Still outstanding, deliberately. It needs the client's gallery-to-event
-mapping — placeholder alt text on a real photograph is worse than an honest
-TODO, because it looks finished.
+mapping — invented alt text on a real photograph is worse than an honest
+marker, because it looks finished.
+
+The markers carry the literal token `PLACEHOLDER`, and the build guard in
+`astro.config.mjs` fails any production build while they survive into the
+rendered output. Alt text is the sharpest case: it is what a screen reader
+announces, so an unwritten one is user-facing, not source noise.

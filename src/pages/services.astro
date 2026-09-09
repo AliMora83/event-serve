@@ -1,0 +1,58 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import ServiceGrid from '@components/ServiceGrid.astro';
+import site from '@data/site.json';
+
+/**
+ * SERVICES — promoted from a homepage section to a real route.
+ *
+ * The homepage keeps its own #services section (titles only, no summaries).
+ * This page is the same ServiceGrid with `detailed` set, so the two never
+ * drift: both read services.json, and only this one renders the prose.
+ *
+ * ALL SERVICE COPY IS PLACEHOLDER. Every string is prefixed with the literal
+ * token PLACEHOLDER, and a build-time guard in astro.config.mjs fails a
+ * production build if any of them survive into the rendered output. See the
+ * placeholderGuard integration there before rewording anything.
+ *
+ * PLACEHOLDER replaced the older marker this repo used, which had spread into
+ * shipped markup, alt text and documentation prose alike — so grepping for it
+ * matched commentary as often as real unfinished copy, and a guard keyed on it
+ * would have fired on its own documentation. One token, one meaning:
+ * `grep -rn PLACEHOLDER src/` returns unfinished copy and nothing else.
+ */
+---
+<BaseLayout
+  title="Services | Event production, broadcast and brand activations — Events Serve"
+  description="Event production, virtual and hybrid delivery, live broadcast, accreditation, brand activations and content production across South Africa."
+>
+  <section class="section">
+    <div class="wrap">
+      <h1>What we offer</h1>
+      <p class="lede">
+        Events Serve delivers events end to end — production, broadcast,
+        accreditation and the content that comes out of them — in
+        {site.cities.slice(0, -1).join(', ')} and {site.cities.at(-1)}.
+      </p>
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="services-heading">
+    <div class="wrap">
+      <SectionHeading title="Services" id="services-heading" />
+      <ServiceGrid detailed={true} columns={3} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="services-cta-heading">
+    <div class="wrap">
+      <SectionHeading title="Talk to us about your event" id="services-cta-heading" star={true} />
+      <p class="lede">
+        Tell us the date, the room and the audience, and we will tell you what
+        it takes to deliver it.
+      </p>
+      <a class="btn btn--primary" href="/contact">Start a conversation</a>
+    </div>
+  </section>
+</BaseLayout>

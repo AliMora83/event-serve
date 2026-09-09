@@ -3,48 +3,48 @@
     "slug": "event-production",
     "title": "Event production",
     "icon": "production",
-    "summary": "Optional. Section renders on titles alone."
+    "summary": "PLACEHOLDER — Full-service production for conferences, launches and awards evenings, from stage and set build through to lighting, sound and show-calling. The same crew runs the technical rehearsal and the live show, so nothing is handed over on the day. Scaled to the room, whether that is eighty people or eight thousand."
   },
   {
     "slug": "virtual-hybrid",
     "title": "Virtual & hybrid experiences",
     "icon": "virtual",
-    "summary": "Optional. Section renders on titles alone."
+    "summary": "PLACEHOLDER — Streaming delivery, moderated Q&A and remote presenter support for audiences who cannot be in the room. A hybrid event is produced as one show rather than a live event with a camera pointed at it. Includes rehearsal with remote speakers and a tested fallback for when connectivity drops."
   },
   {
     "slug": "live-broadcast",
     "title": "Live-to-air broadcast",
     "icon": "broadcast",
-    "summary": "Optional. Section renders on titles alone."
+    "summary": "PLACEHOLDER — Multi-camera capture, vision mixing and live-to-air delivery for broadcast partners and in-house channels. We work to broadcaster technical specifications and deliver a clean feed alongside recorded masters. Most recently applied across national sporting events."
   },
   {
     "slug": "rsvp-accreditation",
     "title": "RSVP & accreditation",
     "icon": "rsvp",
-    "summary": "Optional. Section renders on titles alone."
+    "summary": "PLACEHOLDER — Guest list management, invitations and on-site accreditation with printed passes and tiered access. Arrivals are tracked as they happen, so protocol and security both know who is in the room. VIP, media and general admission are handled as separate streams."
   },
   {
     "slug": "brand-activations",
     "title": "Brand activations",
     "icon": "activation",
-    "summary": "Optional. Section renders on titles alone."
+    "summary": "PLACEHOLDER — Experiential builds that place a brand in front of an audience already gathered for something they care about. Covers concept, fabrication, staffing and measurement of reach on the day. Designed to travel between venues where a campaign runs across several cities."
   },
   {
     "slug": "multimedia-content",
     "title": "Multimedia content",
     "icon": "multimedia",
-    "summary": "Overlaps heavily with video production \u2014 merge or differentiate."
+    "summary": "PLACEHOLDER — Stills, motion graphics and social cutdowns produced alongside the event rather than weeks after it. Assets are delivered in the formats each channel needs, already sized and captioned. Copy review: this overlaps heavily with video production below — the two need merging or clearer differentiation before launch."
   },
   {
     "slug": "video-production",
     "title": "Video production",
     "icon": "video",
-    "summary": "See note on multimedia content."
+    "summary": "PLACEHOLDER — Scripted films, highlights reels and sponsor content, from treatment through to final grade. Shot by the crew already covering the live event, so coverage is planned once rather than twice. Copy review: see the overlap flagged under multimedia content."
   },
   {
     "slug": "pr-marketing",
     "title": "PR & marketing",
     "icon": "pr",
-    "summary": "Optional. Section renders on titles alone."
+    "summary": "PLACEHOLDER — Media relations, press office and campaign support around an event's announcement and delivery. Coordinates with sponsors so partner messaging lands alongside the client's own. Includes coverage reporting once the event has run."
   }
 ]

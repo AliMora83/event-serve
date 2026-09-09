@@ -4,14 +4,23 @@ import services from '@data/services.json';
 interface Props {
   /** Home shows labels only; /services shows summaries once copy lands. */
   detailed?: boolean;
+  /**
+   * Columns at desktop width. 4 suits titles-only tiles; a `detailed` grid
+   * wants 3, because at 4-up the summary measure collapses to roughly 30
+   * characters per line. Below 900px the grid drops to 2 regardless.
+   */
+  columns?: 3 | 4;
 }
-const { detailed = false } = Astro.props;
+const { detailed = false, columns = 4 } = Astro.props;
 ---
-<ul class="services">
+<ul
+  class:list={['services', detailed && 'services--detailed']}
+  style={`--services-columns: ${columns}`}
+>
   {services.map((service, i) => (
     <li class="service" data-reveal data-reveal-step={i % 4}>
       <span class="service__icon" aria-hidden="true">
-        <!-- Icon set TODO: one 24px line icon per service.slug -->
+        <!-- Icon set PLACEHOLDER: one 24px line icon per service.slug -->
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="9" />
@@ -24,19 +33,53 @@ const { detailed = false } = Astro.props;
 </ul>
 
 <style>
+  /* Column count comes from the `columns` prop via --services-columns, so a
+     titles-only grid and a detailed one can differ without forking this
+     component. The 4 here is a fallback for a bare .services with no inline
+     property set.
+
+     Was repeat(auto-fit, minmax(200px, 1fr)), which fits as many columns as
+     the container allows: at --page-max that is five, leaving an orphaned
+     row of three. auto-fit cannot express "exactly four" at any minmax —
+     widen the floor and it drops to three early, narrow it and it returns
+     to five — so the column count is explicit. */
   .services {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(var(--services-columns, 4), minmax(0, 1fr));
     gap: var(--space-5);
+  }
+
+  /* Below ~900px the desktop count (3 or 4) falls under about 180px per
+     column and the longer titles wrap to three lines, so the grid drops to
+     two regardless of the prop. Two is kept all the way down rather than
+     one — these tiles are a centred icon and a short label, and a single
+     column turns the section into an eight-row scroll. */
+  @media (max-width: 900px) {
+    .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* Detailed grids go single-column on phones. Two columns holds a titles-only
+     tile fine, but it puts the prose at about 20 characters per line — worse
+     than the 4-up desktop measure this change set out to fix. Titles-only
+     grids stay at two: they have no measure to protect and a single column
+     would make the homepage section an eight-row scroll. */
+  @media (max-width: 600px) {
+    .services--detailed { grid-template-columns: minmax(0, 1fr); }
   }
 
   .service {
     text-align: center;
     padding: var(--space-4);
   }
+
+  /* A detailed tile gives its inline padding back to the measure: 48px of it
+     was being spent on whitespace the --space-5 grid gap already provides,
+     which held the line length around 41 characters. Titles-only tiles keep
+     the padding — they have no measure to protect. */
+  .services--detailed .service { padding-inline: 0; }
 
   .service__icon {
     display: grid;
@@ -55,10 +98,15 @@ const { detailed = false } = Astro.props;
     margin: 0;
   }
 
+  /* 60ch is a ceiling, not the measure. The column is narrower than this at
+     every breakpoint, so the grid governs the line length and this only stops
+     the paragraph running away if the component is ever used in a wide
+     single-column context. It was 34ch, which capped the measure at roughly
+     34 characters and made widening the column pointless. */
   .service__summary {
     color: var(--c-text-muted);
     font-size: var(--fs-small);
     margin: var(--space-2) auto 0;
-    max-width: 34ch;
+    max-width: 60ch;
   }
 </style>

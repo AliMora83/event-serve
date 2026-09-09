@@ -1,7 +1,7 @@
 ---
 import testimonials from '@data/testimonials.json';
 ---
-<section class="section" aria-labelledby="testimonials-heading">
+<section class="section testimonials" aria-labelledby="testimonials-heading">
   <div class="wrap">
     <h2 id="testimonials-heading" class="t__heading">What our clients say</h2>
     <ul class="t__grid">
@@ -19,7 +19,13 @@ import testimonials from '@data/testimonials.json';
 </section>
 
 <style>
-  .t__heading { text-align: center; margin-bottom: var(--space-6); }
+  .testimonials { background: var(--c-surface-light); }
+
+  .t__heading {
+    text-align: center;
+    margin-bottom: var(--space-6);
+    color: var(--c-text-on-light);
+  }
 
   .t__grid {
     list-style: none; margin: 0; padding: 0;
@@ -28,8 +34,18 @@ import testimonials from '@data/testimonials.json';
     gap: var(--space-4);
   }
 
-  /* Dark cards, not white. The old white cards had light-grey body copy
-     that failed contrast badly. */
+  /* Dark cards, not white — kept deliberately now that the SECTION is light.
+     The card is the figure and the light ground is the field: #171515 on
+     #F2F2F2 separates at 16.25:1 with no border doing the work, and the
+     quote, name and org keep the light-on-dark values already verified
+     inside the card, so nothing in here needs re-checking.
+
+     Light cards were the alternative and were rejected. On a #F2F2F2
+     section a white card separates at 1.07:1, so it would need a light
+     hairline, a light raised surface and light hover states — a parallel
+     sub-palette this dark-only system does not have. Inventing one to get
+     white cards back is also how the previous build failed: white cards
+     with light-grey body copy. See tokens.css. */
   .t__card {
     background: var(--c-surface);
     border: 1px solid var(--c-hairline);
