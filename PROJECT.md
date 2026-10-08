@@ -7,7 +7,7 @@
 **Timeline:** 15 working days, full-time. Launch target: 3 weeks from Sprint 1.
 **No React.** Lottie animations are replaced with static SVG, so nothing hydrates.
 **Routes:** Home, About, Services, Partnerships, Contact. Services became a real route on 2026-09-09; the homepage keeps a titles-only `#services` section fed by the same data.
-**Founder:** Romeo Leko
+**Experience:** "15 years" is the team's experience, not company age. No founder paragraph, no founding year.
 
 ---
 
@@ -72,18 +72,16 @@ dark-red stops. Nothing structural depended on it and it is not being ported as
 a dependency. Sprint 3 reproduces the effect in CSS if it is still wanted; it
 must respect the global `prefers-reduced-motion` block either way.
 
-### Video — pending Vimeo upload
+### Video — Vimeo upload NOT needed (2026-10-08)
 
-`show_jan.mp4` (29MB) is not deployed. It goes to Vimeo and the page embeds
-from there.
+`show_jan.mp4` (29MB) is not deployed. The same video is on YouTube
+(`EhmIfUMwf68`) and the homepage embeds it through `VideoFacade.astro`: a
+self-hosted poster and a click-to-load `youtube-nocookie.com` iframe. There is
+no Vimeo step and no `VIMEO_URL`.
 
-    VIMEO_URL = TODO_VIMEO_URL
-
-**The file stays at `legacy/public/show_jan.mp4` until that URL exists.** It is
-the only findable copy and the client needs it to do the upload. Do not remove
-it as part of any image or asset cleanup.
-
-Sprint 2 stubs the embed with a poster frame.
+The file stays at `legacy/public/show_jan.mp4` as the only local copy; the
+poster (`src/assets/hero/video-poster.jpg`) was extracted from it. Do not
+remove it as part of any image or asset cleanup.
 
 ### Deploy pipeline — configuration required
 
@@ -237,7 +235,7 @@ Fixes applied during the port, not after:
 
 Assemble the homepage. Stats read 150+ / 15+ years industry experience / 70% repeat clients.
 Impact section removed — it becomes the Partnerships band linking to `/partnerships`.
-`show_jan.mp4` embedded from Vimeo with a poster frame.
+The video is embedded from YouTube through the click-to-load facade, with a self-hosted poster.
 
 Image migration, all 86 files:
 - Into `src/assets/`, served through `astro:assets`
@@ -271,8 +269,7 @@ Ships with two cards if African Bank still has no concrete fact.
 
 ## Sprint 5 — About and Contact *(days 10–11)*
 
-About: existing copy, founder paragraph naming Romeo Leko, Impact section moved
-here, cities served.
+About: final client copy (About, Vision, Mission, Approach) verbatim, cities served. No founder paragraph and no Impact section (dropped 2026-10-08).
 Contact: form, details, service-area line.
 
 Shorter than planned — the Services route was cut, so this sprint has slack.
@@ -307,7 +304,7 @@ Every item degrades gracefully except the last, which blocks.
 
 | Needed | Status |
 |---|---|
-| Founder's name | ✅ Romeo Leko |
+| Founder's name | ➖ Not used — the final copy has no founder framing |
 | Logo permissions (Hyundai, SASA, African Bank, MTN) | ✅ Approved |
 | Service descriptions | ✅ No longer needed — section renders on titles |
 | One concrete African Bank fact | Pending. Two partner cards until it lands |

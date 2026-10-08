@@ -2,6 +2,17 @@ Service icons for `ServiceGrid`. **Lordicon PRO assets**, downloaded from
 lordicon.com on 2026-09-10 — the licence basis for using them without
 attribution. Keep this line if the files are ever replaced.
 
+**Interim mapping (8 Oct 2026).** The files were downloaded for the previous
+eight services; the final copy has a different eight, so each key is reused for
+the closest new service. The *Label* column below is the service that uses the
+key now; the *Lordicon identifier* is what the artwork actually is (a
+location pin under "Digital marketing", not the globe the design system's table
+suggests). When the four dedicated
+icons (`digital`, `design`, `social`, `partnerships`) are downloaded, repoint
+those keys in `services.json`, move the four replaced files to
+`legacy/icons-unused/`, and re-run `node scripts/render-icon-fallbacks.mjs`.
+See the interim table in `DESIGN-SYSTEM.md`.
+
 Each file is named for its `icon` key in `src/data/services.json`. Renaming
 destroyed the only other trace of which Lordicon icon each one is, so the
 mapping lives here.
@@ -12,14 +23,14 @@ the build passes anyway.
 
 | File | Label | Lordicon identifier | Downloaded as | Animation state |
 |---|---|---|---|---|
-| `production.json` | Event production | `wired-outline-1383-sphere` | `wired-outline-1383-sphere-hover-pinch.json` | hover-pinch |
-| `virtual.json` | Virtual & hybrid experiences | `wired-outline-18-location-pin` | `wired-outline-18-location-pin-hover-jump.json` | hover-jump |
-| `broadcast.json` | Live-to-air broadcast | `wired-outline-1736-smart-tv-layout-interface` | `wired-outline-1736-smart-tv-hover-pinch.json` | hover-pinch |
-| `rsvp.json` | RSVP & accreditation | `wired-outline-981-consultation` | `wired-outline-981-avatars-chatting-hover-conversation.json` | hover-conversation |
-| `activation.json` | Brand activations | `wired-outline-20-love-heart` | `wired-outline-20-heart-hover-heartbeat.json` | hover-heartbeat |
-| `multimedia.json` | Multimedia content | `wired-outline-61-camera` | `wired-outline-61-camera-hover-flash.json` | hover-flash |
-| `video.json` | Video production | `wired-outline-62-film` | `wired-outline-62-film-play-hover-play.json` | hover-play |
-| `pr.json` | PR & marketing | `wired-outline-478-computer-display` | `wired-outline-478-desktop-hover-angle.json` | hover-angle |
+| `production.json` | Event management & production | `wired-outline-1383-sphere` | `wired-outline-1383-sphere-hover-pinch.json` | hover-pinch |
+| `virtual.json` | Digital marketing | `wired-outline-18-location-pin` | `wired-outline-18-location-pin-hover-jump.json` | hover-jump |
+| `broadcast.json` | Technical production | `wired-outline-1736-smart-tv-layout-interface` | `wired-outline-1736-smart-tv-hover-pinch.json` | hover-pinch |
+| `rsvp.json` | Sponsorships & partnerships | `wired-outline-981-consultation` | `wired-outline-981-avatars-chatting-hover-conversation.json` | hover-conversation |
+| `activation.json` | Social media management | `wired-outline-20-love-heart` | `wired-outline-20-heart-hover-heartbeat.json` | hover-heartbeat |
+| `multimedia.json` | Design services | `wired-outline-61-camera` | `wired-outline-61-camera-hover-flash.json` | hover-flash |
+| `video.json` | Content creation | `wired-outline-62-film` | `wired-outline-62-film-play-hover-play.json` | hover-play |
+| `pr.json` | Public relations | `wired-outline-478-computer-display` | `wired-outline-478-desktop-hover-angle.json` | hover-angle |
 
 The identifier is the file's top-level `nm`. Lordicon's display names have
 drifted since the old build (`heart`, `smart-tv`, `avatars-chatting`,

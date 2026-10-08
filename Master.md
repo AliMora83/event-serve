@@ -62,10 +62,10 @@ Full detail in `PROJECT.md`. Summary:
 | Issue | Resolution |
 |---|---|
 | Contact form never delivered a message (Netlify Forms on non-Netlify host) | Web3Forms, Sprint 1.1 |
-| "15+ years" vs "since 2020" contradiction | Reframed as founder experience |
+| "15+ years" vs "since 2020" contradiction | "15 years" is team experience; no founding year anywhere |
 | Unverifiable 98% satisfaction stat | Replaced with 70% repeat clients |
 | 500+ events claim | Corrected to 150+ |
 | Single crimson used for both fills and type, failing contrast | Three-token split |
 | 46MB of unoptimised PNGs | `astro:assets`, AVIF/WebP |
-| 29MB self-hosted video | Moved to Vimeo |
+| 29MB self-hosted video | Embedded from YouTube (`EhmIfUMwf68`) via a click-to-load facade; no Vimeo |
 | No route structure, dead page components | Five real routes |
