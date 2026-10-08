@@ -4,14 +4,15 @@ import services from '@data/services.json';
 import { RENDERER_VERSION } from '../../scripts/icon-fallback-version.mjs';
 
 interface Props {
-  /** Home shows labels only; /services shows summaries once copy lands. */
+  /** Home shows labels only; /services shows tagline, body and kicker. */
   detailed?: boolean;
   /**
    * Columns at desktop width. 4 suits titles-only tiles; a `detailed` grid
-   * wants 3, because at 4-up the summary measure collapses to roughly 30
-   * characters per line. Below 900px the grid drops to 2 regardless.
+   * wants 2: with eight services, 3 columns orphans the last row as 3+3+2,
+   * and 4-up collapses the measure to roughly 30 characters per line. Below
+   * 900px the grid drops to 2 regardless (1 on phones when detailed).
    */
-  columns?: 3 | 4;
+  columns?: 2 | 3 | 4;
 }
 const { detailed = false, columns = 4 } = Astro.props;
 
@@ -94,8 +95,12 @@ for (const { icon } of services) {
       <span class="service__icon" aria-hidden="true" data-service-icon={service.icon}>
         <Fragment set:html={icons[service.icon]} />
       </span>
-      <h3 class="service__title">{service.title}</h3>
-      {detailed && <p class="service__summary">{service.summary}</p>}
+      <h3 class="service__title">
+        {service.href ? <a href={service.href}>{service.title}</a> : service.title}
+      </h3>
+      {detailed && service.tagline && <p class="service__tagline">{service.tagline}</p>}
+      {detailed && service.body.map((para) => <p class="service__body">{para}</p>)}
+      {detailed && service.kicker && <p class="service__kicker">{service.kicker}</p>}
     </li>
   ))}
 </ul>
@@ -196,12 +201,29 @@ for (const { icon } of services) {
      the paragraph running away if the component is ever used in a wide
      single-column context. It was 34ch, which capped the measure at roughly
      34 characters and made widening the column pointless. */
-  .service__summary {
-    color: var(--c-text-muted);
+  /* Detailed tiles read as prose, so they align left; centred paragraphs at
+     two columns are hard to scan. The icon ring follows the text edge. */
+  .services--detailed .service { text-align: left; }
+  .services--detailed .service__icon { margin-inline: 0; }
+
+  .service__title a { color: inherit; text-decoration: underline; text-decoration-color: var(--c-crimson); text-underline-offset: 0.2em; }
+  .service__title a:hover { text-decoration-color: currentColor; }
+
+  /* Tagline in the TEXT crimson (dark ground), kicker in plain weight 600. */
+  .service__tagline {
+    color: var(--c-crimson-text);
     font-size: var(--fs-small);
-    margin: var(--space-2) auto 0;
-    max-width: 60ch;
+    font-weight: 600;
+    margin: var(--space-2) 0 0;
   }
+  .service__body,
+  .service__kicker {
+    font-size: var(--fs-small);
+    margin: var(--space-2) 0 0;
+    max-width: var(--measure-wide);
+  }
+  .service__body { color: var(--c-text-muted); }
+  .service__kicker { color: var(--c-text); font-weight: 600; }
 </style>
 
 <script>

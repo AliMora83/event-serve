@@ -1,50 +1,82 @@
 [
   {
-    "slug": "event-production",
-    "title": "Event production",
+    "slug": "event-management-production",
+    "title": "Event management & production",
     "icon": "production",
-    "summary": "PLACEHOLDER — Full-service production for conferences, launches and awards evenings, from stage and set build through to lighting, sound and show-calling. The same crew runs the technical rehearsal and the live show, so nothing is handed over on the day. Scaled to the room, whether that is eighty people or eight thousand."
+    "body": [
+      "We provide comprehensive event management and production services, taking care of the details from concept development to execution.",
+      "Our experienced team manages planning, logistics, suppliers, venues, staffing, production, and on-site coordination to ensure your event runs smoothly."
+    ],
+    "kicker": "We don’t just manage events — we manage the experience."
   },
   {
-    "slug": "virtual-hybrid",
-    "title": "Virtual & hybrid experiences",
-    "icon": "virtual",
-    "summary": "PLACEHOLDER — Streaming delivery, moderated Q&A and remote presenter support for audiences who cannot be in the room. A hybrid event is produced as one show rather than a live event with a camera pointed at it. Includes rehearsal with remote speakers and a tested fallback for when connectivity drops."
-  },
-  {
-    "slug": "live-broadcast",
-    "title": "Live-to-air broadcast",
-    "icon": "broadcast",
-    "summary": "PLACEHOLDER — Multi-camera capture, vision mixing and live-to-air delivery for broadcast partners and in-house channels. We work to broadcaster technical specifications and deliver a clean feed alongside recorded masters. Most recently applied across national sporting events."
-  },
-  {
-    "slug": "rsvp-accreditation",
-    "title": "RSVP & accreditation",
-    "icon": "rsvp",
-    "summary": "PLACEHOLDER — Guest list management, invitations and on-site accreditation with printed passes and tiered access. Arrivals are tracked as they happen, so protocol and security both know who is in the room. VIP, media and general admission are handled as separate streams."
-  },
-  {
-    "slug": "brand-activations",
-    "title": "Brand activations",
-    "icon": "activation",
-    "summary": "PLACEHOLDER — Experiential builds that place a brand in front of an audience already gathered for something they care about. Covers concept, fabrication, staffing and measurement of reach on the day. Designed to travel between venues where a campaign runs across several cities."
-  },
-  {
-    "slug": "multimedia-content",
-    "title": "Multimedia content",
-    "icon": "multimedia",
-    "summary": "PLACEHOLDER — Stills, motion graphics and social cutdowns produced alongside the event rather than weeks after it. Assets are delivered in the formats each channel needs, already sized and captioned. Copy review: this overlaps heavily with video production below — the two need merging or clearer differentiation before launch."
-  },
-  {
-    "slug": "video-production",
-    "title": "Video production",
+    "slug": "content-creation",
+    "title": "Content creation",
     "icon": "video",
-    "summary": "PLACEHOLDER — Scripted films, highlights reels and sponsor content, from treatment through to final grade. Shot by the crew already covering the live event, so coverage is planned once rather than twice. Copy review: see the overlap flagged under multimedia content."
+    "tagline": "Great events deserve great content.",
+    "body": [
+      "Our content team creates engaging, relevant, and shareable content designed to capture attention and extend the life of your event and campaign.",
+      "From social media content and photography to video, digital content, blogs and newsletters, we help brands tell their stories before, during and after the event."
+    ]
   },
   {
-    "slug": "pr-marketing",
-    "title": "PR & marketing",
+    "slug": "technical-production",
+    "title": "Technical production",
+    "icon": "broadcast",
+    "tagline": "The right technical production can transform an event.",
+    "body": [
+      "We provide professional audiovisual and technical production solutions, supported by experienced technicians and quality equipment.",
+      "Our services can include sound, lighting, screens, staging, audiovisual production, and other technical requirements needed to create an engaging and professional event environment."
+    ]
+  },
+  {
+    "slug": "digital-marketing",
+    "title": "Digital marketing",
+    "icon": "virtual",
+    "tagline": "Your event doesn’t end when the guests go home.",
+    "body": [
+      "Our digital marketing services help brands build visibility, engage audiences and extend the reach of their events and campaigns.",
+      "Our capabilities include social media marketing, digital campaigns, email marketing, search engine optimisation, online advertising, website support and performance analysis."
+    ]
+  },
+  {
+    "slug": "design-services",
+    "title": "Design services",
+    "icon": "multimedia",
+    "tagline": "We turn ideas into visual experiences.",
+    "body": [
+      "Our design team develops creative visual solutions that help brands communicate with impact.",
+      "From corporate branding and event artwork to posters, brochures, digital assets, websites and social media content, we create designs that are visually engaging, consistent and aligned with your brand."
+    ]
+  },
+  {
+    "slug": "social-media-management",
+    "title": "Social media management",
+    "icon": "activation",
+    "tagline": "We help brands remain relevant, visible and connected with their audiences.",
+    "body": [
+      "Our social media management services cover content planning, creative development, publishing, community engagement, audience monitoring and performance analysis."
+    ],
+    "kicker": "We create social media strategies that don’t simply fill your feed — they give your audience a reason to engage."
+  },
+  {
+    "slug": "public-relations",
+    "title": "Public relations",
     "icon": "pr",
-    "summary": "PLACEHOLDER — Media relations, press office and campaign support around an event's announcement and delivery. Coordinates with sponsors so partner messaging lands alongside the client's own. Includes coverage reporting once the event has run."
+    "tagline": "Your reputation matters. Your story matters. How you tell it matters.",
+    "body": [
+      "Our public relations services help organisations build credibility, strengthen their reputation and communicate effectively with their audiences.",
+      "From media relations and publicity campaigns to strategic communications and reputation management, we help brands generate meaningful visibility and tell their stories through the right channels."
+    ]
+  },
+  {
+    "slug": "sponsorships-partnerships",
+    "title": "Sponsorships & partnerships",
+    "icon": "rsvp",
+    "tagline": "Turning Partnerships Into Powerful Experiences",
+    "body": [
+      "At Events Serve, we believe the right partnership can do more than put a logo on an event; it can put a brand at the heart of an experience."
+    ],
+    "href": "/partnerships"
   }
 ]
