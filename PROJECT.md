@@ -6,8 +6,8 @@
 **Approach:** Port with fixes. Same structure and identity as the current site, corrected content, contrast and performance. Not a redesign.
 **Timeline:** 15 working days, full-time. Launch target: 3 weeks from Sprint 1.
 **No React.** Lottie animations are replaced with static SVG, so nothing hydrates.
-**Routes:** Home, About, Partnerships, Contact. Services is a homepage section (`/#services`), not a route.
-**Founder:** Romeo Leko
+**Routes:** Home, About, Services, Partnerships, Contact. Services became a real route on 2026-09-09; the homepage keeps a titles-only `#services` section fed by the same data.
+**Experience:** "15 years" is the team's experience, not company age. No founder paragraph, no founding year.
 
 ---
 
@@ -61,7 +61,7 @@ live in the **old** build's `package.json`, which moves to `legacy/`. Nothing to
 remove from the Astro scaffold — dependencies there are `astro` and `sharp` only.
 Still worth checking what `gradflow` did, in case a component in the port relied on it.
 
-**Done when:** a deploy preview builds clean, four routes resolve, and a test enquiry reaches the client's inbox. **Still open** — Web3Forms returns 400; see Open issues.
+**Done when:** a deploy preview builds clean, five routes resolve, and a test enquiry reaches the client's inbox. **Still open** — Web3Forms returns 400; see Open issues.
 **Tag `v0.1`.**
 
 ### gradflow — reproduce in CSS, Sprint 3
@@ -72,18 +72,16 @@ dark-red stops. Nothing structural depended on it and it is not being ported as
 a dependency. Sprint 3 reproduces the effect in CSS if it is still wanted; it
 must respect the global `prefers-reduced-motion` block either way.
 
-### Video — pending Vimeo upload
+### Video — Vimeo upload NOT needed (2026-10-08)
 
-`show_jan.mp4` (29MB) is not deployed. It goes to Vimeo and the page embeds
-from there.
+`show_jan.mp4` (29MB) is not deployed. The same video is on YouTube
+(`EhmIfUMwf68`) and the homepage embeds it through `VideoFacade.astro`: a
+self-hosted poster and a click-to-load `youtube-nocookie.com` iframe. There is
+no Vimeo step and no `VIMEO_URL`.
 
-    VIMEO_URL = TODO_VIMEO_URL
-
-**The file stays at `legacy/public/show_jan.mp4` until that URL exists.** It is
-the only findable copy and the client needs it to do the upload. Do not remove
-it as part of any image or asset cleanup.
-
-Sprint 2 stubs the embed with a poster frame.
+The file stays at `legacy/public/show_jan.mp4` as the only local copy; the
+poster (`src/assets/hero/video-poster.jpg`) was extracted from it. Do not
+remove it as part of any image or asset cleanup.
 
 ### Deploy pipeline — configuration required
 
@@ -127,6 +125,38 @@ variables):
 
 Netlify sets `CONTEXT` itself, to `production`, `deploy-preview` or
 `branch-deploy`. Nothing needs to set it, and nothing should.
+
+**The PLACEHOLDER guard.** A second fail-closed gate, added 2026-09-09 with the
+`/services` page. Unfinished copy carries the literal token `PLACEHOLDER`; the
+`placeholderGuard()` integration in `astro.config.mjs` scans the **rendered
+output** after each build — not the source, since that is what reaches a
+visitor — and refuses to let it ship.
+
+| `CONTEXT` | Behaviour when `PLACEHOLDER` is in the output |
+|---|---|
+| `production` | **Build fails**, exit 1, naming each file and its hit count |
+| `deploy-preview` | Warns, build succeeds |
+| `branch-deploy` | Warns, build succeeds |
+| unset (local `npm run build`, `astro dev`) | Warns, build succeeds |
+
+Gated on `CONTEXT=production` alone, with no CI clause — unlike the form key, a
+false negative costs nothing here, because previews are *meant* to render
+placeholder copy. Being able to see it is the point.
+
+It replaced a `TODO` convention that had spread into shipped markup, image alt
+text and documentation prose alike, so a guard keyed on it would have fired on
+its own documentation and been switched off within a week. `grep -rn TODO src/`
+now returns nothing; `grep -rn PLACEHOLDER src/` is the inventory of what is
+still unwritten.
+
+**What is currently behind it** (all of it blocks a production deploy):
+`services.json` (8 service descriptions), `testimonials.json` (3 org/role
+lines), `partners.json` (1 African Bank detail), body copy on `/` and `/about`,
+and **image alt text** in `WorkHighlights.astro` (×4) and `partnerships.astro`.
+
+The alt text is the item to watch. It is what a screen reader announces, so it
+is user-facing rather than source noise, and it needs the client's
+gallery-to-event mapping before it can be written.
 
 **What the key gate does.** `src/components/ContactForm.astro` requires the key
 when `CONTEXT=production`, and keeps a fail-closed backstop for a build in some
@@ -205,7 +235,7 @@ Fixes applied during the port, not after:
 
 Assemble the homepage. Stats read 150+ / 15+ years industry experience / 70% repeat clients.
 Impact section removed — it becomes the Partnerships band linking to `/partnerships`.
-`show_jan.mp4` embedded from Vimeo with a poster frame.
+The video is embedded from YouTube through the click-to-load facade, with a self-hosted poster.
 
 Image migration, all 86 files:
 - Into `src/assets/`, served through `astro:assets`
@@ -220,7 +250,7 @@ Image migration, all 86 files:
 
 # Phase 2 — Pages and launch
 
-**Days 8–15.** Outcome: four routes live on the production domain.
+**Days 8–15.** Outcome: five routes live on the production domain.
 
 ## Sprint 4 — Partnerships *(days 8–9)*
 
@@ -239,8 +269,7 @@ Ships with two cards if African Bank still has no concrete fact.
 
 ## Sprint 5 — About and Contact *(days 10–11)*
 
-About: existing copy, founder paragraph naming Romeo Leko, Impact section moved
-here, cities served.
+About: final client copy (About, Vision, Mission, Approach) verbatim, service area ("We work everywhere in the country"). No founder paragraph and no Impact section (dropped 2026-10-08).
 Contact: form, details, service-area line.
 
 Shorter than planned — the Services route was cut, so this sprint has slack.
@@ -275,7 +304,7 @@ Every item degrades gracefully except the last, which blocks.
 
 | Needed | Status |
 |---|---|
-| Founder's name | ✅ Romeo Leko |
+| Founder's name | ➖ Not used — the final copy has no founder framing |
 | Logo permissions (Hyundai, SASA, African Bank, MTN) | ✅ Approved |
 | Service descriptions | ✅ No longer needed — section renders on titles |
 | One concrete African Bank fact | Pending. Two partner cards until it lands |

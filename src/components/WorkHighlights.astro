@@ -5,17 +5,12 @@
  * scroller.
  */
 import { Image } from 'astro:assets';
-import { workImages } from '@assets/images';
+import { workSlides } from '@assets/images';
 
-// Alt text is deliberately still TODO: it needs the client's gallery-to-event
-// mapping, requested. Placeholder alt on a real photo is worse than none, so
-// Sprint 3 writes these against the actual events.
-const slides = workImages.map((src, i) => ({
-  src,
-  alt: `TODO — event ${i + 1}`,
-}));
+const slides = workSlides;
+
 ---
-<section class="section--tight highlights" aria-labelledby="work-heading">
+<section class="section--tight section--light highlights" aria-labelledby="work-heading">
   <div class="wrap highlights__head">
     <h2 id="work-heading">Work highlights</h2>
     <div class="highlights__controls">
@@ -41,7 +36,8 @@ const slides = workImages.map((src, i) => ({
 </section>
 
 <style>
-  .highlights { background: var(--c-crimson); padding-block: var(--space-6); }
+  /* Ground and heading colour come from .section--light in base.css. */
+  .highlights { padding-block: var(--space-6); }
 
   .highlights__head {
     display: flex;
@@ -49,20 +45,30 @@ const slides = workImages.map((src, i) => ({
     justify-content: space-between;
     margin-bottom: var(--space-4);
   }
-  .highlights__head h2 { margin: 0; color: var(--c-on-crimson); }
+  .highlights__head h2 { margin: 0; }
 
   .highlights__controls { display: flex; gap: var(--space-2); }
 
+  /* --c-field-border is the token for a control boundary that must clear
+     WCAG 1.4.11's 3:1 — 4.99:1 here. The old rgba(255,255,255,0.5) was a
+     hardcoded value and is now invisible on this ground. */
   .highlights__btn {
     width: 40px; height: 40px;
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--c-field-border);
     border-radius: 50%;
-    color: var(--c-on-crimson);
+    color: var(--c-text-on-light);
     font-size: 1.25rem;
     cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
   }
-  .highlights__btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+  /* Inverts rather than tinting, so hover needs no new token. */
+  .highlights__btn:hover {
+    background: var(--c-text-on-light);
+    color: var(--c-surface-light);
+  }
 
   .highlights__track {
     display: flex;
@@ -79,9 +85,19 @@ const slides = workImages.map((src, i) => ({
     flex: 0 0 clamp(240px, 28vw, 360px);
     scroll-snap-align: start;
   }
+  /* Square. object-fit: cover crops to fill rather than distorting — the
+     source photographs are mixed landscape and portrait.
+
+     height: auto is load-bearing, not tidying. <Image> emits width and
+     height attributes, which the UA maps to a definite CSS height; with
+     both dimensions definite, aspect-ratio is ignored entirely. That is why
+     the previous `aspect-ratio: 4 / 3` never took effect and the items
+     rendered at the photographs' own portrait proportions. Removing this
+     line silently restores that bug. */
   .highlights__item img {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: auto;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius-sm);
   }

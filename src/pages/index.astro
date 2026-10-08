@@ -8,48 +8,69 @@ import ClientLogos from '@components/ClientLogos.astro';
 import Testimonials from '@components/Testimonials.astro';
 import ParallaxBand from '@components/ParallaxBand.astro';
 import SectionHeading from '@components/SectionHeading.astro';
-import site from '@data/site.json';
-import { heroImages } from '@assets/images';
+import FeatureList from '@components/FeatureList.astro';
+import VideoFacade from '@components/VideoFacade.astro';
+import why from '@data/why.json';
+import { heroImages, videoPoster } from '@assets/images';
 ---
 <BaseLayout
-  title="Events Serve | Event management in Johannesburg, Cape Town, Durban & Bloemfontein"
-  description="Events Serve delivers event production, live broadcast, brand activations and sponsorship partnerships across South Africa."
+  title="Events Serve | Event management and production across South Africa"
+  description="Full-service events and media company delivering conferences, corporate events, awards, gala dinners and festivals across South Africa."
 >
   <!-- HERO — parallax band 1 of 3 -->
   <ParallaxBand image={heroImages.stage} speed={0.3} minHeight="88vh">
     <p class="hero__eyebrow">Events Serve</p>
-    <h1 class="hero__title">{site.tagline}</h1>
+    <h1 class="hero__title">Your vision. Our expertise. One exceptional experience.</h1>
     <div class="hero__actions">
       <a class="btn btn--primary" href="/contact">Start a conversation</a>
-      <a class="btn btn--ghost" href="/#services">See what we do</a>
+      <a class="btn btn--ghost" href="/services">See what we do</a>
     </div>
   </ParallaxBand>
 
-  <Marquee text="Creating unforgettable moments for your special events" />
+  <Marquee text="Let’s create something memorable" />
 
   <StatsBand />
 
-  <section class="section">
-    <div class="wrap">
-      <SectionHeading title="We do events" />
-      <p class="lede">
-        TODO — carry over the existing "We do events" copy, plus the video
-        embed that currently sits beside it.
-      </p>
-      <a class="btn btn--ghost" href="/about">More about us</a>
+  <section class="section" aria-labelledby="about-heading">
+    <div class="wrap intro">
+      <div>
+        <SectionHeading title="We do events" id="about-heading" />
+        <p class="lede">
+          Events Serve (Pty) Ltd is a dynamic, full-service events and media
+          company dedicated to creating memorable experiences that connect
+          people, brands and audiences.
+        </p>
+        <a class="btn btn--ghost" href="/about">More about us</a>
+      </div>
+      <VideoFacade
+        videoId="EhmIfUMwf68"
+        title="KB Motsilanyane — Rock Lefatshe, live at the SA Sports Awards 2025"
+        poster={videoPoster}
+      />
     </div>
   </section>
 
   <WorkHighlights />
 
-  <!-- Services lives here as a section. There is no /services route —
-       removed from nav by decision, since the copy to justify a page doesn't
-       exist. services.json stays keyed by slug so /services/[slug] remains a
-       v1.1 option. -->
+  <!-- Services now has a real route at /services, in the nav, and the hero
+       button points there. This section stays as the homepage summary: the
+       SAME ServiceGrid without `detailed`, so it renders titles only while
+       /services renders the prose. Both read services.json, so they cannot
+       drift apart.
+
+       The #services id is kept because it is a published anchor — the hero
+       used to point at it. Removing it would break any external link. -->
   <section class="section" id="services">
     <div class="wrap">
       <SectionHeading title="What we offer" />
       <ServiceGrid />
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="why-heading">
+    <div class="wrap">
+      <SectionHeading title="Why Events Serve?" id="why-heading" />
+      <FeatureList items={why} columns={3} />
     </div>
   </section>
 
@@ -92,9 +113,20 @@ import { heroImages } from '@assets/images';
   .hero__title {
     font-size: var(--fs-hero);
     line-height: var(--lh-tight);
-    max-width: 16ch;
+    max-width: 22ch;
     margin-bottom: var(--space-5);
   }
+
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .intro { grid-template-columns: minmax(0, 1fr); }
+  }
+  .intro .lede { margin-bottom: var(--space-5); }
 
   .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 

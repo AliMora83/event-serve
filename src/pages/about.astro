@@ -1,65 +1,100 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SectionHeading from '@components/SectionHeading.astro';
+import StatementPair from '@components/StatementPair.astro';
+import FeatureList from '@components/FeatureList.astro';
+import CtaBlock from '@components/CtaBlock.astro';
+import pillars from '@data/pillars.json';
 import site from '@data/site.json';
+
+/* All doc text on this page is FINAL client copy, verbatim — About, Vision,
+   Mission and Approach. Headings are the doc's words in sentence case.
+   "15 years" is the team's experience, never a company age. */
 ---
 <BaseLayout
-  title="About Events Serve | 15+ years of event management experience"
-  description="Founded in 2020, Events Serve is led by a founder with over 15 years in event management, delivering events across South Africa."
+  title="About Events Serve | 15 years of industry experience"
+  description="Events Serve is a full-service events and media company creating memorable experiences that connect people, brands and audiences across South Africa."
 >
   <section class="section">
-    <div class="wrap">
-      <h1>About Events Serve</h1>
-
-      <!--
-        FOUNDER FRAMING — this paragraph is what resolves the "15+ years"
-        vs "since 2020" conflict. Do not drop it.
-      -->
+    <div class="wrap about">
+      <h1>About us</h1>
       <p class="lede">
-        Events Serve was founded in {site.founded} by {site.founder}, who brings
-        more than 15 years of experience in event management to the company.
+        Events Serve (Pty) Ltd is a dynamic, full-service events and media company
+        dedicated to creating memorable experiences that connect people, brands
+        and audiences.
       </p>
-
-      <p>TODO — carry over the existing About copy from the current build.</p>
-    </div>
-  </section>
-
-  <!--
-    IMPACT — moved here from the home page. It's a genuine differentiator
-    for public-sector and NPO clients and would have been lost otherwise.
-    Note: no parallax on this one. Three bands site-wide is the budget and
-    the home page and partnerships page use all three.
-  -->
-  <section class="section impact" aria-labelledby="impact-heading">
-    <div class="wrap">
-      <SectionHeading title="Impact" star={true} id="impact-heading" />
-      <h3 class="impact__sub">Making a difference through every event</h3>
-      <p class="lede">
-        Our impact extends beyond creating memorable events. We bring together
-        people, ideas and experiences that create lasting change. Each event is
-        an opportunity to inspire, connect, and make a meaningful difference in
-        our community.
+      <p>
+        With 15 years of industry experience, we have built a reputation for
+        delivering professional, creative and seamless event solutions across the
+        corporate, public and private sectors.
+      </p>
+      <p>
+        From intimate gatherings to large-scale productions, we understand that
+        no two events are the same. That is why we take the time to understand
+        your objectives, audience, brand and budget before developing an
+        experience designed specifically for you.
+      </p>
+      <p>
+        At Events Serve, we don’t simply organise events. We bring ideas to life,
+        manage the details and create experiences people remember.
       </p>
     </div>
   </section>
 
-  <section class="section--tight">
+  <section class="section section--light" aria-label="Vision and mission">
+    <div class="wrap">
+      <StatementPair
+        vision={{
+          label: 'Our vision',
+          statement: 'To be a leading, globally recognised events and media company, setting the standard for creativity, innovation, professionalism, and excellence in the events industry.',
+        }}
+        mission={{
+          label: 'Our mission',
+          statement: 'Our mission is to create and deliver exceptional experiences that exceed expectations and leave lasting impressions.',
+          body: 'We aim to be the trusted partner of choice for organisations and individuals seeking reliable, creative, end-to-end event solutions. Through strong partnerships, meticulous planning and a passion for excellence, we transform concepts into experiences that matter.',
+        }}
+      />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="approach-heading">
+    <div class="wrap">
+      <SectionHeading title="Our approach" star={true} id="approach-heading" />
+      <p class="approach__tagline">Your vision. Our expertise. One exceptional experience.</p>
+      <p class="lede">
+        Every successful event starts with understanding what matters to our
+        client. Our approach is built around three key principles:
+      </p>
+      <FeatureList items={pillars} columns={3} />
+    </div>
+  </section>
+
+  <section class="section--tight section--light">
     <div class="wrap">
       <SectionHeading title="Where we work" />
       <p class="lede">
-        We deliver events in {site.cities.slice(0, -1).join(', ')} and
-        {' '}{site.cities.at(-1)}.
+        {site.serviceArea}.
       </p>
     </div>
   </section>
+
+  <CtaBlock
+    heading="Let’s create something memorable"
+    lede="Whether you are planning a corporate event, conference, awards ceremony, gala dinner, concert, festival, private function, or brand experience, Events Serve is ready to bring your vision to life."
+    href="/contact"
+    label="Start a conversation"
+  />
 </BaseLayout>
 
 <style>
-  /* Crimson subheading, using the TEXT crimson token. The old build used
-     the fill crimson here and it failed contrast at heading size. */
-  .impact__sub {
+  .about p { max-width: var(--measure); }
+  .about p + p { margin-top: var(--space-3); }
+
+  /* The doc's approach tagline, set at statement size in the TEXT crimson. */
+  .approach__tagline {
     color: var(--c-crimson-text);
-    font-size: var(--fs-h2);
-    margin-bottom: var(--space-4);
+    font-size: var(--fs-statement);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
   }
 </style>

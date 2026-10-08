@@ -41,6 +41,30 @@
   --c-crimson-hover:  #AE2A3C;  /* interactive hover state                   */
   --c-crimson-text:   #EB3F5B;  /* crimson TYPE on dark — passes AA          */
 
+  /* --- Light sections -----------------------------------------------------
+     The palette above is dark-only. These exist so a section can sit on a
+     light ground WITHOUT any component hardcoding a hex — the rule that the
+     previous build broke.
+
+     Only --c-surface-light is a new value. Every foreground here ALIASES a
+     colour already defined above, so the palette gains no new hues.
+
+     VERIFIED on #F2F2F2:
+       --c-ink          #0F0E0E   17.22:1   body and headings
+       --c-field-border #6B6767    4.99:1   muted copy, passes AA at 4.5:1
+       --c-crimson      #931E2E    7.61:1   crimson TYPE on light
+
+     NOTE THE INVERSION. On dark, crimson type must be --c-crimson-text and
+     --c-crimson is fills-only. On light it is the other way round:
+     --c-crimson-text is 3.48:1 here and FAILS as text, while the fill value
+     passes at 7.61:1. Use --c-crimson-on-light and do not reach past it.
+
+     --c-text-muted is 1.99:1 on this ground. It must never appear on it. */
+  --c-surface-light:       #F2F2F2;
+  --c-text-on-light:       var(--c-ink);
+  --c-text-on-light-muted: var(--c-field-border);
+  --c-crimson-on-light:    var(--c-crimson);
+
   /* --- Type -------------------------------------------------------------- */
   --c-text:           #F3F4F6;  /* primary copy                             */
   --c-text-muted:     #B0ADAD;  /* secondary copy, 9:1 on ink               */
@@ -70,6 +94,7 @@
   --fs-stat:    clamp(2.5rem, 5vw, 4rem);
   --fs-body:    clamp(1rem, 1.1vw, 1.125rem);
   --fs-small:   0.875rem;
+  --fs-statement: clamp(1.25rem, 2.2vw, 1.75rem); /* Vision / Mission, Approach tagline */
 
   --lh-tight:   1.05;
   --lh-heading: 1.15;
@@ -79,6 +104,7 @@
 
   /* --- Layout ------------------------------------------------------------ */
   --measure:      68ch;   /* max line length for body copy */
+  --measure-wide: 78ch;   /* two-column prose: Expertise, /services detailed */
   --page-max:     1280px;
   --gutter:       clamp(1.25rem, 5vw, 4rem);
   --section-y:    clamp(4rem, 10vw, 8rem);
@@ -95,11 +121,16 @@
   --radius-md: 8px;
   --radius-lg: 16px;
 
+  /* --- Icons ------------------------------------------------------------- */
+  --size-icon-ring: 56px;  /* ServiceGrid: the circle around each icon      */
+  --size-icon:      36px;  /* ServiceGrid: the glyph inside that ring       */
+
   /* --- Motion ------------------------------------------------------------ */
   --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
   --dur-fast:   180ms;
   --dur-base:   420ms;
   --dur-slow:   700ms;
+  --dur-testimonial: 9s;  /* reading time per card in the testimonials loop */
   --stagger:    80ms;
 
   --z-header: 100;

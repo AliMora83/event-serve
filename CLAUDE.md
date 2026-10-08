@@ -5,18 +5,51 @@ Auto-loaded by Claude Code. Read this first, every session.
 ## What this project is
 
 A marketing website for **Events Serve** (eventsserve.co.za), a South African event
-management company working in Johannesburg, Cape Town, Durban and Bloemfontein.
+management company working nationwide ("We work everywhere in the country" —
+`site.serviceArea`). The Centurion address in the footer is the registered
+office, not a service-area claim.
 
-Four routes: Home, About, Partnerships, Contact.
+Five routes: Home, About, Services, Partnerships, Contact.
 
-Services is a **section on the homepage** at `/#services`, not a route, and is
-not in the nav. Decided deliberately — the copy to justify a page doesn't
-exist. `src/data/services.json` stays keyed by slug so `/services/[slug]`
-remains a cheap v1.1 addition.
+Services became a **real route** at `/services` on 2026-09-09, in the nav
+between About and Partnerships. It reverses the earlier decision recorded here
+— that Services was a homepage section only, because the copy to justify a page
+did not exist. **That copy still does not exist.** The page ships placeholder
+prose behind the build guard described below, which is what makes shipping the
+page ahead of its copy safe rather than reckless.
 
-Founder: **Romeo Leko**. Company founded 2020; his 15+ years is personal
-experience, not company age — the About page framing depends on that
-distinction.
+The homepage keeps its `#services` section: the same `ServiceGrid` without
+`detailed`, so it renders titles only while `/services` renders the prose. Both
+read `src/data/services.json`, so the two cannot drift. The `#services` anchor
+is retained because it is a published URL.
+
+`services.json` stays keyed by slug, so `/services/[slug]` remains a cheap
+addition.
+
+**The PLACEHOLDER guard.** Unfinished copy carries the literal token
+`PLACEHOLDER`. An integration in `astro.config.mjs` scans the rendered output
+after every build and **fails the build when `CONTEXT=production`** if any
+survives; other contexts warn and pass, because previews are meant to render
+placeholder copy. It replaced an older `TODO` convention that had spread into
+shipped markup, alt text and prose alike, so a guard keyed on it would have
+fired on its own documentation. `grep -rn PLACEHOLDER src/` is the inventory of
+unfinished copy; `grep -rn TODO src/` returns nothing and should stay that way.
+
+Alt text is the sharpest case: `WorkHighlights.astro` and `partnerships.astro`
+carry placeholder alt strings, which is what a screen reader announces. They
+need the client's gallery-to-event mapping before launch, and the guard blocks
+production until they have it.
+
+**"15 years" is the team's experience.** The client's final copy says "15 years
+of industry experience" as a statement about the team, and the stat tile shows
+"15+". Never pair it with a founding year, and do not write "founded" or
+"since 20xx" anywhere — the founder paragraph and `site.founded` / `site.founder`
+were removed on 2026-10-08 (BRAND-VOICE §5). Company details live in
+`site.json`: `legalName`, `registration` and `address`, shown in the footer.
+
+**Copy is final and verbatim.** `legacy/copy/` and the client's two docx files
+are the source; `BRAND-VOICE.md` governs only the copy we write around them and
+`DESIGN-SYSTEM.md` the patterns that render it.
 
 **It is not** a QR check-in app, a pass generator, or a SaaS product. Earlier
 versions of `Master.md` in this repo described a different product entirely.
@@ -31,7 +64,9 @@ they are stale — flag them.
 | Framework | Astro 5, static output |
 | Styling | Vanilla CSS custom properties (`src/styles/tokens.css`). **No Tailwind** |
 | Fonts | Montserrat 400/600/700, loaded via `<link>` in `BaseLayout` |
-| JS framework | **None.** No React, no View Transitions. The only client JS is `motion.js` |
+| JS framework | **None.** No React, no View Transitions. Client JS is `motion.js`, plus the one scoped exception in the next row |
+| Video facade | `VideoFacade.astro` on the homepage: a self-hosted poster and a play button that creates a `youtube-nocookie.com` iframe **on click**. A few lines of inline DOM script, no dependency, nothing third-party loads before the click. **Not a precedent** for other client JS |
+| Icon player | `lottie-web` (light build), **in `ServiceGrid` only**. The Lordicon service icons ship as Lottie JSON and nothing else plays them. Lazy-loaded, skipped under reduced motion and without hover, over an inlined static SVG. **Not a precedent:** any other use of it, or any other client dependency, still needs asking first |
 | Images | `src/assets/` through `astro:assets`. **Not** `public/` |
 | Forms | Web3Forms → `info@eventsserve.co.za`. A build with `CONTEXT=production` **fails** without `PUBLIC_WEB3FORMS_KEY`; local, deploy-preview and branch-deploy builds run keyless and render the form disabled. **The key currently returns 400 — see PROJECT.md open issues** |
 | Package manager | npm |
@@ -138,9 +173,11 @@ These were established by audit. Trust them over anything else in the repo:
   HTML 403 page saved with a `.jpg` extension. Images belong in
   `src/assets/`, never `public/` — the exceptions are `favicon.svg` and
   `og-default.jpg`, which must be plain static URLs.
-- `show_jan.mp4` (29MB) is not deployed; it goes to Vimeo. Until that URL
-  exists the file **stays at `legacy/public/show_jan.mp4`** — it is the only
-  findable copy and the client needs it to do the upload.
+- `show_jan.mp4` (29MB) is not deployed and **no Vimeo upload is needed**: the
+  YouTube video `EhmIfUMwf68` is the same video, and the homepage embeds it
+  through the click-to-load facade. The file stays at `legacy/public/show_jan.mp4`
+  as the only local copy (the poster frame was extracted from it) — do not
+  remove it in an asset cleanup.
 - `.agent/` contains one file and syncs nothing. It is **not** the source of the
   stray documents — don't re-investigate it. Antigravity's workspace-level
   config is the remaining suspect.

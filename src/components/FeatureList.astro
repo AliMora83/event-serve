@@ -1,0 +1,80 @@
+---
+/**
+ * Crimson-ruled list of titled items: About pillars, Why Events Serve and
+ * /partnerships "More than sponsorship". Promoted from the page-scoped
+ * `.approach` that lived on /partnerships.
+ *
+ * Column count is explicit. auto-fit fits as many columns as the container
+ * allows and landed 4 + 2 on a six-item list; no minmax expresses "exactly
+ * three". Tiers match ServiceGrid's detailed grid: 3 → 2 at 900px → 1 at
+ * 600px. Row gap is double the column step, or the rules of one row nearly
+ * meet the next.
+ *
+ * Tone: inside `.section--light` the -on-light tokens apply automatically;
+ * `tone` forces one when the list sits somewhere that class is not an
+ * ancestor. --c-crimson-text (3.48:1) and --c-text-muted (1.99:1) must never
+ * resolve on a light ground, which is why the two token sets are swapped
+ * wholesale rather than per property.
+ */
+interface Item {
+  title: string;
+  /** A short bold line under the title. Doc text, verbatim. */
+  kicker?: string;
+  body: string | string[];
+}
+interface Props {
+  items: Item[];
+  columns?: 2 | 3;
+  tone?: 'dark' | 'light';
+}
+const { items, columns = 3, tone } = Astro.props;
+---
+<ul class="feature" style={`--feature-columns: ${columns}`} data-tone={tone}>
+  {items.map((item, i) => (
+    <li class="feature__item" data-reveal data-reveal-step={i % columns}>
+      <h3>{item.title}</h3>
+      {item.kicker && <p class="feature__kicker">{item.kicker}</p>}
+      {(Array.isArray(item.body) ? item.body : [item.body]).map((para) => (
+        <p class="feature__body">{para}</p>
+      ))}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .feature {
+    --f-rule: var(--c-crimson);
+    --f-head: var(--c-text);
+    --f-kicker: var(--c-crimson-text);
+    --f-body: var(--c-text-muted);
+
+    list-style: none; margin: var(--space-6) 0 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--feature-columns, 3), minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+
+  .feature[data-tone='light'],
+  :global(.section--light) .feature {
+    --f-rule: var(--c-crimson-on-light);
+    --f-head: var(--c-text-on-light);
+    --f-kicker: var(--c-crimson-on-light);
+    --f-body: var(--c-text-on-light-muted);
+  }
+
+  @media (max-width: 900px) {
+    .feature { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .feature { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .feature__item {
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--f-rule);
+  }
+  .feature__item h3 { margin-bottom: var(--space-2); color: var(--f-head); }
+  .feature__kicker { color: var(--f-kicker); font-weight: 600; margin-bottom: var(--space-2); }
+  .feature__body { color: var(--f-body); font-size: var(--fs-small); }
+  .feature__body + .feature__body { margin-top: var(--space-2); }
+</style>

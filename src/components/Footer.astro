@@ -6,9 +6,6 @@ const year = new Date().getFullYear();
   <div class="wrap footer__grid">
     <div>
       <p class="footer__brand">{site.name}</p>
-      <p class="footer__note">
-        Creating memorable events since {site.founded}
-      </p>
     </div>
 
     <nav aria-label="Footer">
@@ -17,7 +14,6 @@ const year = new Date().getFullYear();
         {site.nav.map((item) => (
           <li><a href={item.href}>{item.label}</a></li>
         ))}
-        <li><a href="/#services">Services</a></li>
       </ul>
     </nav>
 
@@ -34,12 +30,15 @@ const year = new Date().getFullYear();
           </>
         ))}
       </p>
-      <p class="footer__note">{site.cities.join(' · ')}</p>
+      <address class="footer__address">
+        {site.address.map((line) => <span>{line}</span>)}
+      </address>
+      <p class="footer__note">{site.serviceArea}</p>
     </div>
   </div>
 
   <div class="wrap footer__legal">
-    <p>© {year} {site.name}. All rights reserved.</p>
+    <p>© {year} {site.legalName} · Reg. {site.registration}</p>
   </div>
 </footer>
 
@@ -79,6 +78,8 @@ const year = new Date().getFullYear();
   .footer a:hover { color: var(--c-text); text-decoration: underline; }
 
   .footer__note { color: var(--c-text-faint); }
+  .footer__address { font-style: normal; color: var(--c-text-faint); margin-bottom: var(--space-2); }
+  .footer__address span { display: block; }
 
   .footer__legal {
     margin-top: var(--space-6);

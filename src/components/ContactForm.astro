@@ -115,7 +115,7 @@ if (import.meta.env.PROD && !formConfigured) {
     {site.phones.map((phone) => (
       <p><a href={`tel:+27${phone.replace(/\D/g, '').slice(1)}`}>{phone}</a></p>
     ))}
-    <p class="contact__cities">{site.cities.join(' · ')}</p>
+    <p class="contact__area">{site.serviceArea}</p>
   </div>
 
   <form class="contact__form" data-contact-form={formConfigured ? true : undefined}>
@@ -245,7 +245,7 @@ if (import.meta.env.PROD && !formConfigured) {
 
   .contact__details a { color: var(--c-text-muted); text-decoration: none; }
   .contact__details a:hover { color: var(--c-crimson-text); }
-  .contact__cities { color: var(--c-text-faint); font-size: var(--fs-small); }
+  .contact__area { color: var(--c-text-faint); font-size: var(--fs-small); }
 
   .field { margin-bottom: var(--space-3); }
 

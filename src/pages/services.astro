@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import ServiceGrid from '@components/ServiceGrid.astro';
+import ExpertiseGrid from '@components/ExpertiseGrid.astro';
+import CtaBlock from '@components/CtaBlock.astro';
+import expertise from '@data/expertise.json';
+
+/**
+ * SERVICES — a real route, with the homepage keeping its own #services section.
+ *
+ * The homepage renders titles only; this page is the same ServiceGrid with
+ * `detailed` set. Both read services.json, so the two cannot drift. Service
+ * and expertise copy is FINAL client copy, verbatim (see BRAND-VOICE.md).
+ *
+ * Eight services in two columns lays out as four even rows. Three columns
+ * would orphan the last row as 3+3+2.
+ */
+---
+<BaseLayout
+  title="Services | Event management, production and marketing — Events Serve"
+  description="Event management and production, content creation, technical production, digital marketing, design, social media and PR, from concept to execution."
+>
+  <section class="section">
+    <div class="wrap">
+      <h1>Our services</h1>
+      <p class="lede">
+        With extensive experience across the events and media landscape, Events
+        Serve provides end-to-end event solutions designed to take your event
+        from concept to execution.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="expertise-heading">
+    <div class="wrap">
+      <SectionHeading title="Our expertise" star={true} id="expertise-heading" />
+      <ExpertiseGrid items={expertise} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="services-heading">
+    <div class="wrap">
+      <SectionHeading title="Services" id="services-heading" />
+      <ServiceGrid detailed={true} columns={2} />
+    </div>
+  </section>
+
+  <CtaBlock
+    tone="light"
+    heading="Let’s create something memorable"
+    lede="Whether you are planning a corporate event, conference, awards ceremony, gala dinner, concert, festival, private function, or brand experience, Events Serve is ready to bring your vision to life."
+    href="/contact"
+    label="Start a conversation"
+  />
+</BaseLayout>

@@ -1,36 +1,170 @@
 ---
 import testimonials from '@data/testimonials.json';
+
+/**
+ * Continuous looping scroll, three cards visible (two at 900px, one at 600px).
+ *
+ * The track holds the list twice and translates by exactly half of itself, so
+ * the seam is invisible; the keyframes and speed live in motion.css. The second
+ * set is aria-hidden and inert, so assistive tech and the tab order see each
+ * testimonial once.
+ *
+ * Without JS, or under prefers-reduced-motion, nothing moves: the second set is
+ * hidden and the first is a static grid (3 + 2, second row centred; 2 columns
+ * at 900px; 1 at 600px). The loop only switches on for `.js` plus
+ * no-preference, so a visitor who cannot pause it never gets it.
+ *
+ * Pause: hover or focus on the viewport (motion.css), or the Pause/Play button
+ * (WCAG 2.2.2). The button is deliberately outside the viewport, so focusing
+ * it does not itself pause, which would make "Play" look like it did nothing.
+ */
 ---
-<section class="section" aria-labelledby="testimonials-heading">
+<section
+  class="section section--light testimonials"
+  aria-labelledby="testimonials-heading"
+  style={`--t-count: ${testimonials.length}`}
+  data-testimonials
+>
   <div class="wrap">
-    <h2 id="testimonials-heading" class="t__heading">What our clients say</h2>
-    <ul class="t__grid">
-      {testimonials.map((item, i) => (
-        <li class="t__card" data-reveal data-reveal-step={i}>
-          <blockquote>
-            <p>{item.quote}</p>
-          </blockquote>
-          <p class="t__name">{item.name}</p>
-          <p class="t__org">{item.org}</p>
-        </li>
-      ))}
-    </ul>
+    <div class="t__head">
+      <h2 id="testimonials-heading" class="t__heading">What our clients say</h2>
+      <button class="t__toggle" type="button" aria-pressed="false" data-testimonials-toggle>
+        Pause testimonials
+      </button>
+    </div>
+
+    <div class="t__viewport">
+      <div class="t__track">
+        {[false, true].map((duplicate) => (
+          <ul class="t__set" aria-hidden={duplicate ? 'true' : undefined} inert={duplicate}>
+            {testimonials.map((item) => (
+              <li class="t__card">
+                <blockquote>
+                  <p>{item.quote}</p>
+                </blockquote>
+                <div class="t__who">
+                  <p class="t__name">{item.name}</p>
+                  <p class="t__org">{item.org}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
-  .t__heading { text-align: center; margin-bottom: var(--space-6); }
+  .testimonials {
+    --t-gap: var(--space-4);
+    --t-visible: 3;
+  }
+  @media (max-width: 900px) { .testimonials { --t-visible: 2; } }
+  @media (max-width: 600px) { .testimonials { --t-visible: 1; } }
 
-  .t__grid {
-    list-style: none; margin: 0; padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-4);
+  .t__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .t__heading { margin: 0; }
+
+  /* Light-ground control: border is the sole affordance, so it uses
+     --c-field-border (4.99:1 here); inverts on hover like the highlights
+     arrows. Needs JS, so it is hidden until the `js` class is set and while
+     nothing moves. */
+  .t__toggle {
+    display: none;
+    padding: var(--space-1) var(--space-4);
+    background: transparent;
+    border: 1px solid var(--c-field-border);
+    border-radius: var(--radius-sm);
+    color: var(--c-text-on-light);
+    font-family: var(--font-display);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out);
+  }
+  .t__toggle:hover {
+    background: var(--c-text-on-light);
+    color: var(--c-surface-light);
   }
 
-  /* Dark cards, not white. The old white cards had light-grey body copy
-     that failed contrast badly. */
+  /* --- Static layout: no JS, or reduced motion ---------------------------
+     Six columns so each card spans two and the second row of two centres. */
+  .t__track { display: block; }
+  .t__set {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--t-gap);
+  }
+  .t__set[aria-hidden='true'] { display: none; }
+  .t__card { grid-column: span 2; }
+  .t__card:nth-child(4) { grid-column: 2 / span 2; }
+  .t__card:nth-child(5) { grid-column: 4 / span 2; }
+
+  @media (max-width: 900px) {
+    .t__set { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .t__card,
+    .t__card:nth-child(4),
+    .t__card:nth-child(5) { grid-column: auto; }
+    .t__card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      width: calc((100% - var(--t-gap)) / 2);
+      justify-self: center;
+    }
+  }
+  @media (max-width: 600px) {
+    .t__set { grid-template-columns: minmax(0, 1fr); }
+    .t__card:last-child:nth-child(odd) { width: auto; }
+  }
+
+  /* --- Looping layout: JS present and motion allowed -------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .t__toggle { display: inline-flex; }
+
+    :global(.js) .t__viewport {
+      overflow: hidden;
+      container-type: inline-size;
+    }
+    :global(.js) .t__track {
+      display: flex;
+      width: max-content;
+    }
+    /* Each set carries its trailing gap as padding, so both sets are exactly
+       the same width and -50% lands on the seam. */
+    :global(.js) .t__set,
+    :global(.js) .t__set[aria-hidden='true'] {
+      display: flex;
+      gap: var(--t-gap);
+      padding-right: var(--t-gap);
+    }
+    :global(.js) .t__card,
+    :global(.js) .t__card:nth-child(4),
+    :global(.js) .t__card:nth-child(5),
+    :global(.js) .t__card:last-child:nth-child(odd) {
+      grid-column: auto;
+      width: calc((100cqw - (var(--t-visible) - 1) * var(--t-gap)) / var(--t-visible));
+      flex: none;
+      justify-self: auto;
+    }
+  }
+
+  /* Dark cards on the light section, kept deliberately: the card is the
+     figure and the light ground is the field (#171515 on #F2F2F2 is 16.25:1
+     with no border doing the work). Equal heights come from the flex row
+     stretching; the name block is pinned to the foot of each card. */
   .t__card {
+    display: flex;
+    flex-direction: column;
+    color: var(--c-text); /* the card is dark; do not inherit .section--light's ink */
     background: var(--c-surface);
     border: 1px solid var(--c-hairline);
     border-radius: var(--radius-md);
@@ -40,6 +174,18 @@ import testimonials from '@data/testimonials.json';
   .t__card blockquote { margin: 0 0 var(--space-4); }
   .t__card blockquote p { color: var(--c-text); margin: 0; }
 
+  .t__who { margin-top: auto; }
   .t__name { font-weight: 600; margin: 0; }
   .t__org  { color: var(--c-text-muted); font-size: var(--fs-small); margin: 0; }
 </style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-testimonials]');
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-testimonials-toggle]');
+
+  toggle?.addEventListener('click', () => {
+    const paused = root!.classList.toggle('is-paused');
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.textContent = paused ? 'Play testimonials' : 'Pause testimonials';
+  });
+</script>

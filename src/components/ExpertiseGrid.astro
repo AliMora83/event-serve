@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import { expertiseImages, type ExpertiseImageKey } from '@assets/images';
+
+/**
+ * Four event types, two by two. Each card carries two paragraphs, and four
+ * columns would put the prose near 25 characters per line. Drops to one
+ * column at 768px.
+ *
+ * Foregrounds are -on-light tokens: this component is built for a
+ * `.section--light` ground, where --c-text-muted and --c-crimson-text fail.
+ */
+interface Item {
+  title: string;
+  image: string;
+  alt: string;
+  kicker?: string;
+  body: string[];
+}
+interface Props { items: Item[]; }
+const { items } = Astro.props;
+---
+<ul class="expertise">
+  {items.map((item, i) => (
+    <li class="expertise__card" data-reveal data-reveal-step={i % 2}>
+      <Image
+        src={expertiseImages[item.image as ExpertiseImageKey]}
+        alt={item.alt}
+        widths={[480, 900]}
+        sizes="(max-width: 768px) 100vw, 560px"
+        loading="lazy"
+      />
+      <h3>{item.title}</h3>
+      {item.kicker && <p class="expertise__kicker">{item.kicker}</p>}
+      {item.body.map((para) => <p class="expertise__body">{para}</p>)}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .expertise {
+    list-style: none; margin: var(--space-6) 0 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+  @media (max-width: 768px) {
+    .expertise { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  /* height: auto is load-bearing: <Image> emits width and height attributes,
+     which make the height definite and silently disable aspect-ratio. */
+  .expertise__card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+  }
+  .expertise__card h3 { margin-bottom: var(--space-2); color: var(--c-text-on-light); }
+  .expertise__kicker { color: var(--c-crimson-on-light); font-weight: 600; margin-bottom: var(--space-2); }
+  .expertise__body { color: var(--c-text-on-light-muted); max-width: var(--measure-wide); }
+  .expertise__body + .expertise__body { margin-top: var(--space-2); }
+</style>

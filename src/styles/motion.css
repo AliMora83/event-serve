@@ -78,6 +78,26 @@
   to   { transform: translate3d(-50%, 0, 0); }
 }
 
+/* --- Testimonials loop ----------------------------------------------------
+   Two identical sets side by side, translated by exactly half the track, so
+   the seam is invisible. Only runs with JS (the `.js` class) and without a
+   reduced-motion preference; every other path is the static grid in
+   Testimonials.astro. Speed is --dur-testimonial per card.                 */
+.js .t__track {
+  animation: testimonials-scroll calc(var(--dur-testimonial) * var(--t-count, 5)) linear infinite;
+}
+
+.js .t__viewport:hover .t__track,
+.js .t__viewport:focus-within .t__track,
+.js .testimonials.is-paused .t__track {
+  animation-play-state: paused;
+}
+
+@keyframes testimonials-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
 /* --- Count-up ------------------------------------------------------------ */
 .stat__value {
   font-variant-numeric: tabular-nums;
@@ -102,6 +122,11 @@
   }
 
   .marquee__track {
+    animation: none;
+    transform: none;
+  }
+
+  .t__track {
     animation: none;
     transform: none;
   }

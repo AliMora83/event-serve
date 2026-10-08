@@ -1,36 +1,146 @@
 ---
+import { createHash } from 'node:crypto';
 import services from '@data/services.json';
+import { RENDERER_VERSION } from '../../scripts/icon-fallback-version.mjs';
 
 interface Props {
-  /** Home shows labels only; /services shows summaries once copy lands. */
+  /** Home shows labels only; /services shows tagline, body and kicker. */
   detailed?: boolean;
+  /**
+   * Columns at desktop width. 4 suits titles-only tiles; a `detailed` grid
+   * wants 2: with eight services, 3 columns orphans the last row as 3+3+2,
+   * and 4-up collapses the measure to roughly 30 characters per line. Below
+   * 900px the grid drops to 2 regardless (1 on phones when detailed).
+   */
+  columns?: 2 | 3 | 4;
 }
-const { detailed = false } = Astro.props;
+const { detailed = false, columns = 4 } = Astro.props;
+
+/* Icons are Lordicon animations in src/assets/icons/, found by filename from
+   each service's `icon` key, so a new service needs a file rather than an
+   edit here. Each icon exists twice: the animation, which the script below
+   loads lazily, and a static SVG of its rest frame, inlined so the icon shows
+   with no JS, under reduced motion, on touch, and if the player fails.
+
+   Every gap throws. An empty circle looks intentional, and a fallback
+   rendered from an older JSON looks right until someone hovers — so each SVG
+   carries the sha256 of the JSON it came from, and a mismatch fails the
+   build. The hash cannot see a change to the renderer itself, so each SVG
+   also carries the version of the script that made it, and a fallback from
+   an older script fails too. Regenerate with
+   `node scripts/render-icon-fallbacks.mjs`.
+
+   So does a file no service claims. A misnamed icon fails the lookup for its
+   service, but it also sits in the folder, where the client-side glob below
+   still bundles it as a chunk nothing loads — the build passes while
+   shipping a dead file. Any .json or .svg whose name is not an `icon` key
+   fails the build, named, with the keys it could have matched. */
+const animations = import.meta.glob<string>('../assets/icons/*.json', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const fallbacks = import.meta.glob<string>('../assets/icons/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+/* Checked before the per-service lookups so a misnamed file is reported by
+   its own name, not as the missing file its service expected instead. */
+const keys = new Set(services.map(({ icon }) => icon));
+const orphans = Object.keys({ ...animations, ...fallbacks })
+  .map((path) => path.slice('../assets/icons/'.length))
+  .filter((file) => !keys.has(file.replace(/\.(json|svg)$/, '')));
+if (orphans.length) {
+  throw new Error(
+    `ServiceGrid: ${orphans.length === 1 ? 'this icon file matches' : 'these icon files match'} no \`icon\` key in src/data/services.json:\n` +
+      orphans.map((file) => `  src/assets/icons/${file}\n`).join('') +
+      `The keys are: ${[...keys].join(', ')}. Rename to one of them, or delete.`
+  );
+}
+
+const icons: Record<string, string> = {};
+for (const { icon } of services) {
+  const json = animations[`../assets/icons/${icon}.json`];
+  const svg = fallbacks[`../assets/icons/${icon}.svg`];
+  if (!json) {
+    throw new Error(`ServiceGrid: no animation for icon "${icon}" — expected src/assets/icons/${icon}.json`);
+  }
+  if (!svg) {
+    throw new Error(`ServiceGrid: no static fallback for icon "${icon}" — run node scripts/render-icon-fallbacks.mjs`);
+  }
+  const version = svg.match(/renderer-version:(\d+)/)?.[1];
+  if (version !== String(RENDERER_VERSION)) {
+    throw new Error(
+      `ServiceGrid: ${icon}.svg was made by ${version ? `renderer version ${version}` : 'a renderer too old to stamp its version'}, ` +
+        `and this build expects version ${RENDERER_VERSION} — run node scripts/render-icon-fallbacks.mjs`
+    );
+  }
+  const hash = createHash('sha256').update(json).digest('hex');
+  if (!svg.includes(`source-sha256:${hash}`)) {
+    throw new Error(
+      `ServiceGrid: ${icon}.svg was rendered from a different ${icon}.json — run node scripts/render-icon-fallbacks.mjs`
+    );
+  }
+  icons[icon] = svg.replace(/^<!--[\s\S]*?-->\s*/, '');
+}
 ---
-<ul class="services">
+<ul
+  class:list={['services', detailed && 'services--detailed']}
+  style={`--services-columns: ${columns}`}
+>
   {services.map((service, i) => (
     <li class="service" data-reveal data-reveal-step={i % 4}>
-      <span class="service__icon" aria-hidden="true">
-        <!-- Icon set TODO: one 24px line icon per service.slug -->
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="12" r="9" />
-        </svg>
+      <span class="service__icon" aria-hidden="true" data-service-icon={service.icon}>
+        <Fragment set:html={icons[service.icon]} />
       </span>
-      <h3 class="service__title">{service.title}</h3>
-      {detailed && <p class="service__summary">{service.summary}</p>}
+      <h3 class="service__title">
+        {service.href ? <a href={service.href}>{service.title}</a> : service.title}
+      </h3>
+      {detailed && service.tagline && <p class="service__tagline">{service.tagline}</p>}
+      {detailed && service.body.map((para) => <p class="service__body">{para}</p>)}
+      {detailed && service.kicker && <p class="service__kicker">{service.kicker}</p>}
     </li>
   ))}
 </ul>
 
 <style>
+  /* Column count comes from the `columns` prop via --services-columns, so a
+     titles-only grid and a detailed one can differ without forking this
+     component. The 4 here is a fallback for a bare .services with no inline
+     property set.
+
+     Was repeat(auto-fit, minmax(200px, 1fr)), which fits as many columns as
+     the container allows: at --page-max that is five, leaving an orphaned
+     row of three. auto-fit cannot express "exactly four" at any minmax —
+     widen the floor and it drops to three early, narrow it and it returns
+     to five — so the column count is explicit. */
   .services {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(var(--services-columns, 4), minmax(0, 1fr));
     gap: var(--space-5);
+  }
+
+  /* Below ~900px the desktop count (3 or 4) falls under about 180px per
+     column and the longer titles wrap to three lines, so the grid drops to
+     two regardless of the prop. Two is kept all the way down rather than
+     one — these tiles are a centred icon and a short label, and a single
+     column turns the section into an eight-row scroll. */
+  @media (max-width: 900px) {
+    .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* Detailed grids go single-column on phones. Two columns holds a titles-only
+     tile fine, but it puts the prose at about 20 characters per line — worse
+     than the 4-up desktop measure this change set out to fix. Titles-only
+     grids stay at two: they have no measure to protect and a single column
+     would make the homepage section an eight-row scroll. */
+  @media (max-width: 600px) {
+    .services--detailed { grid-template-columns: minmax(0, 1fr); }
   }
 
   .service {
@@ -38,16 +148,47 @@ const { detailed = false } = Astro.props;
     padding: var(--space-4);
   }
 
+  /* A detailed tile gives its inline padding back to the measure: 48px of it
+     was being spent on whitespace the --space-5 grid gap already provides,
+     which held the line length around 41 characters. Titles-only tiles keep
+     the padding — they have no measure to protect. */
+  .services--detailed .service { padding-inline: 0; }
+
   .service__icon {
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
+    width: var(--size-icon-ring);
+    height: var(--size-icon-ring);
     margin: 0 auto var(--space-3);
     border: 1px solid var(--c-crimson);
     border-radius: 50%;
     color: var(--c-crimson-text);
   }
+
+  /* The glyph inside the ring. Applies to the inlined fallback <svg> and to
+     the span the player renders into; neither carries this component's scope
+     attribute, hence :global. */
+  .service__icon > :global(*) {
+    display: block;
+    width: var(--size-icon);
+    height: var(--size-icon);
+  }
+
+  /* Recolours the artwork to tokens. Lordicon exports two colours: #aa2a3b,
+     the crimson superseded on 7 Sep, which the player writes out as
+     rgb(170,42,58), and white. These selectors MATCH those values; they are
+     never what renders. Crimson becomes currentColor, which the ring sets to
+     --c-crimson-text, and white becomes --c-text. Both are dark-ground
+     values: on a light section this pair would need the -on-light tokens.
+
+     No icon keyframes a colour, so the attributes never change mid-hover.
+     The rgb(255,0,0) fills in broadcast, video and pr are deliberately left
+     alone — they sit in <defs> as alpha-matte sources, where colour has no
+     effect on the render. */
+  .service__icon :global([stroke="rgb(170,42,58)"]) { stroke: currentColor; }
+  .service__icon :global([fill="rgb(170,42,58)"]) { fill: currentColor; }
+  .service__icon :global([stroke="rgb(255,255,255)"]) { stroke: var(--c-text); }
+  .service__icon :global([fill="rgb(255,255,255)"]) { fill: var(--c-text); }
 
   .service__title {
     font-size: var(--fs-small);
@@ -55,10 +196,92 @@ const { detailed = false } = Astro.props;
     margin: 0;
   }
 
-  .service__summary {
-    color: var(--c-text-muted);
+  /* 60ch is a ceiling, not the measure. The column is narrower than this at
+     every breakpoint, so the grid governs the line length and this only stops
+     the paragraph running away if the component is ever used in a wide
+     single-column context. It was 34ch, which capped the measure at roughly
+     34 characters and made widening the column pointless. */
+  /* Detailed tiles read as prose, so they align left; centred paragraphs at
+     two columns are hard to scan. The icon ring follows the text edge. */
+  .services--detailed .service { text-align: left; }
+  .services--detailed .service__icon { margin-inline: 0; }
+
+  .service__title a { color: inherit; text-decoration: underline; text-decoration-color: var(--c-crimson); text-underline-offset: 0.2em; }
+  .service__title a:hover { text-decoration-color: currentColor; }
+
+  /* Tagline in the TEXT crimson (dark ground), kicker in plain weight 600. */
+  .service__tagline {
+    color: var(--c-crimson-text);
     font-size: var(--fs-small);
-    margin: var(--space-2) auto 0;
-    max-width: 34ch;
+    font-weight: 600;
+    margin: var(--space-2) 0 0;
   }
+  .service__body,
+  .service__kicker {
+    font-size: var(--fs-small);
+    margin: var(--space-2) 0 0;
+    max-width: var(--measure-wide);
+  }
+  .service__body { color: var(--c-text-muted); }
+  .service__kicker { color: var(--c-text); font-weight: 600; }
 </style>
+
+<script>
+  /* Upgrades the inlined rest frames to live players: hovering an icon plays
+     its animation forward once, and leaving returns it to the rest frame.
+
+     Nothing loads unless it can be seen and used. Reduced motion skips the
+     player entirely, matching motion.js. So does a device with no hover —
+     the only trigger — which leaves touch on the static frame it already
+     has. Otherwise the player and the animations are fetched only when a
+     grid nears the viewport. Any failure leaves the fallback in place. */
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const canHover = window.matchMedia('(hover: hover)');
+  const grids = document.querySelectorAll('.services');
+
+  if (grids.length && canHover.matches && !prefersReduced.matches) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        upgrade().catch((error) => console.warn('ServiceGrid: icon player unavailable, keeping static icons', error));
+      },
+      { rootMargin: '200px 0px' }
+    );
+    grids.forEach((grid) => observer.observe(grid));
+  }
+
+  async function upgrade() {
+    const animations = import.meta.glob('../assets/icons/*.json', { import: 'default' });
+    const { default: lottie } = await import('lottie-web/build/player/lottie_light');
+
+    const slots = document.querySelectorAll<HTMLElement>('[data-service-icon]');
+    await Promise.allSettled(
+      [...slots].map(async (slot) => {
+        const load = animations[`../assets/icons/${slot.dataset.serviceIcon}.json`];
+        if (!load) return;
+
+        const player = document.createElement('span');
+        const anim = lottie.loadAnimation({
+          container: player,
+          renderer: 'svg',
+          loop: false,
+          autoplay: false,
+          // lottie mutates its input, and two grids on one page would share it.
+          animationData: structuredClone(await load()),
+        });
+        if (!anim.isLoaded) await new Promise((resolve) => anim.addEventListener('DOMLoaded', resolve));
+
+        // Swap only once the player is drawn on the same frame the fallback shows.
+        const rest = anim.totalFrames - 1;
+        anim.goToAndStop(rest, true);
+        slot.replaceChildren(player);
+
+        slot.addEventListener('mouseenter', () => {
+          if (!prefersReduced.matches) anim.goToAndPlay(0, true);
+        });
+        slot.addEventListener('mouseleave', () => anim.goToAndStop(rest, true));
+      })
+    );
+  }
+</script>
