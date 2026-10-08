@@ -453,7 +453,7 @@ after v1.0.
 - **No JS framework.** React and `lottie-react` dropped entirely. The 14 Lottie
   animations become static SVG. Nothing hydrates — the scaffold's only
   dependencies are `astro` and `sharp`
-- **Founder is Romeo Leko.** Company founded 2020; his 15+ years is personal
+- **Founder is Romeo Lekoba.** Company founded 2020; his 15+ years is personal
   experience, not company age. The About page framing depends on that distinction
 - **Logo permissions approved** for Hyundai, SASA, African Bank and MTN
 
