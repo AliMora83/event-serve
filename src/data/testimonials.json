@@ -1,5 +1,27 @@
 [
-  { "quote": "Events Serve made our corporate event unforgettable. Highly recommended.", "name": "Mpho Mahlodi", "org": "PLACEHOLDER — org/role" },
-  { "quote": "Our wedding was perfect thanks to the Events Serve team.", "name": "Specible Mapanay", "org": "PLACEHOLDER — org/role" },
-  { "quote": "Professional service from start to finish. Will definitely use again.", "name": "Mkuseli Brown", "org": "PLACEHOLDER — org/role" }
+  {
+    "quote": "The professionalism in which your team carried out the task at hand was exemplary and I would like to thank you for assisting us in delivering what was a highly successful event.",
+    "name": "Adam Brooke",
+    "org": "CEO, Netball South Africa — 2026 Telkom Netball League"
+  },
+  {
+    "quote": "The event was executed flawlessly, and SANParks is satisfied with the quality of work provided. SANParks confidently recommends Events Serve and their team for any future opportunities requiring similar event production services.",
+    "name": "SANParks",
+    "org": "KUDU Awards"
+  },
+  {
+    "quote": "Romeo presented us with a vision board, which was met in every detail. Our guests were impressed by the overall look and feel.",
+    "name": "Octavia Mamabolo",
+    "org": "Private client"
+  },
+  {
+    "quote": "The Events Serve team is excellent to work with; they deliver beyond expectations.",
+    "name": "Ms Priscilla Masisi",
+    "org": "Netball World Cup 2023"
+  },
+  {
+    "quote": "Their exceptional experience in Technical Production and Events logistics management is excellent and very professional.",
+    "name": "Linda Joubert",
+    "org": "Marketing Manager: Events, Activations and Hospitality, Hollywoodbets"
+  }
 ]

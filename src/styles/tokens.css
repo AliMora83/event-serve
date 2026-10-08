@@ -130,6 +130,7 @@
   --dur-fast:   180ms;
   --dur-base:   420ms;
   --dur-slow:   700ms;
+  --dur-testimonial: 9s;  /* reading time per card in the testimonials loop */
   --stagger:    80ms;
 
   --z-header: 100;

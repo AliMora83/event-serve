@@ -8,6 +8,21 @@
 
 ---
 
+## v0.7 — 2026-10-09 — Five client testimonials in a looping scroll
+
+- `testimonials.json` is the client's five testimonials, verbatim; the three
+  placeholder entries are gone, so `CONTEXT=production npm run build` now
+  reports no PLACEHOLDER copy.
+- `Testimonials.astro` is a CSS-only loop (`translateX` over a track holding the
+  list twice, so the seam is exact). The second set is `aria-hidden` and
+  `inert`. It pauses on hover or focus of the viewport and has a visible
+  Pause/Play button (WCAG 2.2.2). Speed is `--dur-testimonial` (9s per card).
+- Without JS, or under `prefers-reduced-motion`, the loop is off and the cards
+  are a static grid: 3 + 2 with the second row centred, 2 columns at 900px, 1 at
+  600px. The loop keyframes live in `motion.css` beside the marquee, with the
+  reduced-motion override in the same block.
+- Founder surname corrected to Lekoba in this changelog's v0.1 entry.
+
 ## v0.6 — 2026-10-08 — Final client copy (Phases A and B)
 
 Branch `feat/final-copy`, off `feat/section-updates`. Uncommitted.
