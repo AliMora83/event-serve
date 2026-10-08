@@ -69,6 +69,23 @@ a { color: inherit; }
 
 .section--tight { padding-block: calc(var(--section-y) * 0.6); }
 
+/* --- Light section ---------------------------------------------------------
+ * Global, so no component needs :global() to reach SectionHeading. Every
+ * foreground here is an -on-light token. --c-text-muted (1.99:1) and
+ * --c-crimson-text (3.48:1) must never resolve inside this class. Dark cards
+ * (Testimonials) keep their own dark-ground tokens because the card is the
+ * dark surface, not the section. Never put two light sections back to back.
+ * -------------------------------------------------------------------------- */
+.section--light {
+  background: var(--c-surface-light);
+  color: var(--c-text-on-light);
+}
+.section--light :is(h1, h2, h3) { color: var(--c-text-on-light); }
+.section--light .lede               { color: var(--c-text-on-light-muted); }
+.section--light .heading-mark h2    { color: var(--c-text-on-light); }
+.section--light .heading-mark__rule { background: var(--c-crimson-on-light); }
+.section--light .heading-mark__star { color: var(--c-crimson-on-light); }
+
 /* --- Logo tiles -----------------------------------------------------------
  * ONE treatment for every third-party logo on the site, because every logo
  * file we hold is opaque and each bakes in its own background: white

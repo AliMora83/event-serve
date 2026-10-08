@@ -1,0 +1,28 @@
+---
+/**
+ * Closing call to action. Centred. `tone="light"` puts it on a light ground
+ * to break a run of dark sections; the button stays crimson fill either way
+ * (8.52:1 with its label).
+ */
+interface Props {
+  heading: string;
+  lede: string | string[];
+  href: string;
+  label: string;
+  tone?: 'dark' | 'light';
+}
+const { heading, lede, href, label, tone = 'dark' } = Astro.props;
+const paras = Array.isArray(lede) ? lede : [lede];
+---
+<section class:list={['section', 'cta-block', tone === 'light' && 'section--light']} aria-labelledby="cta-heading">
+  <div class="wrap">
+    <h2 id="cta-heading">{heading}</h2>
+    {paras.map((para) => <p class="lede">{para}</p>)}
+    <a class="btn btn--primary" href={href}>{label}</a>
+  </div>
+</section>
+
+<style>
+  .cta-block { text-align: center; }
+  .cta-block .lede { margin-inline: auto; margin-bottom: var(--space-5); }
+</style>

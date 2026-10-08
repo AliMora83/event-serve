@@ -94,6 +94,7 @@
   --fs-stat:    clamp(2.5rem, 5vw, 4rem);
   --fs-body:    clamp(1rem, 1.1vw, 1.125rem);
   --fs-small:   0.875rem;
+  --fs-statement: clamp(1.25rem, 2.2vw, 1.75rem); /* Vision / Mission, Approach tagline */
 
   --lh-tight:   1.05;
   --lh-heading: 1.15;
@@ -103,6 +104,7 @@
 
   /* --- Layout ------------------------------------------------------------ */
   --measure:      68ch;   /* max line length for body copy */
+  --measure-wide: 78ch;   /* two-column prose: Expertise, /services detailed */
   --page-max:     1280px;
   --gutter:       clamp(1.25rem, 5vw, 4rem);
   --section-y:    clamp(4rem, 10vw, 8rem);

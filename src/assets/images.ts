@@ -62,6 +62,24 @@ export const pageImages = {
   'partnerships-intro': partnershipsIntro,
 } as const;
 
+/* --- Expertise (/services) ------------------------------------------------
+ * Mapping confirmed 8 Oct 2026 (DESIGN-SYSTEM.md): corporate is gallery/3.png
+ * (MTN 30 Years), awards and festivals are the Hollywoodbets Super League
+ * Awards. 900x500 and 940x788 sources, shown inline at card width only.
+ * -------------------------------------------------------------------------- */
+import expConferences from './gallery/Conferences_Setup/Conferences_Setup_8.png';
+import expAwards from './gallery/HB_Images/HollywoodBet-4.png';
+import expFestivals from './gallery/HB_Images/HollywoodBet-1.png';
+
+export const expertiseImages = {
+  conferences: expConferences,
+  corporate: work03,
+  awards: expAwards,
+  festivals: expFestivals,
+} as const;
+
+export type ExpertiseImageKey = keyof typeof expertiseImages;
+
 /* --- Work highlights ------------------------------------------------------
  * gallery/1-10.png are the images the OLD SITE ACTUALLY SHOWED — the previous
  * WorkHighlightsSection globbed 'assets/gallery/*.png' non-recursively, so the

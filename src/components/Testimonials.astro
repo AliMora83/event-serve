@@ -1,7 +1,7 @@
 ---
 import testimonials from '@data/testimonials.json';
 ---
-<section class="section testimonials" aria-labelledby="testimonials-heading">
+<section class="section section--light testimonials" aria-labelledby="testimonials-heading">
   <div class="wrap">
     <h2 id="testimonials-heading" class="t__heading">What our clients say</h2>
     <ul class="t__grid">
@@ -19,12 +19,9 @@ import testimonials from '@data/testimonials.json';
 </section>
 
 <style>
-  .testimonials { background: var(--c-surface-light); }
-
   .t__heading {
     text-align: center;
     margin-bottom: var(--space-6);
-    color: var(--c-text-on-light);
   }
 
   .t__grid {
@@ -47,6 +44,7 @@ import testimonials from '@data/testimonials.json';
      white cards back is also how the previous build failed: white cards
      with light-grey body copy. See tokens.css. */
   .t__card {
+    color: var(--c-text); /* the card is dark; do not inherit .section--light's ink */
     background: var(--c-surface);
     border: 1px solid var(--c-hairline);
     border-radius: var(--radius-md);

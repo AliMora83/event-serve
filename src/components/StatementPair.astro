@@ -1,0 +1,52 @@
+---
+/**
+ * Vision and Mission side by side. Built for a `.section--light` ground, so
+ * every foreground is an -on-light token. The label is a real heading so the
+ * two statements are reachable from the outline.
+ */
+interface Statement {
+  label: string;
+  statement: string;
+  body?: string;
+}
+interface Props { vision: Statement; mission: Statement; }
+const { vision, mission } = Astro.props;
+const pair = [vision, mission];
+---
+<div class="pair">
+  {pair.map((item, i) => (
+    <div class="pair__col" data-reveal data-reveal-step={i}>
+      <h2 class="pair__label">{item.label}</h2>
+      <p class="pair__statement">{item.statement}</p>
+      {item.body && <p class="pair__body">{item.body}</p>}
+    </div>
+  ))}
+</div>
+
+<style>
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+  @media (max-width: 768px) {
+    .pair { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .pair__label {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    color: var(--c-crimson-on-light);
+  }
+  .pair__statement {
+    font-size: var(--fs-statement);
+    font-weight: 600;
+    line-height: var(--lh-heading);
+    color: var(--c-text-on-light);
+  }
+  .pair__body {
+    margin-top: var(--space-4);
+    color: var(--c-text-on-light-muted);
+  }
+</style>

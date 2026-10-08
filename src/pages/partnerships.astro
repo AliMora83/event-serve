@@ -83,7 +83,7 @@ import approach from '@data/approach.json';
 
   <!-- 4. APPROACH — the six points, as a grid. They're four-to-six words of
        substance each; as paragraphs they'd read as filler. -->
-  <section class="section approach-section" aria-labelledby="approach-heading">
+  <section class="section section--light" aria-labelledby="approach-heading">
     <div class="wrap">
       <SectionHeading title="More than sponsorship" id="approach-heading" />
       <p class="lede">
@@ -172,19 +172,6 @@ import approach from '@data/approach.json';
   .partner__logo { margin-bottom: var(--space-4); }
   .partner__role { color: var(--c-crimson-text); font-size: var(--fs-small); margin-bottom: var(--space-3); }
   .partner__body { color: var(--c-text-muted); font-size: var(--fs-small); }
-
-  /* Light ground, set per section as WorkHighlights and Testimonials do —
-     there is no shared light-section class. Every foreground here is an
-     -on-light token: --c-text-muted is 1.99:1 on this ground and
-     --c-crimson-text 3.48:1, so neither may appear in this section. */
-  .approach-section { background: var(--c-surface-light); }
-  .approach-section .lede { color: var(--c-text-on-light-muted); }
-
-  /* SectionHeading renders its own markup, which page-scoped styles cannot
-     reach without :global(). Kept under .approach-section so the component's
-     dark-ground defaults stand everywhere else. */
-  .approach-section :global(.heading-mark h2) { color: var(--c-text-on-light); }
-  .approach-section :global(.heading-mark__rule) { background: var(--c-crimson-on-light); }
 
   /* Six items, so the count is explicit: auto-fit fits as many columns as the
      container allows and landed 4 + 2. No minmax expresses "exactly three".
