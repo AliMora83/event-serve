@@ -5,21 +5,10 @@
  * scroller.
  */
 import { Image } from 'astro:assets';
-import { workImages } from '@assets/images';
+import { workSlides } from '@assets/images';
 
-// NOT REAL ALT TEXT. These strings are what a screen reader announces, so
-// they are user-facing, not source noise — this is the most visible unfinished
-// copy on the site to anyone using assistive technology.
-//
-// Writing them needs the client's gallery-to-event mapping, which has been
-// requested. Inventing descriptions for photographs of real events would be
-// worse than an honest marker, so they carry the PLACEHOLDER token and the
-// build guard in astro.config.mjs blocks any production build until they are
-// replaced with real descriptions.
-const slides = workImages.map((src, i) => ({
-  src,
-  alt: `PLACEHOLDER — event ${i + 1}`,
-}));
+const slides = workSlides;
+
 ---
 <section class="section--tight section--light highlights" aria-labelledby="work-heading">
   <div class="wrap highlights__head">

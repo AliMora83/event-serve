@@ -68,11 +68,13 @@ originals. `astro:assets` downscales; it cannot invent detail.
 
 ## Alt text
 
-Still outstanding, deliberately. It needs the client's gallery-to-event
-mapping — invented alt text on a real photograph is worse than an honest
-marker, because it looks finished.
+Written, from client-supplied descriptions. The work-highlights alts live in
+`workSlides` in `images.ts`, keyed to the source file so a reorder cannot detach
+a description from its photograph. The ExpertiseGrid alts are in
+`src/data/expertise.json`, and the partnerships intro alt is on the page.
 
-The markers carry the literal token `PLACEHOLDER`, and the build guard in
-`astro.config.mjs` fails any production build while they survive into the
-rendered output. Alt text is the sharpest case: it is what a screen reader
-announces, so an unwritten one is user-facing, not source noise.
+New images must not ship with invented alt text on a real photograph: it looks
+finished when it is not. An unwritten alt carries the literal token
+`PLACEHOLDER`, and the build guard in `astro.config.mjs` fails any production
+build while one survives into the rendered output. Alt text is what a screen
+reader announces, so an unwritten one is user-facing, not source noise.

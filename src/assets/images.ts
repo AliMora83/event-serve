@@ -91,7 +91,6 @@ export { videoPoster };
  * gallery/1-10.png are the images the OLD SITE ACTUALLY SHOWED — the previous
  * WorkHighlightsSection globbed 'assets/gallery/*.png' non-recursively, so the
  * 50 subfolder images never reached a visitor. 940x788, fine for a slide.
- * Alt text is written in Sprint 3 once the client returns the event mapping.
  * -------------------------------------------------------------------------- */
 
 import work01 from './gallery/1.png';
@@ -99,7 +98,26 @@ import work02 from './gallery/2.png';
 import work03 from './gallery/3.png';
 import work04 from './gallery/4.png';
 
-export const workImages: ImageMetadata[] = [work01, work02, work03, work04];
+/* Alt text is keyed to the source file, so reordering or swapping a slide
+ * cannot detach a description from its photograph. Supplied by the client. */
+export const workSlides: { src: ImageMetadata; alt: string }[] = [
+  {
+    src: work01, // gallery/1.png
+    alt: 'Netball World Cup 2023 in Cape Town: the trophy on display at the closing ceremony, and performers in traditional dress outside the convention centre',
+  },
+  {
+    src: work02, // gallery/2.png
+    alt: 'A guest in a suit walks onto the court at the Netball World Cup in Cape Town, with the crowd behind',
+  },
+  {
+    src: work03, // gallery/3.png
+    alt: "Branded entrance walkway with draped canopy at MTN's 30 Years celebration",
+  },
+  {
+    src: work04, // gallery/4.png
+    alt: 'Crew member with an all-access pass in the broadcast control room during a live awards show',
+  },
+];
 
 /* --- Brand ----------------------------------------------------------------
  * Client-supplied 7 Sep 2026. NOT a re-export of the previous mark — it is a
