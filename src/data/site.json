@@ -12,12 +12,7 @@
     "073 463 4425",
     "064 050 4442"
   ],
-  "cities": [
-    "Johannesburg",
-    "Cape Town",
-    "Durban",
-    "Bloemfontein"
-  ],
+  "serviceArea": "We work everywhere in the country",
   "nav": [
     {
       "label": "Home",

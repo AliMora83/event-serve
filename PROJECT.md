@@ -269,7 +269,7 @@ Ships with two cards if African Bank still has no concrete fact.
 
 ## Sprint 5 — About and Contact *(days 10–11)*
 
-About: final client copy (About, Vision, Mission, Approach) verbatim, cities served. No founder paragraph and no Impact section (dropped 2026-10-08).
+About: final client copy (About, Vision, Mission, Approach) verbatim, service area ("We work everywhere in the country"). No founder paragraph and no Impact section (dropped 2026-10-08).
 Contact: form, details, service-area line.
 
 Shorter than planned — the Services route was cut, so this sprint has slack.

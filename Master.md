@@ -36,7 +36,7 @@ Last updated: 2026-09-03
 ## Project vision
 
 A marketing website for Events Serve, a South African event management company
-operating in Johannesburg, Cape Town, Durban and Bloemfontein. The site's job
+operating nationwide. The site's job
 is to win enquiries from two audiences: organisations booking event delivery,
 and brands considering sponsorship partnerships.
 

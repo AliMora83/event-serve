@@ -76,7 +76,7 @@ Use these sparingly in new copy. They're what makes the docs sound like Events S
 | Section headings we write | Plain and descriptive | 2–5 words | "What we offer", "Where we work" |
 | Service and expertise copy | Verbatim doc | n/a | Don't touch it |
 | CTAs and buttons | Inviting, first person plural or imperative | 2–4 words | "Start a conversation", "Explore partnerships", "See what we do". Not "Submit", "Click here" or "Learn more". |
-| Meta descriptions | Factual, names services and cities | 140–160 chars | Lead with what Events Serve does, then where |
+| Meta descriptions | Factual, names services; says "across South Africa", never a city list | 140–160 chars | Lead with what Events Serve does, then where |
 | Alt text | Literal and specific: event name + what's visible | ≤ 125 chars | "Stage set for the Presidential Gala dinner". Never "image of", never PLACEHOLDER in production. |
 | Form microcopy and errors | Calm, helpful, no blame | One sentence | "We couldn't send your message. Email us at info@eventsserve.co.za instead." |
 | Footer and legal | Neutral, complete | n/a | "Events Serve (Pty) Ltd · Reg. 2016/524802/07" |
@@ -95,8 +95,8 @@ Use these sparingly in new copy. They're what makes the docs sound like Events S
 
 ## 8. Proposed meta (new copy, written to these guidelines)
 
-- **Home** title: "Events Serve | Event management and production in South Africa"
-  - Description: "Full-service events and media company delivering conferences, corporate events, awards, gala dinners and festivals across Johannesburg, Cape Town, Durban and Bloemfontein."
+- **Home** title: "Events Serve | Event management and production across South Africa"
+  - Description: "Full-service events and media company delivering conferences, corporate events, awards, gala dinners and festivals across South Africa."
 - **About** title: "About Events Serve | 15 years of industry experience"
   - Description: "Events Serve is a full-service events and media company creating memorable experiences that connect people, brands and audiences across South Africa."
 - **Services** title: "Services | Event management, production and marketing — Events Serve"

@@ -5,7 +5,9 @@ Auto-loaded by Claude Code. Read this first, every session.
 ## What this project is
 
 A marketing website for **Events Serve** (eventsserve.co.za), a South African event
-management company working in Johannesburg, Cape Town, Durban and Bloemfontein.
+management company working nationwide ("We work everywhere in the country" —
+`site.serviceArea`). The Centurion address in the footer is the registered
+office, not a service-area claim.
 
 Five routes: Home, About, Services, Partnerships, Contact.
 

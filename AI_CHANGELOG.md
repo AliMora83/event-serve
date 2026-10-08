@@ -8,6 +8,16 @@
 
 ---
 
+## v0.8 — 2026-10-09 — Nationwide service area
+
+- `site.cities` is replaced by `site.serviceArea` ("We work everywhere in the
+  country"), shown verbatim on /about ("Where we work"), the Contact column and
+  the footer. Meta titles and descriptions say "across South Africa" and name no
+  city; BRAND-VOICE.md §8 and CLAUDE.md match.
+- The Centurion office address stays in the footer: it is the registered
+  address, not a service-area claim. Event-location alt text (Netball World Cup
+  in Cape Town) is unchanged, since it describes where a photograph was taken.
+
 ## v0.7 — 2026-10-09 — Five client testimonials in a looping scroll
 
 - `testimonials.json` is the client's five testimonials, verbatim; the three
