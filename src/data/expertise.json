@@ -1,0 +1,41 @@
+[
+  {
+    "title": "Conferences",
+    "image": "conferences",
+    "alt": "Speaker on a large screen above delegates seated in a conference hall",
+    "body": [
+      "From intimate business meetings to large-scale conferences and industry summits, we manage every element of your event to ensure a professional, engaging and seamless experience.",
+      "From planning and venue coordination to production, branding, guest management and post-event support, we make sure your conference delivers on its objectives."
+    ]
+  },
+  {
+    "title": "Corporate events",
+    "image": "corporate",
+    "alt": "Branded entrance walkway at MTN’s 30 Years celebration",
+    "kicker": "Your corporate event is an extension of your brand.",
+    "body": [
+      "We create tailored experiences for companies and organisations across the private and public sectors, whether you are hosting a stakeholder engagement, product launch, employee event, networking function or corporate celebration.",
+      "Our focus is on creating events that are professional, engaging and aligned with your brand."
+    ]
+  },
+  {
+    "title": "Awards and gala dinners",
+    "image": "awards",
+    "alt": "Two hosts on stage at the Hollywoodbets Super League Awards",
+    "kicker": "Celebrate achievement. Recognise excellence. Create unforgettable moments.",
+    "body": [
+      "We specialise in producing prestigious awards ceremonies and gala dinners that make guests feel valued and create memorable experiences.",
+      "From event design and décor to entertainment, technical production, guest management and show flow, we ensure every element contributes to an exceptional occasion."
+    ]
+  },
+  {
+    "title": "Festivals and concerts",
+    "image": "festivals",
+    "alt": "Artist performing live on stage in front of a lit video screen",
+    "kicker": "Big audiences demand big experiences.",
+    "body": [
+      "Events Serve brings energy, creativity and precision to festivals, concerts and entertainment productions. We coordinate the many moving parts required to deliver successful live events, including talent, production, technical requirements, stage management, audience experience and logistics.",
+      "Whether it’s a music festival, cultural celebration or major concert, we help turn your vision into an experience that audiences will remember."
+    ]
+  }
+]

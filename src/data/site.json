@@ -1,7 +1,12 @@
 {
   "name": "Events Serve",
-  "tagline": "Creating unforgettable moments for your special events",
-  "founded": 2020,
+  "legalName": "Events Serve (Pty) Ltd",
+  "registration": "2016/524802/07",
+  "address": [
+    "Regus – Southdowns Ridge Office Park",
+    "John Vorster Drive, Southdowns",
+    "Centurion, 0062"
+  ],
   "email": "info@eventsserve.co.za",
   "phones": [
     "073 463 4425",
@@ -34,6 +39,5 @@
       "label": "Contact",
       "href": "/contact"
     }
-  ],
-  "founder": "Romeo Leko"
+  ]
 }

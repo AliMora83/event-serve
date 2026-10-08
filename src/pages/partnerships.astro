@@ -2,6 +2,8 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import SolidBand from '@components/SolidBand.astro';
+import FeatureList from '@components/FeatureList.astro';
+import CtaBlock from '@components/CtaBlock.astro';
 import { Image } from 'astro:assets';
 import partners from '@data/partners.json';
 import { pageImages, clientLogos, type ClientLogoKey } from '@assets/images';
@@ -15,23 +17,31 @@ import approach from '@data/approach.json';
   <section class="section page-hero">
     <div class="wrap">
       <h1>Sponsorships and partnerships</h1>
-      <p class="page-hero__sub">Turning partnerships into powerful experiences</p>
+      <p class="page-hero__sub">Turning Partnerships Into Powerful Experiences</p>
     </div>
   </section>
 
-  <!-- 2. INTRO — trimmed from three paragraphs to two -->
+  <!-- 2. INTRO — final doc copy, verbatim, all three paragraphs -->
   <section class="section--tight">
     <div class="wrap intro">
       <div>
         <p>
-          The right partnership can do more than put a logo on an event. It can
-          put a brand at the heart of an experience.
+          At Events Serve, we believe the right partnership can do more than put
+          a logo on an event; it can put a brand at the heart of an experience.
         </p>
         <p>
-          We connect brands with events, audiences and platforms that align with
-          their objectives — from sport and entertainment to corporate and
-          community-driven experiences — working with brands, organisers and
-          stakeholders to build partnerships that deliver value on both sides.
+          Our Sponsorships and Partnerships offering connects brands with
+          high-impact events, audiences, and platforms that align with their
+          objectives. From sports and entertainment to corporate and
+          community-driven experiences, we identify opportunities where brands
+          can show up authentically, create meaningful engagement, and leave a
+          lasting impression.
+        </p>
+        <p>
+          We work closely with brands, event organisers and stakeholders to
+          develop partnerships that deliver value on both sides—creating
+          experiences that audiences remember and brands can be proud to be
+          associated with.
         </p>
       </div>
       <Image
@@ -49,16 +59,11 @@ import approach from '@data/approach.json';
     <div class="wrap">
       <SectionHeading title="Our partnership experience" star={true} id="experience-heading" />
       <p class="lede">
-        Our work has placed leading brands within some of South Africa's most
-        high-profile events and platforms.
+        Our work has placed leading brands within some of South Africa’s most
+        exciting and high-profile events and platforms.
       </p>
+      <p class="lede">Among the brands and properties we have worked with are:</p>
 
-      <!--
-        THREE CARDS, ONE PROBLEM: the African Bank entry has no specifics in
-        the source copy. Either get a concrete detail from the client or drop
-        it to two cards and move African Bank into the logo row. Shipping an
-        obviously empty third card is worse than showing two strong ones.
-      -->
       <ul class="partners">
         {partners.map((partner, i) => (
           <li class="partner" data-reveal data-reveal-step={i}>
@@ -81,24 +86,18 @@ import approach from '@data/approach.json';
     </div>
   </section>
 
-  <!-- 4. APPROACH — the six points, as a grid. They're four-to-six words of
-       substance each; as paragraphs they'd read as filler. -->
+  <!-- 4. APPROACH — the six points as a FeatureList, on the shared light
+       ground (.section--light in base.css). -->
   <section class="section section--light" aria-labelledby="approach-heading">
     <div class="wrap">
-      <SectionHeading title="More than sponsorship" id="approach-heading" />
+      <SectionHeading title="More than sponsorship. Strategic connection." id="approach-heading" />
       <p class="lede">
-        Sponsorship is not simply financial support or brand visibility. It is a
-        connection between a brand, an event, and its audience.
+        We understand that sponsorship is not simply about financial support or
+        brand visibility. It is about creating a meaningful connection between a
+        brand, an event, and its audience.
       </p>
-
-      <ul class="approach">
-        {approach.map((item, i) => (
-          <li class="approach__item" data-reveal data-reveal-step={i % 3}>
-            <h3>{item.title}</h3>
-            <p>{item.body}</p>
-          </li>
-        ))}
-      </ul>
+      <p class="lede">Our approach focuses on:</p>
+      <FeatureList items={approach} columns={3} />
     </div>
   </section>
 
@@ -112,22 +111,27 @@ import approach from '@data/approach.json';
     at the same time.
   -->
   <SolidBand>
-    <h2>From the red carpet to the sporting arena</h2>
+    <h2>Where brands meet experiences</h2>
     <p class="band__lede">
-      Whether you're sponsoring an established event, securing a strategic brand
-      partnership, or building a bespoke activation, we bring the relationships,
-      creativity and execution to make it happen.
+      From the red carpet to the sporting arena, from corporate platforms to
+      community-focused initiatives, Events Serve bridges brands and experiences
+      that matter.
+    </p>
+    <p class="band__lede">
+      Whether you are looking to sponsor an established event, secure strategic
+      brand partnerships, or create a bespoke activation around your brand, our
+      team brings the relationships, creativity, and execution expertise to make
+      it happen.
     </p>
   </SolidBand>
 
   <!-- 6. CTA -->
-  <section class="section cta">
-    <div class="wrap">
-      <h2>Let's create a partnership that matters</h2>
-      <p class="lede">Your brand. Our platform. A shared experience.</p>
-      <a class="btn btn--primary" href="/contact">Start a conversation</a>
-    </div>
-  </section>
+  <CtaBlock
+    heading="Let’s create a partnership that matters."
+    lede={['Your brand. Our platform. A shared experience.', 'Partner with Events Serve and let’s turn opportunities into experiences people remember.']}
+    href="/contact"
+    label="Start a conversation"
+  />
 </BaseLayout>
 
 <style>
@@ -173,35 +177,7 @@ import approach from '@data/approach.json';
   .partner__role { color: var(--c-crimson-text); font-size: var(--fs-small); margin-bottom: var(--space-3); }
   .partner__body { color: var(--c-text-muted); font-size: var(--fs-small); }
 
-  /* Six items, so the count is explicit: auto-fit fits as many columns as the
-     container allows and landed 4 + 2. No minmax expresses "exactly three".
-     Tiers match ServiceGrid's detailed grid — these items carry prose.
-     Row gap is double the column step: at --space-5 the rules of one row
-     nearly met the next. */
-  .approach {
-    list-style: none; margin: var(--space-6) 0 0; padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-7) var(--space-6);
-  }
-
-  @media (max-width: 900px) {
-    .approach { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 600px) {
-    .approach { grid-template-columns: 1fr; }
-  }
-
-  .approach__item {
-    padding-left: var(--space-4);
-    border-left: 2px solid var(--c-crimson-on-light);
-  }
-  .approach__item h3 { margin-bottom: var(--space-2); color: var(--c-text-on-light); }
-  .approach__item p { color: var(--c-text-on-light-muted); font-size: var(--fs-small); }
-
   .band__lede { color: var(--c-text); max-width: 52ch; }
+  .band__lede + .band__lede { margin-top: var(--space-3); }
 
-  .cta { text-align: center; }
-  .cta .lede { margin-inline: auto; margin-bottom: var(--space-5); }
 </style>

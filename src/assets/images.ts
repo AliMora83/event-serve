@@ -80,6 +80,13 @@ export const expertiseImages = {
 
 export type ExpertiseImageKey = keyof typeof expertiseImages;
 
+/* --- Home: video facade poster ---------------------------------------------
+ * A frame from show_jan.mp4 (stage lit, performers on). Self-hosted so nothing
+ * third-party loads until the visitor clicks play.
+ * -------------------------------------------------------------------------- */
+import videoPoster from './hero/video-poster.jpg';
+export { videoPoster };
+
 /* --- Work highlights ------------------------------------------------------
  * gallery/1-10.png are the images the OLD SITE ACTUALLY SHOWED — the previous
  * WorkHighlightsSection globbed 'assets/gallery/*.png' non-recursively, so the
